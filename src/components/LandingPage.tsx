@@ -1,6 +1,7 @@
 "use client";
 import { useVisibilityAnimation } from "@/hooks/useLandingAnimations";
 import {
+  Navigation,
   HeroSection,
   ProblemStatement,
   HowItWorksSection,
@@ -16,6 +17,7 @@ export function LandingPage() {
 
   return (
     <div className="bg-slate-950 text-white min-h-screen overflow-x-hidden">
+      <Navigation />
       <HeroSection isVisible={isVisible} />
       <ProblemStatement />
       <HowItWorksSection />

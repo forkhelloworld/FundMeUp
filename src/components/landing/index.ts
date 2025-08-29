@@ -7,3 +7,4 @@ export { PricingSection } from "./PricingSection";
 export { FinalCTASection } from "./FinalCTASection";
 export { Footer } from "./Footer";
 export { StatsPreview } from "./StatsPreview";
+export { Navigation } from "./Navigation";

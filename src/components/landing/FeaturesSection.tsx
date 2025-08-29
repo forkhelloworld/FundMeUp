@@ -12,14 +12,18 @@ export const FeaturesSection = () => {
   });
 
   return (
-    <section ref={elementRef} className="py-20 px-4">
+    <section
+      id="features"
+      ref={elementRef}
+      className="py-16 sm:py-20 px-3 sm:px-4"
+    >
       <div className="max-w-6xl mx-auto">
         <div
-          className={`text-center mb-16 transition-all duration-1000 ease-out ${
+          className={`text-center mb-12 sm:mb-16 transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
             Key{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
               Features
@@ -27,7 +31,7 @@ export const FeaturesSection = () => {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {features.map((feature, index) => (
             <Card
               key={feature.id}
@@ -44,12 +48,12 @@ export const FeaturesSection = () => {
                 <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
                   {feature.icon}
                 </div>
-                <CardTitle className="text-lg font-bold">
+                <CardTitle className="text-base sm:text-lg font-bold">
                   {feature.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-400 text-sm text-center leading-relaxed">
+                <p className="text-slate-400 text-sm sm:text-base text-center leading-relaxed">
                   {feature.description}
                 </p>
               </CardContent>
@@ -58,27 +62,29 @@ export const FeaturesSection = () => {
         </div>
 
         <div
-          className={`mt-12 flex justify-center transition-all duration-1000 ease-out ${
+          className={`mt-10 sm:mt-12 flex justify-center transition-all duration-1000 ease-out ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
           style={{ transitionDelay: "600ms" }}
         >
-          <Card className="bg-slate-800/30 border-slate-700 hover:bg-slate-800/50 transition-all duration-300 group cursor-pointer hover:transform hover:scale-105 max-w-md">
+          <Card className="bg-slate-800/30 border-slate-700 hover:bg-slate-800/50 transition-all duration-300 group cursor-pointer hover:transform hover:scale-105 max-w-md w-full">
             <CardHeader className="text-center">
               <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-purple-400 text-3xl">★</span>
+                <span className="text-purple-400 text-2xl sm:text-3xl">★</span>
               </div>
-              <CardTitle className="text-lg font-bold">Short Modules</CardTitle>
+              <CardTitle className="text-base sm:text-lg font-bold">
+                Short Modules
+              </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-slate-400 text-sm leading-relaxed mb-4">
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-4">
                 Learn with short, interactive modules. No boring lectures—just
                 actionable knowledge.
               </p>
-              <Link href="/login">
+              <Link href="/register">
                 <Button
                   size="sm"
-                  className="bg-purple-500 hover:bg-purple-600 text-white"
+                  className="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white"
                 >
                   Try a Challenge
                 </Button>

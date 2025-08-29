@@ -15,12 +15,12 @@ import { FEATURES, HOW_IT_WORKS_STEPS } from "@/constants/landing";
  */
 export const getFeaturesWithIcons = (): Feature[] => {
   const iconMap = {
-    "investment-simulator": (
+    "intro-lessons": (
       <FaChartPie className="text-emerald-400 text-3xl" />
     ),
-    "goal-savings": <FaCoins className="text-cyan-400 text-3xl" />,
-    "public-portfolios": <FaUserFriends className="text-purple-400 text-3xl" />,
-    "rewards-badges": <FaTrophy className="text-yellow-400 text-3xl" />,
+    "progress-tracking": <FaCoins className="text-cyan-400 text-3xl" />,
+    "goal-setting": <FaUserFriends className="text-purple-400 text-3xl" />,
+    "ai-assistant": <FaTrophy className="text-yellow-400 text-3xl" />,
   };
 
   return FEATURES.map((feature) => ({
@@ -35,9 +35,9 @@ export const getFeaturesWithIcons = (): Feature[] => {
  */
 export const getHowItWorksStepsWithIcons = (): HowItWorksStep[] => {
   const iconMap = {
-    personalize: <FaUserCheck className="text-emerald-400 text-4xl" />,
+    simulate: <FaUserCheck className="text-emerald-400 text-4xl" />,
     learn: <FaRocket className="text-cyan-400 text-4xl" />,
-    track: <FaTrophy className="text-purple-400 text-4xl" />,
+    progress: <FaTrophy className="text-purple-400 text-4xl" />,
   };
 
   return HOW_IT_WORKS_STEPS.map((step) => ({

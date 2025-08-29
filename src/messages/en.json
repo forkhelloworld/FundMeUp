@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "FundMeUp",
+    "language": "Language",
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Create account"
+  },
+  "landing": {
+    "hero": {
+      "title": "Don't lose your money!",
+      "cta": "Get started"
+    }
+  }
+}

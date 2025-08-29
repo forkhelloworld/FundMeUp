@@ -16,31 +16,31 @@ export const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
 // Features data
 export const FEATURES: Omit<Feature, "icon">[] = [
   {
-    id: "investment-simulator",
-    title: "Investment Simulator",
+    id: "intro-lessons",
+    title: "Interactive Lessons",
     description:
-      "Test your strategies in a risk-free environment. Compete and track your performance.",
+      "Engage with short, interactive lessons that explain why investing matters and how to start.",
     color: "emerald",
   },
   {
-    id: "goal-savings",
-    title: "Goal-based Savings",
+    id: "goal-setting",
+    title: "Financial Goal Builder",
     description:
-      "Set savings goals and track your progress visually. Stay motivated with milestones.",
+      "Define your first financial goal and see how investing can help you reach it step by step.",
     color: "cyan",
   },
   {
-    id: "public-portfolios",
-    title: "Public Portfolios",
+    id: "progress-tracking",
+    title: "Progress Tracking",
     description:
-      "See how influencers invest. Learn from real strategies and share your own.",
+      "Track completed lessons and goals. Stay motivated with streaks, milestones, and rewards.",
     color: "purple",
   },
   {
-    id: "rewards-badges",
-    title: "Rewards & Badges",
+    id: "ai-assistant",
+    title: "AI Investment Buddy",
     description:
-      "Earn badges for achievements and consistency. Show off your progress.",
+      "Get personalized guidance from an AI assistant that helps you learn and stay on track.",
     color: "yellow",
   },
 ];
@@ -76,57 +76,54 @@ export const TESTIMONIALS: Testimonial[] = [
 // How it works steps
 export const HOW_IT_WORKS_STEPS: Omit<HowItWorksStep, "icon">[] = [
   {
-    id: "personalize",
-    step: "01",
-    title: "Personalize your path",
-    description:
-      "Start with a quick quiz to tailor your journey and set your financial goals.",
-    color: "emerald",
-  },
-  {
     id: "learn",
-    step: "02",
-    title: "Learn via micro-tasks",
-    description:
-      "Learn via micro-tasks, simulations, and challenges. Master concepts at your own pace.",
-    color: "cyan",
+    step: "01",
+    "title": "Start learning",
+    "description": "Begin with simple lessons that explain why investing matters and help you set your first financial goal.",
+    "color": "emerald"
   },
   {
-    id: "track",
-    step: "03",
-    title: "Track your progress",
-    description:
-      "Track your progress and earn rewards. Stay motivated with streaks, badges, and public goals.",
-    color: "purple",
+    "id": "simulate",
+    "step": "02",
+    "title": "Try simulations",
+    "description": "Practice with easy-to-use simulations to see how investing works in real life without any risk.",
+    "color": "cyan"
   },
+  {
+    "id": "progress",
+    "step": "03",
+    "title": "Track & earn",
+    "description": "Follow your progress, unlock achievements, and stay motivated with rewards and public goals.",
+    "color": "purple"
+  }
 ];
 
 // Pricing features
 export const PRICING_FEATURES: PricingFeature[] = [
-  { id: "lessons", text: "Access to all lessons and simulations" },
-  { id: "goals", text: "Track goals and earn badges" },
-  { id: "challenges", text: "Join public challenges" },
+  { id: "basic-course", text: "Start the basic course on investing fundamentals" },
+  { id: "simulations", text: "Try simple investment simulations without risks" },
+  { id: "gamification", text: "Stay engaged with goals, badges, and challenges" },
 ];
 
 // Statistics data
 export const STATS_DATA: StatData[] = [
   {
     id: "inflation",
-    value: "2.4%",
+    value: "3%",
     label: "Inflation",
     subtitle: "This year alone",
     color: "text-red-400",
   },
   {
     id: "investing-profit",
-    value: "10.9%",
+    value: "10%",
     label: "Investing profit",
     subtitle: "Which can be obtained",
     color: "text-orange-400",
   },
   {
     id: "profit",
-    value: "13.3%",
+    value: "13%",
     label: "Profit",
     subtitle: "Potential gains missed",
     color: "text-green-400",

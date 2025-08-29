@@ -10,7 +10,11 @@ export const HowItWorksSection = () => {
   });
 
   return (
-    <section ref={elementRef} className="py-20 px-4 bg-slate-900/50">
+    <section
+      id="how-it-works"
+      ref={elementRef}
+      className="py-20 px-4 bg-slate-900/50"
+    >
       <div className="max-w-6xl mx-auto">
         <div
           className={`text-center mb-16 transition-all duration-1000 ease-out ${
