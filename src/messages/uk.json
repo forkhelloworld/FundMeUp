@@ -1,0 +1,15 @@
+{
+  "common": {
+    "appName": "FundMeUp",
+    "language": "Мова",
+    "login": "Увійти",
+    "logout": "Вийти",
+    "register": "Створити акаунт"
+  },
+  "landing": {
+    "hero": {
+      "title": "Не втрачай свої гроші",
+      "cta": "Почати"
+    }
+  }
+}
