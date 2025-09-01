@@ -15,7 +15,6 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function InvestingBasicsPage() {
   const { state, actions } = useLessonState();
@@ -799,10 +798,6 @@ export default function InvestingBasicsPage() {
               ? "Complete! You've mastered investing basics."
               : "Keep exploring to complete this lesson."}
           </p>
-
-          <Link href="/lessons/build-your-first-portfolio">
-            <Button>Next Lesson →</Button>
-          </Link>
 
           {state.lessonProgress === 100 && (
             <motion.p {...scaleIn} className="text-green-400 text-sm mt-4">

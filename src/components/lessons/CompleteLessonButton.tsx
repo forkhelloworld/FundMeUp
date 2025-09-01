@@ -3,10 +3,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import Link from "next/link";
+import { lessons } from "@/constants/lessons";
 
-export function CompleteLessonButton() {
+export function CompleteLessonButton({ slug }: { slug: string }) {
   const [submitting, setSubmitting] = useState(false);
-
+  let nextSlug: string
+  try {
+    nextSlug = lessons[lessons.findIndex((l) => l.slug === slug) + 1].slug
+  } catch {
+    return null
+  }
   const onComplete = async () => {
     try {
       setSubmitting(true);
@@ -41,8 +48,10 @@ export function CompleteLessonButton() {
   };
 
   return (
-    <Button onClick={onComplete} disabled={submitting} variant="default">
-      {submitting ? "Completing..." : "Complete lesson"}
-    </Button>
+    <Link href={`/lessons/${nextSlug}`}>
+      <Button onClick={onComplete} disabled={submitting} variant="default">
+        {submitting ? "Completing..." : "Next lesson"}
+      </Button>
+    </Link>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
+import { FICalculator } from "@/components/lessons/FICalculator";
 import { LessonSection } from "@/components/lessons/LessonSection";
 import { Quiz } from "@/components/lessons/Quiz";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -14,8 +14,6 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { FICalculator } from "@/components/lessons/FICalculator";
 
 export default function SetFinancialPlanPage() {
   const { state, actions } = useLessonState();
@@ -507,18 +505,6 @@ export default function SetFinancialPlanPage() {
               ? "Complete! You've mastered financial planning."
               : "Keep exploring to complete this lesson."}
           </p>
-
-          <div className="space-y-4">
-            <Link href="/lessons/investing-basics">
-              <Button>Next Lesson: Investing Basics →</Button>
-            </Link>
-
-            <Link href="/financial-simulator">
-              <Button variant="outline" className="ml-4">
-                Try Financial Simulator 🧮
-              </Button>
-            </Link>
-          </div>
 
           {state.lessonProgress === 100 && (
             <motion.p {...scaleIn} className="text-green-400 text-sm mt-4">

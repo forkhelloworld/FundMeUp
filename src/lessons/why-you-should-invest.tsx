@@ -14,8 +14,6 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { CompleteLessonButton } from "@/components/lessons/CompleteLessonButton";
 
 export default function LessonPage() {
   const { state, actions } = useLessonState();
@@ -156,8 +154,8 @@ export default function LessonPage() {
               {...(index === 0
                 ? fadeInLeft
                 : index === 1
-                ? fadeInUp
-                : fadeInRight)}
+                  ? fadeInUp
+                  : fadeInRight)}
               className={`bg-${pillar.color}-900/20 p-4 md:p-6 rounded-lg border border-${pillar.color}-800`}
             >
               <h3
@@ -365,10 +363,6 @@ export default function LessonPage() {
               : "Keep exploring to complete this lesson."}
           </p>
 
-          <Link href="/lessons/set-your-financial-goal">
-            <Button>Next Lesson →</Button>
-          </Link>
-
           {state.lessonProgress === 100 && (
             <motion.p {...scaleIn} className="text-green-400 text-sm mt-4">
               Remember: Every expert was once a beginner. The difference between
@@ -379,12 +373,6 @@ export default function LessonPage() {
         </Card>
       </motion.div>
 
-      <div className="mt-8 md:mt-10 flex items-center gap-3">
-        <Link href="/lessons">
-          <Button variant="outline">Back to lessons</Button>
-        </Link>
-        <CompleteLessonButton />
-      </div>
     </div>
   );
 }
