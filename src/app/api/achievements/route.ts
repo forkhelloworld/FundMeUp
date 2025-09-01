@@ -40,6 +40,5 @@ export async function GET(request: NextRequest) {
     description: a.description,
     unlocked: unlockedIds.has(a.id),
   }));
-
   return NextResponse.json({ achievements: data });
 }

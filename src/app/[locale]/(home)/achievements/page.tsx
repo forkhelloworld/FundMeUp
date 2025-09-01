@@ -1,31 +1,14 @@
-import {
-  AchievementsGrid,
-  type ApiAchievement,
-} from "@/components/achievements/AchievementsGrid";
-import { cookies } from "next/headers";
+"use client";
+import { AchievementsGrid } from "@/components/achievements/AchievementsGrid";
+import { useUserStore } from "@/lib/user-store";
+import { useEffect } from "react";
 
-async function getAchievements(): Promise<ApiAchievement[]> {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token")?.value;
-    const headers: HeadersInit = {};
-    if (token) headers["authorization"] = `Bearer ${token}`;
-
-    const res = await fetch(`http://localhost:3000/api/achievements`, {
-      cache: "no-store",
-      headers,
-    });
-    if (!res.ok) return [];
-    const json = (await res.json()) as { achievements: ApiAchievement[] };
-    return json.achievements ?? [];
-  } catch {
-    return [];
-  }
-}
-
-export default async function AchievementsPage() {
-  const achievements = await getAchievements();
-
+export default function AchievementsPage() {
+  const { achievements, fetchAchievements } = useUserStore();
+  useEffect(() => {
+    console.log('render')
+    fetchAchievements();
+  }, []);
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-background to-background/60" />

@@ -1,3 +1,4 @@
+import { ApiAchievement } from "@/types/achievements";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -13,6 +14,8 @@ interface UserState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
+  achievements: Array<ApiAchievement>;
   register: (
     userData: Omit<User, "id"> & { password: string }
   ) => Promise<void>;
@@ -21,6 +24,7 @@ interface UserState {
   checkAuth: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
   getProfile: () => Promise<User>;
+  fetchAchievements: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -30,6 +34,8 @@ export const useUserStore = create<UserState>()(
       token: null,
       isAuthenticated: false,
       isLoading: false,
+      error: null,
+      achievements: [],
 
       register: async (userData) => {
         set({ isLoading: true });
@@ -173,6 +179,32 @@ export const useUserStore = create<UserState>()(
         set({ user: data.user });
         return data.user;
       },
+      fetchAchievements: async () => {
+        set({ isLoading: true, error: null });
+        const { token } = get()
+        try {
+          const res = await fetch("/api/achievements", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            },
+            cache: "no-store",
+          });
+          if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err || "Failed to load achievements");
+          }
+          const json = (await res.json()) as { achievements: ApiAchievement[] };
+          set({ achievements: json.achievements ?? [], isLoading: false });
+          return json.achievements ?? []
+        } catch (e) {
+          console.log(e)
+          const message = e instanceof Error ? e.message : "Unknown error";
+          set({ error: message, isLoading: false });
+        }
+      },
+
     }),
     {
       name: "fundmeup-user-storage",
