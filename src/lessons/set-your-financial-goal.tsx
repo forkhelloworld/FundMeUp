@@ -1,9 +1,10 @@
 "use client";
 import { FICalculator } from "@/components/lessons/FICalculator";
+import { LessonHero } from "@/components/lessons/LessonHero";
 import { LessonSection } from "@/components/lessons/LessonSection";
+import { KeyTakeaways } from "@/components/lessons/KeyTakeaways";
 import { Quiz } from "@/components/lessons/Quiz";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { NextStepsCard } from "@/components/lessons/NextStepsCard";
 import {
   bounceIn,
   fadeInLeft,
@@ -26,22 +27,17 @@ export default function SetFinancialPlanPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center px-6 py-12">
       {/* Hero Section */}
-      <motion.div
-        {...bounceIn}
-        className="text-center max-w-5xl mb-12"
+      <LessonHero
+        animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(1)}
-      >
-        <h1 className="text-5xl font-bold mb-6">
-          🎯 Set Your <span className="text-green-400">Financial Plan</span>
-        </h1>
-        <p className="text-gray-300 text-xl leading-relaxed">
-          Your Complete Roadmap to Financial Independence
-        </p>
-        <p className="text-gray-400 text-lg mt-4">
-          Financial independence isn&lsquo;t just a dream—it&lsquo;s a
-          mathematical equation you can solve.
-        </p>
-      </motion.div>
+        title={
+          <>
+            🎯 Set Your <span className="text-green-400">Financial Plan</span>
+          </>
+        }
+        subtitle="Your Complete Roadmap to Financial Independence"
+        description="Financial independence isn&lsquo;t just a dream—it&lsquo;s a mathematical equation you can solve."
+      />
 
       {/* Why a Financial Plan Matters */}
       <LessonSection
@@ -458,8 +454,9 @@ export default function SetFinancialPlanPage() {
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(9)}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
+        <KeyTakeaways
+          animationVariant={fadeInLeft}
+          items={[
             "Financial independence is your north star—all goals should support it",
             "Your FI number = Annual expenses × 25 (4% withdrawal rule)",
             "Higher savings rate = Dramatically shorter timeline to FI",
@@ -467,54 +464,28 @@ export default function SetFinancialPlanPage() {
             "Use the FI filter—does this goal support or delay your independence?",
             "Track progress monthly—what gets measured gets managed",
             "Supporting goals should accelerate, not derail, your FI plan",
-          ].map((takeaway, index) => (
-            <motion.div
-              key={index}
-              {...fadeInLeft}
-              transition={{ delay: index * 0.1 }}
-              className="flex items-start gap-3"
-            >
-              <span className="text-green-400 text-lg">✓</span>
-              <p className="text-gray-300 text-sm">{takeaway}</p>
-            </motion.div>
-          ))}
-        </div>
+          ]}
+        />
       </LessonSection>
 
       {/* Next Steps */}
-      <motion.div
-        {...bounceIn}
-        className="w-full max-w-5xl text-center"
+      <NextStepsCard
+        animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(10)}
-      >
-        <Card className="bg-slate-900 border-slate-800 p-6">
-          <h3 className="text-xl font-semibold text-green-400 mb-4">
-            🚀 What&lsquo;s Next?
-          </h3>
-          <p className="text-gray-300 mb-6">
-            Now that you have a clear financial independence plan, our next
-            lesson will teach you the fundamentals of investing. You&lsquo;ll
-            learn how to build the investment portfolio that will power your
-            journey to FI.
-          </p>
-
-          <Progress value={50} className="mb-4" />
-          <p className="text-sm text-gray-400 mb-6">
-            Lesson 2 of 4 —{" "}
-            {state.lessonProgress === 100
-              ? "Complete! You've mastered financial planning."
-              : "Keep exploring to complete this lesson."}
-          </p>
-
-          {state.lessonProgress === 100 && (
-            <motion.p {...scaleIn} className="text-green-400 text-sm mt-4">
-              Remember: Financial independence isn&lsquo;t about having
-              millions—it&lsquo;s about having enough to choose how you spend
-              your time.
-            </motion.p>
-          )}
-        </Card>
-      </motion.div>
+        description={
+          "Now that you have a clear financial independence plan, our next lesson will teach you the fundamentals of investing. You'll learn how to build the investment portfolio that will power your journey to FI."
+        }
+        progressValue={50}
+        lessonLabel={`Lesson 2 of 4 — ${state.lessonProgress === 100
+            ? "Complete! You've mastered financial planning."
+            : "Keep exploring to complete this lesson."
+          }`}
+        completeMessage={
+          state.lessonProgress === 100
+            ? "Remember: Financial independence isn't about having millions—it's about having enough to choose how you spend your time."
+            : undefined
+        }
+      />
     </div>
   );
 }

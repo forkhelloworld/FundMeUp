@@ -65,6 +65,7 @@ export function FICalculator({
               type="number"
               value={currentAge}
               onChange={(e) => onCurrentAgeChange(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
               className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
             />
           </div>
@@ -75,6 +76,7 @@ export function FICalculator({
               type="number"
               value={selectedFIAge}
               onChange={(e) => setSelectedFIAge(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
               className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
             />
           </div>
@@ -87,6 +89,7 @@ export function FICalculator({
               type="number"
               value={currentNetWorth}
               onChange={(e) => setCurrentNetWorth(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
               className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
             />
           </div>
@@ -97,6 +100,7 @@ export function FICalculator({
               type="number"
               value={monthlyIncome}
               onChange={(e) => setMonthlyIncome(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
               className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
             />
           </div>
@@ -107,6 +111,7 @@ export function FICalculator({
               type="number"
               value={monthlyExpenses}
               onChange={(e) => setMonthlyExpenses(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
               className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
             />
           </div>
@@ -119,6 +124,7 @@ export function FICalculator({
               type="number"
               value={expectedReturn}
               onChange={(e) => setExpectedReturn(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
               className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
             />
           </div>
