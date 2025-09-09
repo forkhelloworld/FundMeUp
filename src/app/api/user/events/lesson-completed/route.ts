@@ -3,7 +3,7 @@ import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
 import { recordEventAndEvaluate } from "@/lib/achievements/service";
 
 interface JwtPayloadWithId {
-  id: number;
+  id: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -19,8 +19,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  let slug: string | undefined;
+  try {
+    const body = await request.json();
+    slug = body?.slug;
+  } catch {
+    slug = undefined;
+  }
+
   const awarded = await recordEventAndEvaluate(userId, {
     type: "lesson_completed",
+    slug,
   });
   return NextResponse.json({ awarded });
 }

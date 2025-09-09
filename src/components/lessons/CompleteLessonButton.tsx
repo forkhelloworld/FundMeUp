@@ -8,11 +8,11 @@ import { lessons } from "@/constants/lessons";
 
 export function CompleteLessonButton({ slug }: { slug: string }) {
   const [submitting, setSubmitting] = useState(false);
-  let nextSlug: string
+  let nextSlug: string;
   try {
-    nextSlug = lessons[lessons.findIndex((l) => l.slug === slug) + 1].slug
+    nextSlug = lessons[lessons.findIndex((l) => l.slug === slug) + 1].slug;
   } catch {
-    return null
+    return null;
   }
   const onComplete = async () => {
     try {
@@ -20,6 +20,8 @@ export function CompleteLessonButton({ slug }: { slug: string }) {
       const res = await fetch("/api/user/events/lesson-completed", {
         method: "POST",
         credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug }),
       });
       const data = await res.json();
       if (!res.ok)

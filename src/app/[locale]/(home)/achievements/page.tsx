@@ -6,7 +6,6 @@ import { useEffect } from "react";
 export default function AchievementsPage() {
   const { achievements, fetchAchievements } = useUserStore();
   useEffect(() => {
-    console.log('render')
     fetchAchievements();
   }, []);
   return (

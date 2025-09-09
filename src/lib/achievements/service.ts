@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { UserProgress } from "@prisma/client";
+import type { LessonStatus } from "@prisma/client";
 
 export type AchievementKey =
   | "first-step"
@@ -10,82 +10,54 @@ export type AchievementKey =
   | "consistency-is-key";
 
 export type EventType =
-  | { type: "lesson_completed" }
+  | { type: "lesson_completed"; slug?: string }
   | { type: "simulation_completed"; returnPct?: number }
   | { type: "login"; now?: Date };
 
-export async function ensureUserProgress(
-  userId: number
-): Promise<UserProgress> {
-  return prisma.userProgress.upsert({
-    where: { userId },
-    update: {},
-    create: { userId },
-  });
-}
-
 export async function recordEventAndEvaluate(
-  userId: number,
+  userId: string,
   event: EventType
 ): Promise<AchievementKey[]> {
-  let progress = await ensureUserProgress(userId);
   const now = new Date();
 
   if (event.type === "lesson_completed") {
-    progress = await prisma.userProgress.update({
-      where: { userId },
-      data: {
-        lessonsCompletedCount: { increment: 1 },
-        consecutiveLessonsInSession: { increment: 1 },
-      },
-    });
-  }
-
-  if (event.type === "simulation_completed") {
-    const bestSimulationReturn = Math.max(
-      progress.bestSimulationReturn,
-      event.returnPct ?? 0
-    );
-    progress = await prisma.userProgress.update({
-      where: { userId },
-      data: {
-        simulationsCompletedCount: { increment: 1 },
-        bestSimulationReturn,
-      },
-    });
-  }
-
-  if (event.type === "login") {
-    const last = progress.lastLoginAt ? new Date(progress.lastLoginAt) : null;
-    const today = new Date(event.now ?? now);
-    const sameDay = !!last && last.toDateString() === today.toDateString();
-    const yesterday =
-      !!last &&
-      new Date(last.getTime() + 24 * 60 * 60 * 1000).toDateString() ===
-        today.toDateString();
-
-    progress = await prisma.userProgress.update({
-      where: { userId },
-      data: {
-        lastLoginAt: today,
-        loginStreak: sameDay
-          ? progress.loginStreak
-          : yesterday
-          ? progress.loginStreak + 1
-          : 1,
-      },
-    });
+    if (event.slug) {
+      // Ensure Lesson exists (optional: create if missing)
+      const lesson = await prisma.lesson.findUnique({
+        where: { slug: event.slug },
+        select: { slug: true },
+      });
+      if (!lesson) {
+        await prisma.lesson.create({
+          data: { slug: event.slug, title: event.slug },
+        });
+      }
+      // Upsert UserLesson and mark as completed
+      await prisma.userLesson.upsert({
+        where: { userId_lessonSlug: { userId, lessonSlug: event.slug } },
+        create: {
+          userId,
+          lessonSlug: event.slug,
+          status: "COMPLETED" as LessonStatus,
+          startedAt: now,
+          completedAt: now,
+        },
+        update: { status: "COMPLETED" as LessonStatus, completedAt: now },
+      });
+    }
   }
 
   const newlyAwarded: AchievementKey[] = [];
 
+  // Compute achievements based on current data without UserProgress
+  const completedLessonsCount = await prisma.userLesson.count({
+    where: { userId, status: "COMPLETED" },
+  });
+
   const checks: Array<{ key: AchievementKey; pass: boolean }> = [
-    { key: "first-step", pass: progress.lessonsCompletedCount >= 1 },
-    { key: "knowledge-seeker", pass: progress.lessonsCompletedCount >= 3 },
-    { key: "quick-learner", pass: progress.consecutiveLessonsInSession >= 3 },
-    { key: "first-simulation", pass: progress.simulationsCompletedCount >= 1 },
-    { key: "smart-investor", pass: progress.bestSimulationReturn > 0 },
-    { key: "consistency-is-key", pass: progress.loginStreak >= 5 },
+    { key: "first-step", pass: completedLessonsCount >= 1 },
+    { key: "knowledge-seeker", pass: completedLessonsCount >= 3 },
+    // Removed checks that depended on UserProgress (quick-learner, first-simulation, smart-investor, consistency-is-key)
   ];
 
   for (const c of checks) {
@@ -105,16 +77,6 @@ export async function recordEventAndEvaluate(
         newlyAwarded.push(c.key);
       }
     }
-  }
-
-  if (
-    event.type !== "lesson_completed" &&
-    progress.consecutiveLessonsInSession !== 0
-  ) {
-    await prisma.userProgress.update({
-      where: { userId },
-      data: { consecutiveLessonsInSession: 0 },
-    });
   }
 
   return newlyAwarded;
