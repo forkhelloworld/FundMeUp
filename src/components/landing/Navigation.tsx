@@ -5,10 +5,12 @@ import { useUserStore } from "@/lib/user-store";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export const Navigation = () => {
   const { isAuthenticated, logout } = useUserStore();
   const router = useRouter();
+  const t = useTranslations("common");
 
   const handleLogout = async () => {
     try {
@@ -28,7 +30,7 @@ export const Navigation = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              FundMeUp
+              {t("appName")}
             </span>
           </Link>
 
@@ -38,19 +40,19 @@ export const Navigation = () => {
               href="#features"
               className="text-slate-300 hover:text-emerald-400 transition-colors"
             >
-              Features
+              {t("features")}
             </a>
             <a
               href="#how-it-works"
               className="text-slate-300 hover:text-emerald-400 transition-colors"
             >
-              How It Works
+              {t("howItWorks")}
             </a>
             <a
               href="#pricing"
               className="text-slate-300 hover:text-emerald-400 transition-colors"
             >
-              Pricing
+              {t("pricing")}
             </a>
           </div>
 
@@ -63,7 +65,7 @@ export const Navigation = () => {
                     variant="ghost"
                     className="text-slate-300 hover:text-emerald-400 hover:bg-slate-800 text-sm sm:text-base"
                   >
-                    Lessons
+                    {t("lessons")}
                   </Button>
                 </Link>
                 <Button
@@ -82,12 +84,12 @@ export const Navigation = () => {
                     variant="ghost"
                     className="text-slate-300 hover:text-emerald-400 hover:bg-slate-800 text-sm sm:text-base"
                   >
-                    Sign In
+                    {t("login")}
                   </Button>
                 </Link>
                 <Link href="/register">
                   <Button className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white text-sm sm:text-base">
-                    Get Started
+                    {t("register")}
                   </Button>
                 </Link>
               </>

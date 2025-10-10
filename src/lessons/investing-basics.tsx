@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { LessonSection } from "@/components/lessons/LessonSection";
 import { Quiz } from "@/components/lessons/Quiz";
 import { LessonHero } from "@/components/lessons/LessonHero";
@@ -16,12 +17,89 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function InvestingBasicsPage() {
+  const t = useTranslations("lessons.investingBasics");
+  const commonT = useTranslations("common");
   const { state, actions } = useLessonState();
 
+  // Local state for form data
+  const [formData, setFormData] = useState({
+    riskTolerance: "moderate",
+    currentAge: 25,
+    timeHorizon: 20,
+    currentNetWorth: 0,
+    monthlyContribution: 0,
+  });
+
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState<{
+    currentAge?: string;
+    currentNetWorth?: string;
+    monthlyContribution?: string;
+  }>({});
+
+  // Validation functions
+  const validateField = (field: string, value: number) => {
+    // Simple validation - can be enhanced later
+    if (field === "currentAge" && (value < 18 || value > 100)) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [field]: "Age must be between 18 and 100",
+      }));
+      return false;
+    }
+    if (field === "currentNetWorth" && value < 0) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [field]: "Net worth cannot be negative",
+      }));
+      return false;
+    }
+    if (field === "monthlyContribution" && value < 0) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [field]: "Monthly contribution cannot be negative",
+      }));
+      return false;
+    }
+    setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
+    return true;
+  };
+
+  const validateAllFields = () => {
+    const isValid =
+      validateField("currentAge", formData.currentAge) &&
+      validateField("currentNetWorth", formData.currentNetWorth) &&
+      validateField("monthlyContribution", formData.monthlyContribution);
+    return isValid;
+  };
+
+  // Input handlers with validation
+  const handleAgeChange = (value: number) => {
+    setFormData((prev) => ({ ...prev, currentAge: value }));
+    validateField("currentAge", value);
+  };
+
+  const handleNetWorthChange = (value: number) => {
+    setFormData((prev) => ({ ...prev, currentNetWorth: value }));
+    validateField("currentNetWorth", value);
+  };
+
+  const handleContributionChange = (value: number) => {
+    setFormData((prev) => ({ ...prev, monthlyContribution: value }));
+    validateField("monthlyContribution", value);
+  };
+
+  const handleCalculateAllocation = () => {
+    if (validateAllFields()) {
+      actions.toggleVisibility("showAllocationResult");
+    }
+  };
+
   // Calculations
-  const stockPercentage = Math.max(20, Math.min(90, 110 - state.age));
+  const stockPercentage = Math.max(20, Math.min(90, 110 - formData.currentAge));
   const bondPercentage = 100 - stockPercentage;
   const dcaExample = {
     month1: { price: 100, shares: state.dcaAmount / 100 },
@@ -44,21 +122,33 @@ export default function InvestingBasicsPage() {
   // Event handlers
   const handleRiskQuiz = () => {
     let score = 0;
-    if (state.age < 30) score += 3;
-    else if (state.age < 50) score += 2;
+    if (formData.currentAge < 30) score += 3;
+    else if (formData.currentAge < 50) score += 2;
     else score += 1;
 
-    if (state.timeHorizon > 20) score += 3;
-    else if (state.timeHorizon > 10) score += 2;
+    if (formData.timeHorizon > 20) score += 3;
+    else if (formData.timeHorizon > 10) score += 2;
     else score += 1;
 
-    if (state.riskTolerance === "aggressive") score += 3;
-    else if (state.riskTolerance === "moderate") score += 2;
+    if (formData.riskTolerance === "aggressive") score += 3;
+    else if (formData.riskTolerance === "moderate") score += 2;
     else score += 1;
 
-    if (score >= 8) actions.setRiskProfile("Aggressive");
-    else if (score >= 5) actions.setRiskProfile("Moderate");
-    else actions.setRiskProfile("Conservative");
+    if (score >= 8)
+      actions.updateInput(
+        "riskProfile",
+        t("sections.riskQuiz.riskToleranceOptions.aggressive")
+      );
+    else if (score >= 5)
+      actions.updateInput(
+        "riskProfile",
+        t("sections.riskQuiz.riskToleranceOptions.moderate")
+      );
+    else
+      actions.updateInput(
+        "riskProfile",
+        t("sections.riskQuiz.riskToleranceOptions.conservative")
+      );
 
     actions.toggleVisibility("showRiskResult");
   };
@@ -71,39 +161,33 @@ export default function InvestingBasicsPage() {
         onViewportEnter={() => handleProgress(1)}
         title={
           <>
-            📈 <span className="text-green-400">Investing Basics</span>
+            📈 <span className="text-green-400">{t("title")}</span>
           </>
         }
-        subtitle="Your Complete Guide to Making Your Money Work for You"
-        description={
-          "You now understand WHY you need to invest and WHAT you&lsquo;re investing for. Now comes the exciting part: HOW to actually make your money grow."
-        }
+        subtitle={t("subtitle")}
+        description={t("description")}
       />
 
       {/* From Goals to Action */}
       <LessonSection
-        title="🎯 From Goals to Action: Making the Connection"
+        title={t("sections.goalsToAction.title")}
         animationVariant={fadeInLeft}
         onViewportEnter={() => handleProgress(2)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
-          Think of investing like planting a garden. You wouldn&lsquo;t throw
-          seeds randomly in the dirt and hope for the best. You&lsquo;d choose
-          the right seeds (investments) for your climate (risk tolerance), plant
-          them in good soil (diversified portfolio), water them regularly
-          (consistent contributions), and give them time to grow.
+          {t("sections.goalsToAction.content")}
         </p>
 
         <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
           <p className="text-green-200 font-semibold text-center">
-            Today, you become a money gardener.
+            {t("sections.goalsToAction.highlight")}
           </p>
         </div>
       </LessonSection>
 
       {/* Investment Universe */}
       <LessonSection
-        title="🏗️ The Investment Universe: Your Options Explained"
+        title={t("sections.investmentUniverse.title")}
         animationVariant={fadeInRight}
         onViewportEnter={() => handleProgress(3)}
       >
@@ -111,47 +195,43 @@ export default function InvestingBasicsPage() {
           {[
             {
               icon: "🏢",
-              title: "Stocks (Equities)",
+              title: t("sections.investmentUniverse.stocks.title"),
               color: "blue",
-              what: "You buy a tiny piece of ownership in a company",
-              how: "Company grows in value, stock price goes up + dividends",
-              risk: "Medium to High",
-              time: "3+ years ideally",
-              example:
-                "You buy Apple stock for $150. If Apple does well and the stock rises to $180, you made $30 per share. If Apple struggles, it might drop to $120, and you'd lose $30 per share.",
+              what: t("sections.investmentUniverse.stocks.what"),
+              how: t("sections.investmentUniverse.stocks.how"),
+              risk: t("sections.investmentUniverse.stocks.risk"),
+              time: t("sections.investmentUniverse.stocks.time"),
+              example: t("sections.investmentUniverse.stocks.example"),
             },
             {
               icon: "🏛️",
-              title: "Bonds (Fixed Income)",
+              title: t("sections.investmentUniverse.bonds.title"),
               color: "green",
-              what: "You loan money to a government or company",
-              how: "They pay you interest regularly, then return your principal",
-              risk: "Low to Medium",
-              time: "1-30 years depending on bond type",
-              example:
-                "You buy a $1,000 government bond paying 4% annually for 10 years. You'll receive $40 per year for 10 years, then get your $1,000 back.",
+              what: t("sections.investmentUniverse.bonds.what"),
+              how: t("sections.investmentUniverse.bonds.how"),
+              risk: t("sections.investmentUniverse.bonds.risk"),
+              time: t("sections.investmentUniverse.bonds.time"),
+              example: t("sections.investmentUniverse.bonds.example"),
             },
             {
               icon: "🧺",
-              title: "Mutual Funds",
+              title: t("sections.investmentUniverse.mutualFunds.title"),
               color: "purple",
-              what: "A basket containing many stocks, bonds, or both",
-              how: "The fund's investments grow in value",
-              risk: "Varies based on fund contents",
-              time: "Varies, typically 3+ years",
-              example:
-                "Instead of picking individual stocks, you buy shares in a fund that owns 500 different companies. If those companies do well on average, your fund value increases.",
+              what: t("sections.investmentUniverse.mutualFunds.what"),
+              how: t("sections.investmentUniverse.mutualFunds.how"),
+              risk: t("sections.investmentUniverse.mutualFunds.risk"),
+              time: t("sections.investmentUniverse.mutualFunds.time"),
+              example: t("sections.investmentUniverse.mutualFunds.example"),
             },
             {
               icon: "📦",
-              title: "Exchange-Traded Funds (ETFs)",
+              title: t("sections.investmentUniverse.etfs.title"),
               color: "orange",
-              what: "Like mutual funds but trade like stocks throughout the day",
-              how: "Same as mutual funds but often with lower fees",
-              risk: "Varies based on fund contents",
-              time: "3+ years typically",
-              example:
-                "An S&P 500 ETF owns all 500 companies in that index. When you buy shares, you own a tiny piece of America's biggest companies.",
+              what: t("sections.investmentUniverse.etfs.what"),
+              how: t("sections.investmentUniverse.etfs.how"),
+              risk: t("sections.investmentUniverse.etfs.risk"),
+              time: t("sections.investmentUniverse.etfs.time"),
+              example: t("sections.investmentUniverse.etfs.example"),
             },
           ].map((investment, index) => (
             <motion.div
@@ -166,20 +246,20 @@ export default function InvestingBasicsPage() {
                 {investment.icon} {investment.title}
               </h3>
               <p className="text-gray-300 text-sm mb-3">
-                <strong>What it is:</strong> {investment.what}
+                <strong>{commonT("whatItIs")}:</strong> {investment.what}
               </p>
               <p className="text-gray-300 text-sm mb-3">
-                <strong>How you make money:</strong> {investment.how}
+                <strong>{commonT("howYouMakeMoney")}:</strong> {investment.how}
               </p>
               <p className="text-gray-300 text-sm mb-3">
-                <strong>Risk level:</strong> {investment.risk}
+                <strong>{commonT("riskLevel")}:</strong> {investment.risk}
               </p>
               <p className="text-gray-300 text-sm mb-3">
-                <strong>Time horizon:</strong> {investment.time}
+                <strong>{commonT("timeHorizon")}:</strong> {investment.time}
               </p>
               <div className={`bg-${investment.color}-900/40 p-3 rounded-lg`}>
                 <p className={`text-${investment.color}-200 text-sm`}>
-                  <strong>Example:</strong> {investment.example}
+                  <strong>{commonT("example")}:</strong> {investment.example}
                 </p>
               </div>
             </motion.div>
@@ -189,68 +269,41 @@ export default function InvestingBasicsPage() {
 
       {/* Risk vs Return */}
       <LessonSection
-        title="⚖️ Risk vs. Return: The Golden Rule of Investing"
+        title={t("sections.riskReturn.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(4)}
       >
         <div className="bg-yellow-900/30 p-4 rounded-lg border border-yellow-700 mb-6">
           <p className="text-yellow-200 font-semibold text-center">
-            The fundamental truth: Higher potential returns come with higher
-            risk. There&lsquo;s no free lunch in investing.
+            {t("sections.riskReturn.fundamentalTruth")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          {[
-            {
-              risk: "Lowest Risk/Lowest Return",
-              examples: [
-                "Savings accounts: ~0.5% annually",
-                "Government bonds: ~2-4% annually",
-              ],
-              color: "green",
-            },
-            {
-              risk: "Medium Risk/Medium Return",
-              examples: [
-                "Corporate bonds: ~3-6% annually",
-                "Balanced funds: ~4-8% annually",
-              ],
-              color: "yellow",
-            },
-            {
-              risk: "Higher Risk/Higher Return",
-              examples: [
-                "Stock market: ~6-10% annually",
-                "Growth stocks: Can be much higher or lower",
-              ],
-              color: "orange",
-            },
-            {
-              risk: "Highest Risk/Highest Return",
-              examples: [
-                "Individual growth stocks: -50% to +500%",
-                "Cryptocurrency: Extremely volatile",
-              ],
-              color: "red",
-            },
-          ].map((level, index) => (
-            <motion.div
-              key={index}
-              {...fadeInUp}
-              transition={{ delay: index * 0.1 }}
-              className={`bg-${level.color}-900/20 p-4 rounded-lg border border-${level.color}-700`}
-            >
-              <h4 className={`text-${level.color}-300 font-semibold mb-3`}>
-                {level.risk}
-              </h4>
-              <ul className="text-gray-300 text-sm space-y-1">
-                {level.examples.map((example, i) => (
-                  <li key={i}>• {example}</li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+          {t
+            .raw("sections.riskReturn.riskLevels")
+            .map(
+              (
+                level: { risk: string; examples: string[]; color: string },
+                index: number
+              ) => (
+                <motion.div
+                  key={index}
+                  {...fadeInUp}
+                  transition={{ delay: index * 0.1 }}
+                  className={`bg-${level.color}-900/20 p-4 rounded-lg border border-${level.color}-700`}
+                >
+                  <h4 className={`text-${level.color}-300 font-semibold mb-3`}>
+                    {level.risk}
+                  </h4>
+                  <ul className="text-gray-300 text-sm space-y-1">
+                    {level.examples.map((example: string, i: number) => (
+                      <li key={i}>• {example}</li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )
+            )}
         </div>
 
         <motion.div
@@ -258,46 +311,42 @@ export default function InvestingBasicsPage() {
           className="bg-blue-900/20 p-4 rounded-lg border border-blue-700"
         >
           <h4 className="text-blue-300 font-semibold mb-3">
-            Your Personal Risk Tolerance
+            {t("sections.riskReturn.personalRiskTolerance.title")}
           </h4>
-          <p className="text-gray-300 text-sm mb-3">Ask yourself:</p>
+          <p className="text-gray-300 text-sm mb-3">
+            {t("sections.riskReturn.personalRiskTolerance.askYourself")}
+          </p>
           <ol className="text-gray-300 text-sm space-y-2">
-            <li>
-              1. <strong>Time horizon:</strong> How long until you need this
-              money?
-            </li>
-            <li>
-              2. <strong>Sleep test:</strong> Would a 20% portfolio drop keep
-              you awake at night?
-            </li>
-            <li>
-              3. <strong>Recovery ability:</strong> Can you make up losses with
-              future earnings?
-            </li>
-            <li>
-              4. <strong>Experience:</strong> Are you comfortable with market
-              volatility?
-            </li>
+            {t
+              .raw("sections.riskReturn.personalRiskTolerance.questions")
+              .map((question: string, index: number) => (
+                <li key={index}>
+                  {index + 1}. <strong>{question}</strong>
+                </li>
+              ))}
           </ol>
         </motion.div>
       </LessonSection>
 
       {/* Risk Tolerance Quiz */}
       <LessonSection
-        title="🧠 Risk Tolerance Quiz"
+        title={t("sections.riskQuiz.title")}
         animationVariant={slideInFromBottom}
         onViewportEnter={() => handleProgress(5)}
       >
         <div className="space-y-6">
           <div>
             <label className="text-white font-semibold">
-              What&lsquo;s your age?
+              {t("sections.riskQuiz.ageQuestion")}
             </label>
             <input
               type="number"
-              value={state.age}
+              value={formData.currentAge}
               onChange={(e) =>
-                actions.updateInput("age", Number(e.target.value))
+                setFormData((prev) => ({
+                  ...prev,
+                  currentAge: Number(e.target.value),
+                }))
               }
               className="w-full bg-slate-800 border-slate-700 text-white mt-2 p-2 rounded border"
             />
@@ -305,55 +354,57 @@ export default function InvestingBasicsPage() {
 
           <div>
             <label className="text-white font-semibold">
-              What&lsquo;s your time horizon for this money?
+              {t("sections.riskQuiz.timeHorizonQuestion")}
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
-              {[
-                { value: 5, label: "5 years" },
-                { value: 10, label: "10 years" },
-                { value: 20, label: "20+ years" },
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() =>
-                    actions.updateInput("timeHorizon", option.value)
-                  }
-                  className={`p-3 rounded-lg border transition-colors ${
-                    state.timeHorizon === option.value
-                      ? "border-green-500 bg-green-900/30"
-                      : "border-slate-700 bg-slate-800 hover:bg-slate-700"
-                  }`}
-                >
-                  <span className="text-gray-300">{option.label}</span>
-                </button>
-              ))}
+              {t
+                .raw("sections.riskQuiz.timeHorizonOptions")
+                .map((option: { value: string; label: string }) => (
+                  <button
+                    key={option.value}
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        timeHorizon: Number(option.value),
+                      }))
+                    }
+                    className={`p-3 rounded-lg border transition-colors ${
+                      formData.timeHorizon === Number(option.value)
+                        ? "border-green-500 bg-green-900/30"
+                        : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                    }`}
+                  >
+                    <span className="text-gray-300">{option.label}</span>
+                  </button>
+                ))}
             </div>
           </div>
 
           <div>
             <label className="text-white font-semibold">
-              How would you describe your risk tolerance?
+              {t("sections.riskQuiz.riskToleranceQuestion")}
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
-              {[
-                { value: "conservative", label: "Conservative" },
-                { value: "moderate", label: "Moderate" },
-                { value: "aggressive", label: "Aggressive" },
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() =>
-                    actions.updateInput("riskTolerance", option.value)
-                  }
-                  className={`p-3 rounded-lg border transition-colors ${
-                    state.riskTolerance === option.value
-                      ? "border-green-500 bg-green-900/30"
-                      : "border-slate-700 bg-slate-800 hover:bg-slate-700"
-                  }`}
-                >
-                  <span className="text-gray-300">{option.label}</span>
-                </button>
-              ))}
+              {t
+                .raw("sections.riskQuiz.riskToleranceOptions")
+                .map((option: { value: string; label: string }) => (
+                  <button
+                    key={option.value}
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        riskTolerance: option.value,
+                      }))
+                    }
+                    className={`p-3 rounded-lg border transition-colors ${
+                      formData.riskTolerance === option.value
+                        ? "border-green-500 bg-green-900/30"
+                        : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                    }`}
+                  >
+                    <span className="text-gray-300">{option.label}</span>
+                  </button>
+                ))}
             </div>
           </div>
         </div>
@@ -362,7 +413,7 @@ export default function InvestingBasicsPage() {
           onClick={handleRiskQuiz}
           className="w-full bg-blue-600 hover:bg-blue-700 mt-6"
         >
-          Calculate My Risk Profile
+          {t("sections.riskQuiz.calculateButton")}
         </Button>
 
         {state.showRiskResult && (
@@ -371,11 +422,16 @@ export default function InvestingBasicsPage() {
             className="mt-4 p-4 bg-blue-900/30 rounded-lg border border-blue-700"
           >
             <p className="text-blue-200 text-center mb-2">
-              <strong>Your Risk Profile: {state.riskProfile}</strong>
+              <strong>
+                {t("sections.riskQuiz.resultPrefix")} {state.riskProfile}
+              </strong>
             </p>
             <p className="text-blue-300 text-sm text-center">
-              Based on your age ({state.age}), time horizon ({state.timeHorizon}{" "}
-              years), and risk tolerance ({state.riskTolerance}).
+              {t("sections.riskQuiz.resultSuffix", {
+                age: formData.currentAge,
+                timeHorizon: formData.timeHorizon,
+                riskTolerance: formData.riskTolerance,
+              })}
             </p>
           </motion.div>
         )}
@@ -383,7 +439,7 @@ export default function InvestingBasicsPage() {
 
       {/* Asset Allocation Calculator */}
       <LessonSection
-        title="🧮 Asset Allocation Calculator"
+        title={t("sections.assetAllocation.title")}
         animationVariant={fadeInRight}
         onViewportEnter={() => handleProgress(6)}
       >
@@ -392,46 +448,81 @@ export default function InvestingBasicsPage() {
             {...fadeInLeft}
             className="bg-green-900/20 p-4 rounded-lg border border-green-700"
           >
-            <h3 className="text-green-300 font-semibold mb-4">Your Profile</h3>
+            <h3 className="text-green-300 font-semibold mb-4">
+              {t("sections.assetAllocation.profileTitle")}
+            </h3>
             <div className="space-y-3">
-              {[
-                {
-                  id: "calcAge",
-                  label: "Age",
-                  key: "age" as keyof typeof state,
-                },
-                {
-                  id: "calcSavings",
-                  label: "Current savings",
-                  key: "currentSavings" as keyof typeof state,
-                },
-                {
-                  id: "calcContribution",
-                  label: "Monthly contribution",
-                  key: "monthlyContribution" as keyof typeof state,
-                },
-              ].map((input) => (
-                <div key={input.id}>
-                  <label htmlFor={input.id} className="text-green-200">
-                    {input.label}
-                  </label>
-                  <input
-                    id={input.id}
-                    type="number"
-                    value={state[input.key] as number}
-                    onChange={(e) =>
-                      actions.updateInput(input.key, Number(e.target.value))
-                    }
-                    className="w-full bg-slate-800 border-slate-700 text-white p-2 rounded border"
-                  />
-                </div>
-              ))}
+              <div>
+                <label htmlFor="calcAge" className="text-green-200">
+                  {t("sections.assetAllocation.ageLabel")}
+                </label>
+                <input
+                  id="calcAge"
+                  type="number"
+                  value={formData.currentAge || ""}
+                  onChange={(e) => handleAgeChange(Number(e.target.value))}
+                  className={`w-full bg-slate-800 text-white p-2 rounded border ${
+                    validationErrors.currentAge
+                      ? "border-red-500"
+                      : "border-slate-700"
+                  }`}
+                />
+                {validationErrors.currentAge && (
+                  <p className="text-red-400 text-sm mt-1">
+                    {validationErrors.currentAge}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="calcSavings" className="text-green-200">
+                  {t("sections.assetAllocation.savingsLabel")}
+                </label>
+                <input
+                  id="calcSavings"
+                  type="number"
+                  value={formData.currentNetWorth || ""}
+                  onChange={(e) => handleNetWorthChange(Number(e.target.value))}
+                  className={`w-full bg-slate-800 text-white p-2 rounded border ${
+                    validationErrors.currentNetWorth
+                      ? "border-red-500"
+                      : "border-slate-700"
+                  }`}
+                />
+                {validationErrors.currentNetWorth && (
+                  <p className="text-red-400 text-sm mt-1">
+                    {validationErrors.currentNetWorth}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="calcContribution" className="text-green-200">
+                  {t("sections.assetAllocation.contributionLabel")}
+                </label>
+                <input
+                  id="calcContribution"
+                  type="number"
+                  value={formData.monthlyContribution || ""}
+                  onChange={(e) =>
+                    handleContributionChange(Number(e.target.value))
+                  }
+                  className={`w-full bg-slate-800 text-white p-2 rounded border ${
+                    validationErrors.monthlyContribution
+                      ? "border-red-500"
+                      : "border-slate-700"
+                  }`}
+                />
+                {validationErrors.monthlyContribution && (
+                  <p className="text-red-400 text-sm mt-1">
+                    {validationErrors.monthlyContribution}
+                  </p>
+                )}
+              </div>
             </div>
             <Button
-              onClick={() => actions.toggleVisibility("showAllocationResult")}
+              onClick={handleCalculateAllocation}
               className="w-full bg-green-600 hover:bg-green-700 mt-4"
             >
-              Calculate Asset Allocation
+              {t("sections.assetAllocation.calculateButton")}
             </Button>
           </motion.div>
 
@@ -441,17 +532,17 @@ export default function InvestingBasicsPage() {
               className="bg-blue-900/20 p-4 rounded-lg border border-blue-700"
             >
               <h3 className="text-blue-300 font-semibold mb-4">
-                Recommended Allocation
+                {t("sections.assetAllocation.recommendedTitle")}
               </h3>
               <div className="space-y-4">
                 {[
                   {
-                    name: "Stocks",
+                    name: t("sections.assetAllocation.stocksLabel"),
                     percentage: stockPercentage,
                     color: "blue",
                   },
                   {
-                    name: "Bonds",
+                    name: t("sections.assetAllocation.bondsLabel"),
                     percentage: bondPercentage,
                     color: "green",
                   },
@@ -481,11 +572,16 @@ export default function InvestingBasicsPage() {
 
                 <div className="bg-yellow-900/40 p-3 rounded-lg">
                   <p className="text-yellow-200 text-sm">
-                    <strong>Formula:</strong> Stock percentage = 110 - your age
+                    <strong>{t("sections.assetAllocation.formula")}</strong>
                   </p>
                   <p className="text-yellow-200 text-sm">
-                    <strong>Your age {state.age}:</strong> {110 - state.age}%
-                    stocks, {100 - (110 - state.age)}% bonds
+                    <strong>
+                      {t("sections.assetAllocation.yourAge", {
+                        age: formData.currentAge,
+                        stockPercentage: 110 - formData.currentAge,
+                        bondPercentage: 100 - (110 - formData.currentAge),
+                      })}
+                    </strong>
                   </p>
                 </div>
               </div>
@@ -496,27 +592,28 @@ export default function InvestingBasicsPage() {
 
       {/* Dollar-Cost Averaging Simulator */}
       <LessonSection
-        title="🚀 Dollar-Cost Averaging: Your Secret Weapon"
+        title={t("sections.dcaSimulator.title")}
         animationVariant={rotateIn}
         onViewportEnter={() => handleProgress(7)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
-          <strong>Dollar-Cost Averaging (DCA)</strong> means investing the same
-          amount of money at regular intervals, regardless of market conditions.
+          <strong>{t("sections.dcaSimulator.description")}</strong>
         </p>
 
         <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-700 mb-6">
-          <h4 className="text-purple-300 font-semibold mb-3">DCA Simulator</h4>
+          <h4 className="text-purple-300 font-semibold mb-3">
+            {t("sections.dcaSimulator.simulatorTitle")}
+          </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {[
               {
                 id: "dcaAmount",
-                label: "Monthly investment amount",
+                label: t("sections.dcaSimulator.monthlyAmountLabel"),
                 key: "dcaAmount" as keyof typeof state,
               },
               {
                 id: "dcaMonths",
-                label: "Number of months",
+                label: t("sections.dcaSimulator.monthsLabel"),
                 key: "dcaMonths" as keyof typeof state,
               },
             ].map((input) => (
@@ -540,7 +637,7 @@ export default function InvestingBasicsPage() {
             onClick={() => actions.toggleVisibility("showDcaResult")}
             className="w-full bg-purple-600 hover:bg-purple-700"
           >
-            Run DCA Simulation
+            {t("sections.dcaSimulator.runSimulationButton")}
           </Button>
         </div>
 
@@ -565,16 +662,16 @@ export default function InvestingBasicsPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 {[
                   {
-                    label: "Total shares bought",
+                    label: t("sections.dcaSimulator.totalSharesLabel"),
                     value: totalShares.toFixed(1),
                   },
                   {
-                    label: "Total invested",
-                    value: `$${totalInvested.toLocaleString()}`,
+                    label: t("sections.dcaSimulator.totalInvestedLabel"),
+                    value: `${totalInvested.toLocaleString()}`,
                   },
                   {
-                    label: "Average price per share",
-                    value: `$${averagePrice.toFixed(2)}`,
+                    label: t("sections.dcaSimulator.averagePriceLabel"),
+                    value: `${averagePrice.toFixed(2)}`,
                   },
                 ].map((item, index) => (
                   <div key={index}>
@@ -589,10 +686,7 @@ export default function InvestingBasicsPage() {
 
             <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
               <p className="text-blue-200 text-center">
-                <strong>Why DCA Works:</strong> You bought more shares when
-                prices were low ($80) and fewer when prices were high ($120),
-                resulting in a lower average cost per share than if you had
-                invested all at once.
+                <strong>{t("sections.dcaSimulator.whyDcaWorks")}</strong>
               </p>
             </div>
           </motion.div>
@@ -601,166 +695,124 @@ export default function InvestingBasicsPage() {
 
       {/* Investment Strategy Builder */}
       <LessonSection
-        title="🛠️ Building Your First Investment Strategy"
+        title={t("sections.strategyBuilder.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(8)}
       >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Option A - Simple Three-Fund Portfolio",
-              color: "blue",
-              items: [
-                "70% Total Stock Market Index Fund (like VTI)",
-                "20% International Stock Index Fund (like VTIAX)",
-                "10% Bond Index Fund (like BND)",
-              ],
-              bestFor: "Hands-on investors who want control",
-            },
-            {
-              title: "Option B - Target-Date Fund",
-              color: "green",
-              items: [
-                "One fund that automatically adjusts",
-                "Based on your retirement date",
-                "Gets more conservative as you age",
-                'Example: "2055 Target Date Fund"',
-              ],
-              bestFor: "Set-it-and-forget-it investors",
-            },
-            {
-              title: "Option C - Robo-Advisor",
-              color: "purple",
-              items: [
-                "Automated investing service",
-                "Builds portfolio for you",
-                "Examples: Betterment, Wealthfront",
-                "Handles rebalancing automatically",
-              ],
-              bestFor: "Beginners who want guidance",
-            },
-          ].map((option, index) => (
-            <motion.div
-              key={index}
-              {...scaleIn}
-              transition={{ delay: index * 0.2 }}
-              className={`bg-${option.color}-900/20 p-4 rounded-lg border border-${option.color}-700`}
-            >
-              <h4 className={`text-${option.color}-300 font-semibold mb-3`}>
-                {option.title}
-              </h4>
-              <ul className="text-gray-300 text-sm space-y-2">
-                {option.items.map((item, i) => (
-                  <li key={i}>• {item}</li>
-                ))}
-              </ul>
-              <div className={`bg-${option.color}-900/40 p-3 rounded-lg mt-3`}>
-                <p className={`text-${option.color}-200 text-sm`}>
-                  <strong>Best for:</strong> {option.bestFor}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+          {t.raw("sections.strategyBuilder.options").map(
+            (
+              option: {
+                title: string;
+                description: string;
+                icon: string;
+                color: string;
+                items: string[];
+                bestFor: string;
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...scaleIn}
+                transition={{ delay: index * 0.2 }}
+                className={`bg-${option.color}-900/20 p-4 rounded-lg border border-${option.color}-700`}
+              >
+                <h4 className={`text-${option.color}-300 font-semibold mb-3`}>
+                  {option.title}
+                </h4>
+                <ul className="text-gray-300 text-sm space-y-2">
+                  {option.items.map((item: string, i: number) => (
+                    <li key={i}>• {item}</li>
+                  ))}
+                </ul>
+                <div
+                  className={`bg-${option.color}-900/40 p-3 rounded-lg mt-3`}
+                >
+                  <p className={`text-${option.color}-200 text-sm`}>
+                    <strong>{t("sections.strategyBuilder.bestFor")}:</strong>{" "}
+                    {option.bestFor}
+                  </p>
+                </div>
+              </motion.div>
+            )
+          )}
         </div>
       </LessonSection>
 
       {/* Common Mistakes */}
       <LessonSection
-        title="⚠️ Common Beginner Mistakes to Avoid"
+        title={t("sections.commonMistakes.title")}
         animationVariant={slideInFromBottom}
         onViewportEnter={() => handleProgress(9)}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              mistake: "Trying to Time the Market",
-              problem: 'Waiting for the "perfect" time to invest',
-              solution: "Start now with dollar-cost averaging",
-            },
-            {
-              mistake: "Picking Individual Stocks",
-              problem: "Most professionals can't beat the market consistently",
-              solution: "Start with diversified index funds",
-            },
-            {
-              mistake: "Checking Your Account Daily",
-              problem: "Short-term volatility causes panic decisions",
-              solution: "Check monthly or quarterly at most",
-            },
-            {
-              mistake: "Not Having an Emergency Fund First",
-              problem: "You might need to sell investments at a loss",
-              solution: "Build 3-6 months expenses in cash first",
-            },
-            {
-              mistake: "Chasing Hot Trends",
-              problem: "By the time you hear about it, it's often too late",
-              solution: "Stick to boring, diversified investments",
-            },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              {...fadeInLeft}
-              transition={{ delay: index * 0.1 }}
-              className="bg-red-900/20 p-4 rounded-lg border border-red-700"
-            >
-              <h4 className="text-red-300 font-semibold mb-3">
-                Mistake #{index + 1}: {item.mistake}
-              </h4>
-              <div className="space-y-2">
-                <p className="text-red-200 text-sm">
-                  <strong>Problem:</strong> {item.problem}
-                </p>
-                <p className="text-green-200 text-sm">
-                  <strong>Solution:</strong> {item.solution}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+          {t.raw("sections.commonMistakes.mistakes").map(
+            (
+              item: {
+                mistake: string;
+                solution: string;
+                icon: string;
+                problem: string;
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...fadeInLeft}
+                transition={{ delay: index * 0.1 }}
+                className="bg-red-900/20 p-4 rounded-lg border border-red-700"
+              >
+                <h4 className="text-red-300 font-semibold mb-3">
+                  {t("sections.commonMistakes.mistakeNumber", {
+                    number: index + 1,
+                  })}
+                  : {item.mistake}
+                </h4>
+                <div className="space-y-2">
+                  <p className="text-red-200 text-sm">
+                    <strong>{t("sections.commonMistakes.problem")}:</strong>{" "}
+                    {item.problem}
+                  </p>
+                  <p className="text-green-200 text-sm">
+                    <strong>{t("sections.commonMistakes.solution")}:</strong>{" "}
+                    {item.solution}
+                  </p>
+                </div>
+              </motion.div>
+            )
+          )}
         </div>
       </LessonSection>
 
       {/* Knowledge Check Quiz */}
       <LessonSection
-        title="🧠 Knowledge Check Quiz"
+        title={t("sections.quiz.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(10)}
       >
         <Quiz
-          question="What's the most important factor in determining your asset allocation?"
-          options={[
-            { id: "a", text: "Your current income level" },
-            { id: "b", text: "Your age and time horizon" },
-            { id: "c", text: "How much money you have to invest" },
-            { id: "d", text: "What your friends are investing in" },
-          ]}
+          question={t("sections.quiz.question")}
+          options={t.raw("sections.quiz.options")}
           selectedAnswer={state.quizAnswer}
-          onAnswerSelect={actions.setQuizAnswer}
+          onAnswerSelect={(answer) => actions.updateInput("quizAnswer", answer)}
           onCheckAnswer={() => actions.toggleVisibility("showQuizResult")}
           showResult={state.showQuizResult}
-          correctAnswer="B) Your age and time horizon"
-          explanation="Your age and time horizon are the most important factors because they determine how much risk you can afford to take. Younger investors can handle more risk because they have time to recover from market downturns."
+          correctAnswer={t("sections.quiz.correctAnswer")}
+          explanation={t("sections.quiz.explanation")}
         />
       </LessonSection>
 
       {/* Key Takeaways */}
       <LessonSection
-        title="🎉 Key Takeaways"
+        title={t("sections.keyTakeaways.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(11)}
       >
         <KeyTakeaways
           animationVariant={fadeInLeft}
           onViewportEnter={() => {}}
-          items={[
-            "Start simple - Index funds and ETFs are perfect for beginners",
-            "Diversify broadly - Don't put all money in one investment",
-            "Match risk to timeline - Longer goals can handle more risk",
-            "Automate everything - Remove emotions from the equation",
-            "Stay the course - Time in the market beats timing the market",
-            "Keep costs low - Fees compound against you over time",
-            "Think decades, not days - Successful investing is boring",
-          ]}
+          items={t.raw("sections.keyTakeaways.items")}
         />
       </LessonSection>
 
@@ -768,20 +820,11 @@ export default function InvestingBasicsPage() {
       <NextStepsCard
         animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(12)}
-        description={
-          "Now that you understand the basics of investing, our next lesson will teach you how to actually build your first portfolio. You&lsquo;ll learn specific fund recommendations, how to allocate your money, and how to put together a complete investment plan that matches your goals."
-        }
+        title={t("sections.nextSteps.title")}
+        description={t("sections.nextSteps.description")}
         progressValue={75}
-        lessonLabel={`Lesson 3 of 4 — ${
-          state.lessonProgress === 100
-            ? "Complete! You've mastered investing basics."
-            : "Keep exploring to complete this lesson."
-        }`}
-        completeMessage={
-          state.lessonProgress === 100
-            ? "Remember: The best investment strategy is the one you can stick with. Don&lsquo;t let perfect be the enemy of good – start investing today, even if it&lsquo;s not perfect."
-            : undefined
-        }
+        lessonLabel={t("sections.nextSteps.lessonLabel")}
+        completeMessage={t("sections.nextSteps.completeMessage")}
       />
     </div>
   );

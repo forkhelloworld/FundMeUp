@@ -2,14 +2,1434 @@
   "common": {
     "appName": "FundMeUp",
     "language": "Language",
-    "login": "Log in",
+    "login": "Sign In",
     "logout": "Log out",
-    "register": "Create account"
+    "register": "Get Started",
+    "lessons": "Lessons",
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "pricing": "Pricing",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "achievements": "Achievements",
+    "simulations": "Simulations",
+    "aiBuddy": "AI Buddy",
+    "profile": "Profile",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "back": "Back",
+    "continue": "Continue",
+    "finish": "Finish",
+    "start": "Start",
+    "complete": "Complete",
+    "incomplete": "Incomplete",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No",
+    "whatItIs": "What it is",
+    "howYouMakeMoney": "How you make money",
+    "riskLevel": "Risk level",
+    "timeHorizon": "Time horizon",
+    "example": "Example",
+    "minimize": "Minimize sidebar",
+    "expand": "Expand sidebar"
   },
   "landing": {
     "hero": {
       "title": "Don't lose your money!",
-      "cta": "Get started"
+      "subtitle": "Learn to Invest.",
+      "cta": "Get started",
+      "description": "Interactive, gamified finance education built for the digital generation."
+    },
+    "problem": {
+      "title": "Financial literacy is low.",
+      "statistic": "70% of people",
+      "subtitle": "don't invest.",
+      "description": "Most people miss out on the power of investing early. FundMeUp is here to change that with interactive, personalized learning for everyone.",
+      "points": {
+        "fear": {
+          "title": "Fear of Losing Money",
+          "description": "Without proper education, investing feels like gambling."
+        },
+        "overload": {
+          "title": "Information Overload",
+          "description": "Traditional finance education is overwhelming and boring."
+        },
+        "time": {
+          "title": "No Time to Learn",
+          "description": "People need bite-sized, engaging ways to learn finance."
+        }
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "subtitle": "Everything you need to become a confident investor",
+      "items": {
+        "intro-lessons": {
+          "title": "Interactive Lessons",
+          "description": "Engage with short, interactive lessons that explain why investing matters and how to start."
+        },
+        "goal-setting": {
+          "title": "Financial Goal Builder",
+          "description": "Define your first financial goal and see how investing can help you reach it step by step."
+        },
+        "progress-tracking": {
+          "title": "Progress Tracking",
+          "description": "Track completed lessons and goals. Stay motivated with streaks, milestones, and rewards."
+        },
+        "ai-assistant": {
+          "title": "AI Investment Buddy",
+          "description": "Get personalized guidance from an AI assistant that helps you learn and stay on track."
+        },
+        "short-modules": {
+          "title": "Short Modules",
+          "description": "Learn with short, interactive modules. No boring lectures—just actionable knowledge.",
+          "cta": "Try a Challenge"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to transform your financial future through interactive learning.",
+      "steps": {
+        "learn": {
+          "title": "Start learning",
+          "description": "Begin with simple lessons that explain why investing matters and help you set your first financial goal."
+        },
+        "simulate": {
+          "title": "Try simulations",
+          "description": "Practice with easy-to-use simulations to see how investing works in real life without any risk."
+        },
+        "progress": {
+          "title": "Track & earn",
+          "description": "Follow your progress, unlock achievements, and stay motivated with rewards and public goals."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "subtitle": "What our users say about their experience",
+      "items": {
+        "alex": {
+          "name": "Alex",
+          "role": "Student",
+          "content": "I never thought finance could be this fun. The challenges keep me coming back!"
+        },
+        "maria": {
+          "name": "Maria",
+          "role": "Marketing Manager",
+          "content": "The simulator made me realize how much I could grow my money. Super motivating!"
+        },
+        "taras": {
+          "name": "Taras",
+          "role": "Developer",
+          "content": "I love the rewards and badges. It feels like a game, but I'm learning real skills."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Pricing",
+      "free": {
+        "title": "Free Tier",
+        "price": "$0",
+        "description": "All core features, no credit card required",
+        "cta": "Start Free",
+        "features": {
+          "basic-course": "Start the basic course on investing fundamentals",
+          "simulations": "Try simple investment simulations without risks",
+          "gamification": "Stay engaged with goals, badges, and challenges"
+        }
+      }
+    },
+    "stats": {
+      "inflation": {
+        "label": "Inflation",
+        "subtitle": "This year alone"
+      },
+      "investing-profit": {
+        "label": "Investing profit",
+        "subtitle": "Which can be obtained"
+      },
+      "profit": {
+        "label": "Profit",
+        "subtitle": "Potential gains missed"
+      }
+    },
+    "finalCta": {
+      "title": "Start building your financial future today",
+      "subtitle": "Join our community and start your journey to financial independence.",
+      "cta": "Sign Up Free"
+    },
+    "footer": {
+      "description": "Empowering the next generation of investors through interactive, gamified learning.",
+      "links": {
+        "about": "About",
+        "contact": "Contact",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue your investment journey",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "signIn": "Sign In",
+      "signInWithGoogle": "Sign in with Google"
+    },
+    "register": {
+      "title": "Get Started",
+      "subtitle": "Create your account and start learning",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "agreeToTerms": "I agree to the Terms of Service and Privacy Policy",
+      "alreadyHaveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "createAccount": "Create Account",
+      "signUpWithGoogle": "Sign up with Google"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "termsRequired": "You must agree to the terms and conditions"
+    },
+    "messages": {
+      "loginSuccess": "Logged in successfully",
+      "loginError": "Login failed. Please check your credentials.",
+      "registerSuccess": "Account created successfully",
+      "registerError": "Registration failed. Please try again.",
+      "logoutSuccess": "Logged out successfully",
+      "logoutError": "Logout failed"
+    }
+  },
+  "lessons": {
+    "whyYouShouldInvest": {
+      "title": "💰 Why You Need to Invest",
+      "subtitle": "Your Journey to Financial Freedom Starts Here",
+      "description": "You don't need to be rich to start investing. But if you never start, it will be much harder to ever get rich.",
+      "sections": {
+        "realityCheck": {
+          "title": "🤔 Let's Start with a Reality Check",
+          "content": "Imagine you have $10,000 sitting in your savings account earning 0.5% interest. Now imagine your friend invested the same amount and earned 7% annually. After 30 years, you'd have $11,617. Your friend? $76,123. That's the power of compound interest.",
+          "button": "Click to see what happens to $10,000 over 20 years",
+          "savingsAccount": "Your savings account",
+          "friendInvestment": "Your friend's investment",
+          "moneyLeft": "Money left on table",
+          "conclusion": "That's enough to buy a car, pay for a wedding, or fund a year of living expenses! This is why every financial expert says the same thing: time in the market beats timing the market."
+        },
+        "compoundInterest": {
+          "title": "📈 The Magic of Compound Interest",
+          "content": "Compound interest is when you earn interest on your interest. It's like a snowball rolling down a hill - it starts small but grows bigger and bigger over time. The earlier you start, the more powerful it becomes."
+        },
+        "inflation": {
+          "title": "💸 The Silent Thief: Inflation",
+          "content": "Inflation erodes the purchasing power of your money over time. If inflation is 3% per year, your $100 today will only be worth $97 next year. Investing helps your money grow faster than inflation, preserving and increasing your purchasing power.",
+          "warning": "The brutal truth: If you're not investing, you're actually losing money every year.",
+          "example": "With average inflation at 3% annually, money that sits in cash loses purchasing power over time. For example, $10,000 today would only buy about $7,400 worth of goods in 10 years if prices rise ~3% per year.",
+          "conclusion": "This is why investing matters: your money needs to grow just to maintain its value."
+        },
+        "threePillars": {
+          "title": "🎯 The Three Pillars of Why You Must Invest",
+          "pillars": [
+            {
+              "title": "1. Beat Inflation (Survival Mode)",
+              "color": "red",
+              "description": "If you're not investing, you're actually losing money every year. With average inflation at 3%, your $1,000 today will only buy $744 worth of goods in 10 years. Your money needs to grow just to maintain its value."
+            },
+            {
+              "title": "2. Build Wealth (Growth Mode)",
+              "color": "blue",
+              "description": "The stock market has historically returned about 10% annually over the long term. That means your money can double approximately every 7 years through compound growth. Einstein allegedly called compound interest 'the eighth wonder of the world' – and for good reason."
+            },
+            {
+              "title": "3. Achieve Financial Freedom (Freedom Mode)",
+              "color": "green",
+              "description": "When your investments generate enough passive income to cover your living expenses, you've achieved financial independence. You're no longer trading time for money – your money works for you 24/7."
+            }
+          ]
+        },
+        "myths": {
+          "title": "💡 Common Investment Myths (Busted!)",
+          "items": [
+            {
+              "myth": "I don't have enough money to start investing",
+              "reality": "You can start investing with as little as $1. Many brokerages now offer fractional shares, meaning you can own a piece of expensive stocks like Amazon or Tesla with just a few dollars."
+            },
+            {
+              "myth": "Investing is too risky",
+              "reality": "Not investing is riskier. Inflation guarantees you'll lose purchasing power. While investments can fluctuate, historically they've been the best way to grow wealth over time."
+            },
+            {
+              "myth": "I need to be a financial expert",
+              "reality": "You need basic knowledge, not a finance degree. Index funds allow you to invest in hundreds of companies with zero stock-picking skills required."
+            },
+            {
+              "myth": "I'll start investing when I'm older and make more money",
+              "reality": "Starting early is your biggest advantage. A 25-year-old investing $200/month until retirement will likely have more money than a 35-year-old investing $400/month, thanks to compound interest."
+            }
+          ]
+        },
+        "earlyStart": {
+          "title": "📊 The Power of Starting Early",
+          "description": "Starting early gives compound growth more time to work. Even small amounts invested consistently over many years can significantly outperform larger amounts invested later.",
+          "scenarios": [
+            {
+              "title": "Scenario A - Early Bird",
+              "details": [
+                "Starts investing at age 25",
+                "Invests $200 monthly for 10 years, then stops",
+                "Total invested: $24,000",
+                "Value at age 65: $525,000"
+              ],
+              "color": "green"
+            },
+            {
+              "title": "Scenario B - Procrastinator",
+              "details": [
+                "Starts investing at age 35",
+                "Invests $200 monthly for 30 years",
+                "Total invested: $72,000",
+                "Value at age 65: $379,000"
+              ],
+              "color": "red"
+            }
+          ],
+          "conclusion": "The early bird invested $48,000 less but ended up with $146,000 more! That's the magic of compound interest combined with time."
+        },
+        "quiz": {
+          "title": "🧠 Quick Knowledge Check",
+          "question": "What is compound interest?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Interest earned only on the principal amount"
+            },
+            {
+              "id": "b",
+              "text": "Interest earned on both principal and previously earned interest"
+            },
+            {
+              "id": "c",
+              "text": "Interest earned only on previously earned interest"
+            },
+            { "id": "d", "text": "A type of loan interest" }
+          ],
+          "correctAnswer": "B) Interest earned on both principal and previously earned interest",
+          "explanation": "Compound interest is the magic of investing - you earn returns on your returns, creating exponential growth over time.",
+          "questions": [
+            {
+              "question": "What is compound interest?",
+              "options": [
+                "Interest earned only on the principal amount",
+                "Interest earned on both principal and previously earned interest",
+                "Interest earned only on previously earned interest",
+                "A type of loan interest"
+              ],
+              "correct": 1
+            },
+            {
+              "question": "Why is starting to invest early important?",
+              "options": [
+                "You can invest more money",
+                "Compound interest has more time to work",
+                "Early investments are safer",
+                "You get better interest rates"
+              ],
+              "correct": 1
+            }
+          ]
+        },
+        "keyTakeaways": {
+          "title": "🎉 Key Takeaways",
+          "items": [
+            "Compound interest is your greatest wealth-building tool - start early!",
+            "Inflation erodes purchasing power - investing beats inflation",
+            "Time in the market beats timing the market",
+            "You don't need to be rich to start investing - start with what you have",
+            "The earlier you start, the more powerful compound interest becomes"
+          ]
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "description": "Now that you understand why investing is crucial, let's set your first financial goal and create a roadmap to achieve it.",
+          "progressValue": 25,
+          "lessonLabel": "Lesson 1 of 4 — \"Complete! You've mastered the fundamentals.\"",
+          "completeMessage": "Remember: The best time to start investing was 20 years ago. The second best time is now."
+        }
+      }
+    },
+    "setFinancialGoal": {
+      "title": "🎯 Set Your Financial Goal",
+      "subtitle": "Define Your Path to Financial Success",
+      "description": "Every successful investment journey starts with a clear goal. Let's define yours and create a roadmap to achieve it.",
+      "sections": {
+        "importance": {
+          "title": "🎯 Why Goals Matter",
+          "content": "Without a clear goal, investing becomes aimless. A well-defined financial goal gives you direction, motivation, and a way to measure your progress. Whether it's buying a house, retiring comfortably, or building wealth, your goal shapes your investment strategy."
+        },
+        "types": {
+          "title": "📋 Types of Financial Goals",
+          "content": "Financial goals typically fall into three categories: Short-term (1-3 years), Medium-term (3-10 years), and Long-term (10+ years). Each requires different investment strategies and risk levels."
+        },
+        "calculator": {
+          "title": "🧮 Calculate Your Goal",
+          "content": "Use our Financial Independence Calculator to determine how much you need to save and invest to achieve your goal."
+        },
+        "financialPlan": {
+          "title": "🗺️ Why You Need a Financial Plan (Not Just Goals)",
+          "content": "Most people set random financial goals: \"save for retirement,\" \"buy a house,\" \"have an emergency fund.\" But these scattered goals often conflict with each other and lack a unifying purpose.",
+          "definition": "A financial plan is different—it's your complete strategy for achieving financial independence",
+          "fiDefinition": "Financial Independence (FI) = Having enough passive income to cover your lifestyle indefinitely",
+          "randomGoals": {
+            "title": "❌ Random Goals Approach:",
+            "items": [
+              "Conflicting priorities and timelines",
+              "No clear path to financial freedom",
+              "Reactive money management",
+              "Always chasing the next financial milestone"
+            ]
+          },
+          "strategicPlan": {
+            "title": "✅ Strategic Financial Plan:",
+            "items": [
+              "One clear destination: Financial Independence",
+              "All goals work together toward FI",
+              "Proactive wealth building strategy",
+              "Freedom to choose your life path"
+            ]
+          }
+        },
+        "fiFramework": {
+          "title": "💰 The Financial Independence Framework",
+          "content": "Financial Independence follows a simple mathematical formula that anyone can understand and implement:",
+          "steps": [
+            {
+              "step": 1,
+              "title": "Step 1: Know Your FI Number",
+              "formula": "Annual Expenses × 25 = Your FI Number",
+              "note": "Based on the 4% withdrawal rule"
+            },
+            {
+              "step": 2,
+              "title": "Step 2: Calculate Timeline",
+              "formula": "Higher savings rate = Faster FI",
+              "note": "50% savings rate = ~17 years to FI"
+            },
+            {
+              "step": 3,
+              "title": "Step 3: Execute Plan",
+              "formula": "Automate investments, optimize taxes, track progress",
+              "note": "Consistency beats perfection"
+            }
+          ],
+          "savingsRates": {
+            "title": "The Magic of High Savings Rates:",
+            "rates": [
+              { "rate": "10% saved", "time": "51 years to FI" },
+              { "rate": "25% saved", "time": "32 years to FI" },
+              { "rate": "50% saved", "time": "17 years to FI" },
+              { "rate": "75% saved", "time": "7 years to FI" }
+            ]
+          }
+        },
+        "fiCalculator": {
+          "title": "🧮 Your Personal FI Calculator",
+          "content": "Let's calculate your personalized path to financial independence:"
+        },
+        "supportingGoals": {
+          "title": "🎯 Building Your Supporting Goals",
+          "content": "Once you have your FI plan, all other financial goals should support this primary objective. Here's how to structure your supporting goals:",
+          "categories": [
+            {
+              "title": "Foundation Goals",
+              "icon": "🏗️",
+              "color": "blue",
+              "goals": [
+                "Emergency fund (3-6 months expenses)",
+                "High-interest debt elimination",
+                "Adequate insurance coverage",
+                "Employer 401(k) match maximization"
+              ]
+            },
+            {
+              "title": "Acceleration Goals",
+              "icon": "🚀",
+              "color": "green",
+              "goals": [
+                "Optimize tax-advantaged accounts",
+                "Increase income through skills/career",
+                "Reduce major expenses (housing, transport)",
+                "Build additional income streams"
+              ]
+            },
+            {
+              "title": "Lifestyle Goals",
+              "icon": "🎨",
+              "color": "purple",
+              "goals": [
+                "Travel fund (within FI timeline)",
+                "Home purchase (if aligned with FI)",
+                "Education/skill development",
+                "Major purchases (analyze FI impact)"
+              ]
+            }
+          ],
+          "fiFilter": {
+            "title": "💡 The FI Filter: Before Adding Any Goal, Ask:",
+            "questions": [
+              "\"Does this support my FI plan?\"",
+              "\"How will this impact my timeline?\"",
+              "\"Is there a more FI-aligned alternative?\""
+            ]
+          }
+        },
+        "planningProcess": {
+          "title": "📋 Your FI Planning Process",
+          "content": "Creating a financial plan isn't a one-time activity. Here's your systematic approach:",
+          "phases": [
+            {
+              "phase": "Month 1: Foundation",
+              "color": "blue",
+              "tasks": [
+                "Calculate your FI number and timeline",
+                "Set up automatic savings and investments",
+                "Build your emergency fund",
+                "Maximize employer retirement matching"
+              ]
+            },
+            {
+              "phase": "Month 2-3: Optimization",
+              "color": "green",
+              "tasks": [
+                "Optimize your tax-advantaged accounts",
+                "Automate your investment contributions",
+                "Track and reduce unnecessary expenses",
+                "Set up progress monitoring system"
+              ]
+            },
+            {
+              "phase": "Month 4-6: Acceleration",
+              "color": "purple",
+              "tasks": [
+                "Focus on increasing income",
+                "Consider house hacking or real estate",
+                "Build additional income streams",
+                "Optimize tax strategies"
+              ]
+            },
+            {
+              "phase": "Ongoing: Maintenance",
+              "color": "yellow",
+              "tasks": [
+                "Monthly progress reviews",
+                "Quarterly plan adjustments",
+                "Annual comprehensive review",
+                "Celebrate milestones achieved"
+              ]
+            }
+          ]
+        },
+        "quiz": {
+          "title": "🧠 Financial Plan Knowledge Check",
+          "question": "What's the main advantage of having a financial independence plan versus scattered financial goals?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It's easier to achieve multiple small goals"
+            },
+            {
+              "id": "b",
+              "text": "All goals work together toward one unified objective"
+            },
+            { "id": "c", "text": "You can retire earlier than everyone else" },
+            { "id": "d", "text": "It requires less monthly savings" }
+          ],
+          "correctAnswer": "B) All goals work together toward one unified objective",
+          "explanation": "A financial independence plan provides a unified framework where every financial decision supports your ultimate goal of FI. This eliminates conflicting priorities and ensures optimal resource allocation toward building wealth and achieving financial freedom."
+        },
+        "implementationChecklist": {
+          "title": "✅ Your FI Plan Implementation Checklist",
+          "thisWeek": {
+            "title": "This Week",
+            "tasks": [
+              "Calculate your FI number using the 25x rule",
+              "Determine your current savings rate",
+              "Set your target FI age and timeline",
+              "Open a dedicated FI tracking spreadsheet"
+            ]
+          },
+          "thisMonth": {
+            "title": "This Month",
+            "tasks": [
+              "Automate investments toward your FI goal",
+              "Complete your emergency fund if needed",
+              "Optimize all tax-advantaged accounts",
+              "Create your supporting goals framework"
+            ]
+          }
+        },
+        "keyTakeaways": {
+          "title": "🎉 Key Takeaways",
+          "items": [
+            "Financial independence is your north star—all goals should support it",
+            "Your FI number = Annual expenses × 25 (4% withdrawal rule)",
+            "Higher savings rate = Dramatically shorter timeline to FI",
+            "Automate everything—consistency beats perfection every time",
+            "Use the FI filter—does this goal support or delay your independence?",
+            "Track progress monthly—what gets measured gets managed",
+            "Supporting goals should accelerate, not derail, your FI plan"
+          ]
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "description": "Now that you have a clear financial independence plan, our next lesson will teach you the fundamentals of investing. You'll learn how to build the investment portfolio that will power your journey to FI.",
+          "progressValue": 50,
+          "lessonLabel": "Lesson 2 of 4 — \"Complete! You've mastered financial planning.\"",
+          "completeMessage": "Remember: Financial independence isn't about having millions—it's about having enough to choose how you spend your time."
+        }
+      }
+    },
+    "investingBasics": {
+      "title": "📈 Investing Basics",
+      "subtitle": "Your Complete Guide to Making Your Money Work for You",
+      "description": "You now understand WHY you need to invest and WHAT you're investing for. Now comes the exciting part: HOW to actually make your money grow.",
+      "sections": {
+        "goalsToAction": {
+          "title": "🎯 From Goals to Action: Making the Connection",
+          "content": "Think of investing like planting a garden. You wouldn't throw seeds randomly in the dirt and hope for the best. You'd choose the right seeds (investments) for your climate (risk tolerance), plant them in good soil (diversified portfolio), water them regularly (consistent contributions), and give them time to grow.",
+          "highlight": "Today, you become a money gardener."
+        },
+        "investmentUniverse": {
+          "title": "🏗️ The Investment Universe: Your Options Explained",
+          "stocks": {
+            "title": "Stocks (Equities)",
+            "what": "You buy a tiny piece of ownership in a company",
+            "how": "Company grows in value, stock price goes up + dividends",
+            "risk": "Medium to High",
+            "time": "3+ years ideally",
+            "example": "You buy Apple stock for $150. If Apple does well and the stock rises to $180, you made $30 per share. If Apple struggles, it might drop to $120, and you'd lose $30 per share."
+          },
+          "bonds": {
+            "title": "Bonds (Fixed Income)",
+            "what": "You loan money to a government or company",
+            "how": "They pay you interest regularly, then return your principal",
+            "risk": "Low to Medium",
+            "time": "1-30 years depending on bond type",
+            "example": "You buy a $1,000 government bond paying 4% annually for 10 years. You'll receive $40 per year for 10 years, then get your $1,000 back."
+          },
+          "mutualFunds": {
+            "title": "Mutual Funds",
+            "what": "A basket containing many stocks, bonds, or both",
+            "how": "The fund's investments grow in value",
+            "risk": "Varies based on fund contents",
+            "time": "Varies, typically 3+ years",
+            "example": "Instead of picking individual stocks, you buy shares in a fund that owns 500 different companies. If those companies do well on average, your fund value increases."
+          },
+          "etfs": {
+            "title": "Exchange-Traded Funds (ETFs)",
+            "what": "Like mutual funds but trade like stocks throughout the day",
+            "how": "Same as mutual funds but often with lower fees",
+            "risk": "Varies based on fund contents",
+            "time": "3+ years typically",
+            "example": "An S&P 500 ETF owns all 500 companies in that index. When you buy shares, you own a tiny piece of America's biggest companies."
+          }
+        },
+        "riskReturn": {
+          "title": "⚖️ Risk vs. Return: The Golden Rule of Investing",
+          "fundamentalTruth": "The fundamental truth: Higher potential returns come with higher risk. There's no free lunch in investing.",
+          "riskLevels": [
+            {
+              "risk": "Lowest Risk/Lowest Return",
+              "examples": [
+                "Savings accounts: ~0.5% annually",
+                "Government bonds: ~2-4% annually"
+              ],
+              "color": "green"
+            },
+            {
+              "risk": "Medium Risk/Medium Return",
+              "examples": [
+                "Corporate bonds: ~3-6% annually",
+                "Balanced funds: ~4-8% annually"
+              ],
+              "color": "yellow"
+            },
+            {
+              "risk": "Higher Risk/Higher Return",
+              "examples": [
+                "Stock market: ~6-10% annually",
+                "Growth stocks: Can be much higher or lower"
+              ],
+              "color": "orange"
+            },
+            {
+              "risk": "Highest Risk/Highest Return",
+              "examples": [
+                "Individual growth stocks: -50% to +500%",
+                "Cryptocurrency: Extremely volatile"
+              ],
+              "color": "red"
+            }
+          ],
+          "personalRiskTolerance": {
+            "title": "Your Personal Risk Tolerance",
+            "askYourself": "Ask yourself:",
+            "questions": [
+              "Time horizon: How long until you need this money?",
+              "Sleep test: Would a 20% portfolio drop keep you awake at night?",
+              "Recovery ability: Can you make up losses with future earnings?",
+              "Experience: Are you comfortable with market volatility?"
+            ]
+          }
+        },
+        "riskQuiz": {
+          "title": "🧠 Risk Tolerance Quiz",
+          "ageQuestion": "What's your age?",
+          "timeHorizonQuestion": "What's your time horizon for this money?",
+          "timeHorizonOptions": [
+            { "value": 5, "label": "5 years" },
+            { "value": 10, "label": "10 years" },
+            { "value": 20, "label": "20+ years" }
+          ],
+          "riskToleranceQuestion": "How would you describe your risk tolerance?",
+          "riskToleranceOptions": [
+            { "value": "conservative", "label": "Conservative" },
+            { "value": "moderate", "label": "Moderate" },
+            { "value": "aggressive", "label": "Aggressive" }
+          ],
+          "calculateButton": "Calculate My Risk Profile",
+          "resultPrefix": "Your Risk Profile:",
+          "resultSuffix": "Based on your age ({age}), time horizon ({timeHorizon} years), and risk tolerance ({riskTolerance})."
+        },
+        "assetAllocation": {
+          "title": "🧮 Asset Allocation Calculator",
+          "profileTitle": "Your Profile",
+          "ageLabel": "Age",
+          "savingsLabel": "Current savings",
+          "contributionLabel": "Monthly contribution",
+          "calculateButton": "Calculate Asset Allocation",
+          "recommendedTitle": "Recommended Allocation",
+          "stocksLabel": "Stocks",
+          "bondsLabel": "Bonds",
+          "formula": "Formula: Stock percentage = 110 - your age",
+          "yourAge": "Your age {age}: {stockPercentage}% stocks, {bondPercentage}% bonds"
+        },
+        "dcaSimulator": {
+          "title": "🚀 Dollar-Cost Averaging: Your Secret Weapon",
+          "description": "Dollar-Cost Averaging (DCA) means investing the same amount of money at regular intervals, regardless of market conditions.",
+          "simulatorTitle": "DCA Simulator",
+          "monthlyAmountLabel": "Monthly investment amount",
+          "monthsLabel": "Number of months",
+          "runSimulationButton": "Run DCA Simulation",
+          "totalSharesLabel": "Total shares bought",
+          "totalInvestedLabel": "Total invested",
+          "averagePriceLabel": "Average price per share",
+          "whyDcaWorks": "Why DCA Works: You bought more shares when prices were low ($80) and fewer when prices were high ($120), resulting in a lower average cost per share than if you had invested all at once."
+        },
+        "strategyBuilder": {
+          "title": "🛠️ Building Your First Investment Strategy",
+          "bestFor": "Best for",
+          "options": [
+            {
+              "title": "Option A - Simple Three-Fund Portfolio",
+              "color": "blue",
+              "items": [
+                "70% Total Stock Market Index Fund (like VTI)",
+                "20% International Stock Index Fund (like VTIAX)",
+                "10% Bond Index Fund (like BND)"
+              ],
+              "bestFor": "Hands-on investors who want control"
+            },
+            {
+              "title": "Option B - Target-Date Fund",
+              "color": "green",
+              "items": [
+                "One fund that automatically adjusts",
+                "Based on your retirement date",
+                "Gets more conservative as you age",
+                "Example: \"2055 Target Date Fund\""
+              ],
+              "bestFor": "Set-it-and-forget-it investors"
+            },
+            {
+              "title": "Option C - Robo-Advisor",
+              "color": "purple",
+              "items": [
+                "Automated investing service",
+                "Builds portfolio for you",
+                "Examples: Betterment, Wealthfront",
+                "Handles rebalancing automatically"
+              ],
+              "bestFor": "Beginners who want guidance"
+            }
+          ]
+        },
+        "commonMistakes": {
+          "title": "⚠️ Common Beginner Mistakes to Avoid",
+          "mistakeNumber": "Mistake #{number}",
+          "problem": "Problem",
+          "solution": "Solution",
+          "mistakes": [
+            {
+              "mistake": "Trying to Time the Market",
+              "problem": "Waiting for the \"perfect\" time to invest",
+              "solution": "Start now with dollar-cost averaging"
+            },
+            {
+              "mistake": "Picking Individual Stocks",
+              "problem": "Most professionals can't beat the market consistently",
+              "solution": "Start with diversified index funds"
+            },
+            {
+              "mistake": "Checking Your Account Daily",
+              "problem": "Short-term volatility causes panic decisions",
+              "solution": "Check monthly or quarterly at most"
+            },
+            {
+              "mistake": "Not Having an Emergency Fund First",
+              "problem": "You might need to sell investments at a loss",
+              "solution": "Build 3-6 months expenses in cash first"
+            },
+            {
+              "mistake": "Chasing Hot Trends",
+              "problem": "By the time you hear about it, it's often too late",
+              "solution": "Stick to boring, diversified investments"
+            }
+          ]
+        },
+        "quiz": {
+          "title": "🧠 Knowledge Check Quiz",
+          "question": "What's the most important factor in determining your asset allocation?",
+          "options": [
+            { "id": "a", "text": "Your current income level" },
+            { "id": "b", "text": "Your age and time horizon" },
+            { "id": "c", "text": "How much money you have to invest" },
+            { "id": "d", "text": "What your friends are investing in" }
+          ],
+          "correctAnswer": "B) Your age and time horizon",
+          "explanation": "Your age and time horizon are the most important factors because they determine how much risk you can afford to take. Younger investors can handle more risk because they have time to recover from market downturns."
+        },
+        "keyTakeaways": {
+          "title": "🎉 Key Takeaways",
+          "items": [
+            "Start simple - Index funds and ETFs are perfect for beginners",
+            "Diversify broadly - Don't put all money in one investment",
+            "Match risk to timeline - Longer goals can handle more risk",
+            "Automate everything - Remove emotions from the equation",
+            "Stay the course - Time in the market beats timing the market",
+            "Keep costs low - Fees compound against you over time",
+            "Think decades, not days - Successful investing is boring"
+          ]
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "description": "Now that you understand the basics of investing, our next lesson will teach you how to actually build your first portfolio. You'll learn specific fund recommendations, how to allocate your money, and how to put together a complete investment plan that matches your goals.",
+          "progressValue": 75,
+          "lessonLabel": "Lesson 3 of 4 — \"Complete! You've mastered investing basics.\"",
+          "completeMessage": "Remember: The best investment strategy is the one you can stick with. Don't let perfect be the enemy of good – start investing today, even if it's not perfect."
+        }
+      }
+    },
+    "buildPortfolio": {
+      "title": "🏗️ Build Your First Portfolio",
+      "subtitle": "Turn Knowledge Into Action",
+      "description": "Create a diversified portfolio that aligns with your goals and risk tolerance.",
+      "sections": {
+        "assetAllocation": {
+          "title": "📊 Asset Allocation",
+          "content": "Asset allocation is how you divide your investments among different asset classes like stocks, bonds, and cash. This is one of the most important decisions you'll make as an investor."
+        },
+        "rebalancing": {
+          "title": "⚖️ Rebalancing",
+          "content": "Over time, your portfolio's allocation will drift from your target. Rebalancing involves buying and selling to restore your desired allocation."
+        },
+        "calculator": {
+          "title": "🧮 Portfolio Calculator",
+          "content": "Use our Portfolio Calculator to determine the optimal allocation for your risk tolerance and investment goals."
+        },
+        "diversificationMatters": {
+          "title": "🎯 Why Diversification is Your Best Friend",
+          "concentrationProblem": {
+            "title": "The Problem with Concentration",
+            "items": [
+              "Putting all money in one stock = huge risk",
+              "Even Apple fell 76% in 2000-2002",
+              "Single countries can underperform for decades",
+              "Bonds and stocks often move opposite directions"
+            ]
+          },
+          "diversificationPower": {
+            "title": "The Power of Diversification",
+            "items": [
+              "Spreads risk across thousands of companies",
+              "Captures global economic growth",
+              "Smooths out volatility over time",
+              "Ensures you never miss the next big winner"
+            ]
+          },
+          "historicalEvidence": {
+            "title": "📊 Historical Evidence",
+            "content": "A globally diversified portfolio has never had a negative 20-year return in modern history, while individual stocks and sectors can go to zero."
+          }
+        },
+        "fourFundFoundation": {
+          "title": "🏗️ The Four-Fund Foundation",
+          "domesticStocks": {
+            "title": "🇺🇸 ITOT - US Total Market",
+            "percentage": "50%",
+            "whatItHolds": "3,000+ US companies (Apple, Microsoft, Amazon, etc.)",
+            "whyThisFund": "Broadest US coverage, ultra-low 0.03% fee",
+            "role": "Core holding for developed market stability and growth",
+            "alternatives": [
+              "VTI (Vanguard) - 0.03% fee, slightly different weighting",
+              "SWTSX (Schwab) - 0.03% fee, mutual fund version"
+            ]
+          },
+          "internationalStocks": {
+            "title": "🌍 VXUS - International Stocks",
+            "percentage": "20%",
+            "whatItHolds": "7,000+ non-US companies (Nestlé, Samsung, TSMC)",
+            "whyThisFund": "Developed + emerging markets, 0.08% fee",
+            "role": "Hedges against US-only risk, captures global growth",
+            "alternatives": [
+              "FTIHX (Fidelity) - 0.06% fee, similar coverage",
+              "SWISX (Schwab) - 0.06% fee, international focus"
+            ]
+          },
+          "domesticBonds": {
+            "title": "🏛️ AGG - US Total Bond Market",
+            "percentage": "20%",
+            "whatItHolds": "10,000+ US government & corporate bonds",
+            "whyThisFund": "Broad bond exposure, 0.03% fee, high quality",
+            "role": "Stability during stock market crashes, income generation",
+            "alternatives": [
+              "BND (Vanguard) - 0.03% fee, nearly identical holdings",
+              "SWAGX (Schwab) - 0.04% fee, similar strategy"
+            ]
+          },
+          "internationalBonds": {
+            "title": "🌐 BNDX - International Bonds",
+            "percentage": "10%",
+            "whatItHolds": "Government bonds from developed countries",
+            "whyThisFund": "Currency diversification, 0.07% fee",
+            "role": "Hedges US dollar risk, international stability",
+            "alternatives": [
+              "Skip it: Many experts suggest US bonds only",
+              "VTEB (Vanguard Tax-Exempt) if in high tax bracket"
+            ]
+          }
+        },
+        "alternativeApproaches": {
+          "title": "🎨 Alternative Portfolio Approaches",
+          "threeFund": {
+            "title": "🎯 Three-Fund Portfolio",
+            "description": "Skip international bonds (BNDX)",
+            "allocation": "70% ITOT, 20% VXUS, 10% AGG",
+            "benefits": [
+              "Simpler, still well-diversified",
+              "Most popular approach"
+            ],
+            "bestFor": "Perfect for beginners who want simplicity"
+          },
+          "growthFocused": {
+            "title": "🚀 Growth-Focused",
+            "description": "Add VUG (growth) or VTV (value)",
+            "allocation": "Include VNQ (REITs) for real estate",
+            "benefits": [
+              "Higher risk, higher potential return",
+              "More complex rebalancing"
+            ],
+            "bestFor": "For investors wanting more control"
+          },
+          "targetDate": {
+            "title": "🛡️ Target-Date Fund",
+            "description": "One fund does everything",
+            "allocation": "Automatically rebalances",
+            "benefits": [
+              "Becomes conservative with age",
+              "Slightly higher fees (0.10-0.15%)"
+            ],
+            "bestFor": "Set-and-forget approach"
+          }
+        },
+        "implementationSteps": {
+          "title": "📋 Step-by-Step Implementation",
+          "steps": [
+            {
+              "step": 1,
+              "title": "Choose Your Brokerage",
+              "content": "Fidelity, Vanguard, or Schwab all offer commission-free ETF trades. Pick one and open a Roth IRA or taxable account."
+            },
+            {
+              "step": 2,
+              "title": "Fund Your Account",
+              "content": "Set up automatic monthly transfers from your bank. Start with whatever you can afford - even $50/month builds wealth over time."
+            },
+            {
+              "step": 3,
+              "title": "Buy Your First Shares",
+              "content": "Purchase ITOT, VXUS, AGG, and BNDX according to your target allocation. Many brokers offer fractional shares."
+            },
+            {
+              "step": 4,
+              "title": "Automate Everything",
+              "content": "Set up automatic investing to buy these four funds monthly. This removes emotion and timing mistakes from the equation."
+            },
+            {
+              "step": 5,
+              "title": "Rebalance Annually",
+              "content": "Once per year, check if any fund is more than 5% off target. Sell the overweight, buy the underweight."
+            }
+          ]
+        },
+        "commonMistakes": {
+          "title": "⚠️ Common Beginner Mistakes",
+          "mistakes": [
+            {
+              "mistake": "Trying to Time the Market",
+              "solution": "Invest consistently regardless of market conditions. Time in market beats timing the market.",
+              "icon": "⏰"
+            },
+            {
+              "mistake": "Chasing Hot Stocks",
+              "solution": "Stick to your diversified plan. Individual stocks are gambling, not investing.",
+              "icon": "📈"
+            },
+            {
+              "mistake": "Ignoring International Exposure",
+              "solution": "The US is only 54% of world market cap. Don't miss global opportunities.",
+              "icon": "🌍"
+            },
+            {
+              "mistake": "Checking Too Often",
+              "solution": "Review quarterly at most. Daily checking leads to emotional decisions.",
+              "icon": "📱"
+            },
+            {
+              "mistake": "Not Rebalancing",
+              "solution": "Annual rebalancing forces you to sell high and buy low automatically.",
+              "icon": "⚖️"
+            },
+            {
+              "mistake": "Paying High Fees",
+              "solution": "Keep expense ratios under 0.10%. High fees compound against you forever.",
+              "icon": "💰"
+            }
+          ]
+        },
+        "keyTakeaways": {
+          "title": "🎉 Key Takeaways",
+          "items": [
+            "Diversification reduces risk without sacrificing returns",
+            "Four funds (ITOT, VXUS, AGG, BNDX) provide global exposure",
+            "Keep costs low - under 0.06% annually for the entire portfolio",
+            "Automate everything to remove emotion from investing",
+            "Rebalance annually to maintain target allocation",
+            "Time in the market beats timing the market",
+            "Start with whatever you can afford - consistency matters most"
+          ]
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "description": "Congratulations! You now have a complete understanding of how to build a diversified portfolio. The next step is to take action - open a brokerage account and start investing with your four-fund foundation.",
+          "progressValue": 100,
+          "lessonLabel": "Lesson 4 of 4 — \"Complete! You've mastered portfolio building.\"",
+          "completeMessage": "Remember: The best portfolio is the one you can stick with. Start simple, stay consistent, and let time and compound interest work their magic."
+        }
+      }
+    },
+    "category": "Investing Basics",
+    "page": {
+      "title": "🎓 Complete Investing Foundation",
+      "subtitle": "Master the fundamentals of investing with our comprehensive beginner course",
+      "startFreeCourse": "Start Free Course",
+      "continueLesson": "Continue",
+      "startLesson": "Start Lesson",
+      "minRead": "min read",
+      "categories": {
+        "all": "All",
+        "investingBasics": "Investing Basics",
+        "advanced": "Advanced",
+        "retirement": "Retirement"
+      }
+    },
+    "navigation": {
+      "backToLessons": "Back to lessons",
+      "nextLesson": "Next Lesson",
+      "previousLesson": "Previous Lesson",
+      "completeLesson": "Complete Lesson",
+      "lessonCompleted": "Lesson Completed!",
+      "completing": "Completing...",
+      "nextLessonButton": "Next lesson"
+    },
+    "errors": {
+      "couldNotCompleteLesson": "Could not complete lesson",
+      "somethingWentWrong": "Something went wrong",
+      "failedToRecordCompletion": "Failed to record completion",
+      "pleaseCorrectFields": "Please correct the highlighted fields",
+      "someInputsInvalid": "Some inputs are invalid. Review errors and try again."
+    },
+    "calculators": {
+      "fiCalculator": {
+        "title": "Financial Independence Calculator",
+        "subtitle": "Calculate how much you need to achieve financial independence",
+        "currentAge": "Current Age",
+        "retirementAge": "Desired Retirement Age",
+        "monthlyExpenses": "Monthly Expenses",
+        "currentSavings": "Current Savings",
+        "monthlySavings": "Monthly Savings",
+        "expectedReturn": "Expected Annual Return (%)",
+        "savingsRate": "Current Savings Rate",
+        "calculate": "Calculate",
+        "results": {
+          "title": "Your Financial Independence Plan",
+          "targetAmount": "Target Amount Needed",
+          "yearsToFI": "Years to Financial Independence",
+          "monthlyNeeded": "Monthly Savings Needed",
+          "currentProgress": "Current Progress",
+          "basedOnExpenses": "Based on ${amount} annual expenses",
+          "projectedAtAge": "Projected at Age {age}",
+          "monthlySavingsAmount": "Monthly savings: ${amount}",
+          "gapAnalysis": "Gap Analysis",
+          "shortfall": "Shortfall: ${amount}",
+          "additionalNeeded": "Need additional ${amount}/month",
+          "congratulations": "🎉 Congratulations!",
+          "onTrack": "You're on track to achieve FI by age {age}!"
+        }
+      },
+      "portfolioCalculator": {
+        "title": "Portfolio Calculator",
+        "subtitle": "Calculate your optimal portfolio allocation",
+        "investmentAmount": "Investment Amount",
+        "riskTolerance": "Risk Tolerance",
+        "conservative": "Conservative",
+        "moderate": "Moderate",
+        "aggressive": "Aggressive",
+        "calculate": "Calculate",
+        "results": {
+          "title": "Recommended Portfolio Allocation",
+          "stocks": "Stocks",
+          "bonds": "Bonds",
+          "cash": "Cash",
+          "expectedReturn": "Expected Annual Return",
+          "riskLevel": "Risk Level"
+        },
+        "personalAllocation": {
+          "title": "🧮 Build Your Personal Allocation",
+          "profile": {
+            "title": "Your Profile",
+            "age": "Age: {age}",
+            "yearsToRetirement": "Years to Retirement: {years}",
+            "riskTolerance": "Risk Tolerance",
+            "monthlyInvestment": "Monthly Investment",
+            "riskToleranceOptions": {
+              "conservative": "Conservative",
+              "moderate": "Moderate",
+              "aggressive": "Aggressive"
+            }
+          },
+          "recommendedPortfolio": {
+            "title": "Your Recommended Portfolio",
+            "itot": "ITOT (US Stocks)",
+            "vxus": "VXUS (Intl Stocks)",
+            "agg": "AGG (US Bonds)",
+            "bndx": "BNDX (Intl Bonds)",
+            "monthlyBreakdown": "Monthly Investment Breakdown"
+          }
+        }
+      }
+    },
+    "quiz": {
+      "title": "Quiz",
+      "question": "Question",
+      "of": "of",
+      "submit": "Submit Answer",
+      "next": "Next Question",
+      "finish": "Finish Quiz",
+      "unknown": "?",
+      "results": {
+        "title": "Quiz Results",
+        "score": "Your Score",
+        "correct": "Correct",
+        "incorrect": "Incorrect",
+        "retake": "Retake Quiz",
+        "continue": "Continue to Next Lesson"
+      }
+    }
+  },
+
+  "content": {
+    "keyTakeaways": {
+      "title": "Key Takeaways",
+      "items": [
+        "Start investing early to benefit from compound interest",
+        "Diversify your portfolio to reduce risk",
+        "Invest consistently, even small amounts add up over time"
+      ]
+    },
+    "nextSteps": {
+      "title": "Next Steps",
+      "description": "Ready to continue your investment journey?",
+      "action": "Start Next Lesson"
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "lessons": "Lessons",
+      "achievements": "Achievements",
+      "simulations": "Simulations",
+      "aiBuddy": "AI Buddy",
+      "settings": "Settings",
+      "profile": "Profile"
+    },
+    "welcome": {
+      "title": "Welcome back!",
+      "subtitle": "Ready to continue your investment journey?",
+      "continueLearning": "Continue Learning",
+      "viewProgress": "View Progress",
+      "greeting": {
+        "morning": "Good morning",
+        "afternoon": "Good afternoon",
+        "evening": "Good evening"
+      },
+      "motivation": "Ready to level up your financial knowledge today?"
+    },
+    "progress": {
+      "title": "Your Progress",
+      "lessonsCompleted": "Lessons Completed",
+      "achievementsEarned": "Achievements Earned",
+      "currentStreak": "Current Streak",
+      "totalTimeSpent": "Total Time Spent",
+      "learningJourney": "Learning Journey",
+      "overallProgress": "Overall Progress",
+      "nextLesson": "Next Lesson",
+      "continueJourney": "Continue your learning journey",
+      "allCompleted": "All lessons completed!",
+      "congratulations": "Congratulations! You've completed all lessons",
+      "continue": "Continue",
+      "review": "Review"
+    },
+    "achievements": {
+      "title": "Recent Achievements",
+      "unlocked": "Unlocked",
+      "noAchievements": "No achievements yet",
+      "motivation": "Complete lessons to unlock your first achievement!",
+      "startLearning": "Start Learning",
+      "viewAll": "View All Achievements"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "continueLearning": {
+        "title": "Continue Learning",
+        "description": "Resume education"
+      },
+      "aiBuddy": {
+        "title": "AI Buddy",
+        "description": "Personalized advice"
+      },
+      "simulations": {
+        "title": "Simulations",
+        "description": "Test strategies"
+      },
+      "achievements": {
+        "title": "Achievements",
+        "description": "Learning milestones"
+      }
+    },
+    "stats": {
+      "learningStreak": "Learning Streak",
+      "daysInRow": "days in a row",
+      "portfolioValue": "Portfolio Value",
+      "thisMonth": "this month"
+    },
+    "profile": {
+      "title": "Your Profile",
+      "manageProfile": "Manage Profile"
+    }
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your account information",
+    "personalInfo": {
+      "title": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "dateOfBirth": "Date of Birth"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "language": "Language",
+      "theme": "Theme",
+      "notifications": "Notifications",
+      "emailUpdates": "Email Updates",
+      "pushNotifications": "Push Notifications"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password"
+    },
+    "messages": {
+      "profileUpdated": "Profile updated successfully",
+      "profileUpdateError": "Failed to update profile",
+      "passwordChanged": "Password changed successfully",
+      "passwordChangeError": "Failed to change password"
+    }
+  },
+  "achievements": {
+    "title": "Achievements",
+    "subtitle": "Track your learning milestones",
+    "description": "All available milestones you can unlock.",
+    "noAchievementsFound": "No achievements found.",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "progress": "Progress",
+    "achievement": "Achievement",
+    "achievementUnlocked": "Achievement unlocked: {title}",
+    "achievementToast": "Achievement: {title}",
+    "categories": {
+      "learning": "Learning",
+      "consistency": "Consistency",
+      "mastery": "Mastery",
+      "exploration": "Exploration"
+    },
+    "types": {
+      "firstLesson": {
+        "title": "First Steps",
+        "description": "Complete your first lesson"
+      },
+      "streak": {
+        "title": "Consistent Learner",
+        "description": "Complete lessons for 7 days in a row"
+      },
+      "calculator": {
+        "title": "Number Cruncher",
+        "description": "Use all calculators in a lesson"
+      },
+      "quiz": {
+        "title": "Quiz Master",
+        "description": "Score 100% on any quiz"
+      }
+    }
+  },
+  "aiBuddy": {
+    "title": "AI Investment Buddy",
+    "subtitle": "Your personal investment assistant",
+    "chat": {
+      "placeholder": "Ask me anything about investing...",
+      "send": "Send",
+      "thinking": "Thinking...",
+      "welcome": "Hello! I'm your AI Investment Buddy. I'm here to help you learn about investing, answer your questions, and guide you on your financial journey. What would you like to know?"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "explainBasics": {
+        "title": "Explain Investment Basics",
+        "description": "Learn the fundamentals of investing",
+        "prompt": "Can you explain the basic concepts of investing for a beginner?"
+      },
+      "portfolioHelp": {
+        "title": "Portfolio Guidance",
+        "description": "Get help with portfolio allocation",
+        "prompt": "I need help understanding how to allocate my portfolio. What should I consider?"
+      },
+      "riskAssessment": {
+        "title": "Risk Assessment",
+        "description": "Understand your risk tolerance",
+        "prompt": "How can I determine my risk tolerance for investing?"
+      }
+    },
+    "messages": {
+      "error": "Sorry, I encountered an error. Please try again.",
+      "noResponse": "I didn't receive a response. Please try again."
+    }
+  },
+  "simulations": {
+    "title": "Investment Simulations",
+    "subtitle": "Practice investing with virtual money",
+    "comingSoon": "Coming Soon",
+    "description": "Interactive simulations to practice your investment strategies without risk.",
+    "page": {
+      "title": "Simulations",
+      "configureSimulation": "Configure Your Simulation",
+      "setupDescription": "To run simulations, you first need to set up your financial profile.",
+      "goToSettings": "Go to Settings"
+    }
+  },
+  "headerIsland": {
+    "openMenu": "Open menu",
+    "logout": "Logout",
+    "guest": "Guest"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "userProfile": {
+      "title": "User Profile Setup",
+      "currentAge": "Current Age",
+      "targetFIAge": "Target FI Age",
+      "monthlyIncome": "Monthly Income",
+      "monthlyExpenses": "Monthly Expenses",
+      "currentNetWorth": "Current Net Worth",
+      "runSimulation": "Run Simulation",
+      "running": "Running...",
+      "saveProfile": "Save Profile",
+      "saving": "Saving..."
+    },
+    "messages": {
+      "profileSaved": "Your user profile data has been saved.",
+      "profileSaveError": "Failed to save profile data.",
+      "authenticationError": "You must be logged in to save your profile.",
+      "unknownError": "An unknown error occurred."
+    },
+    "validation": {
+      "currentAgeRequired": "Current age is required",
+      "currentAgeInvalid": "Current age must be a whole number",
+      "currentAgeMin": "Current age must be at least 18",
+      "currentAgeMax": "Current age must be at most 100",
+      "targetFIAgeRequired": "Target FI age is required",
+      "targetFIAgeInvalid": "Target FI age must be a whole number",
+      "targetFIAgeMin": "Target FI age must be at least 19",
+      "targetFIAgeMax": "Target FI age must be at most 120",
+      "targetFIAgeGreater": "Target FI age must be greater than current age",
+      "netWorthRequired": "Current net worth is required",
+      "netWorthNegative": "Net worth cannot be negative",
+      "incomeRequired": "Monthly income is required",
+      "incomeNegative": "Monthly income cannot be negative",
+      "expensesRequired": "Monthly expenses is required",
+      "expensesNegative": "Monthly expenses cannot be negative",
+      "expensesExceedIncome": "Expenses should not exceed income"
     }
   }
 }

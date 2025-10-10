@@ -8,8 +8,10 @@ import {
 import { FaStar } from "react-icons/fa";
 import { TESTIMONIALS } from "@/constants/landing";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useTranslations } from "next-intl";
 
 export const TestimonialsSection = () => {
+  const t = useTranslations("landing.testimonials");
   const { isVisible, elementRef } = useScrollAnimation({
     threshold: 0.2,
     rootMargin: "-50px",
@@ -28,12 +30,10 @@ export const TestimonialsSection = () => {
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              Testimonials
+              {t("title")}
             </span>
           </h2>
-          <p className="text-base sm:text-xl text-slate-400">
-            What our users say about their experience
-          </p>
+          <p className="text-base sm:text-xl text-slate-400">{t("subtitle")}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
@@ -60,15 +60,15 @@ export const TestimonialsSection = () => {
                   ))}
                 </div>
                 <CardTitle className="text-base sm:text-lg">
-                  {testimonial.name}
+                  {t(`items.${testimonial.id}.name`)}
                 </CardTitle>
                 <CardDescription className="text-emerald-400 text-sm sm:text-base">
-                  {testimonial.role}
+                  {t(`items.${testimonial.id}.role`)}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <blockquote className="text-slate-300 text-center italic leading-relaxed text-sm sm:text-base">
-                  &quot;{testimonial.content}&quot;
+                  &quot;{t(`items.${testimonial.id}.content`)}&quot;
                 </blockquote>
               </CardContent>
             </Card>

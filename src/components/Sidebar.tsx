@@ -9,33 +9,43 @@ import {
   ChevronLeft,
   ChevronRight,
   BookOpen,
+  Settings,
+  Bot,
+  LayoutDashboard,
 } from "lucide-react";
 import { useState } from "react";
 import { useSidebarStore } from "@/lib/sidebar-store";
 import { useUserStore } from "@/lib/user-store";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-const navItems = [
-  { href: "/lessons", icon: BookOpen, label: "Lessons" },
-  { href: "/simulations", icon: BarChart2, label: "Simulations" },
-  { href: "/achievements", icon: Trophy, label: "Achievements" },
-];
+import { useTranslations } from "next-intl";
 
 export function Sidebar() {
+  const t = useTranslations("dashboard.sidebar");
+  const tCommon = useTranslations("common");
+  const tMessages = useTranslations("auth.messages");
   const { expanded, toggle } = useSidebarStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { logout } = useUserStore();
   const router = useRouter();
 
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: t("dashboard") },
+    { href: "/lessons", icon: BookOpen, label: t("lessons") },
+    { href: "/simulations", icon: BarChart2, label: t("simulations") },
+    { href: "/achievements", icon: Trophy, label: t("achievements") },
+    { href: "/ai-buddy", icon: Bot, label: t("aiBuddy") },
+    { href: "/settings", icon: Settings, label: t("settings") },
+  ];
+
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success("Logged out successfully");
+      toast.success(tMessages("logoutSuccess"));
       router.push("/login");
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error(tMessages("logoutError"));
       console.error("Logout error:", error);
     }
   };
@@ -44,14 +54,15 @@ export function Sidebar() {
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:block fixed top-0 left-0 h-full bg-slate-800/90 border-r border-emerald-400/20 flex flex-col items-center py-6 px-2 shadow-xl backdrop-blur-md transition-all duration-300 z-40 ${expanded ? "w-56" : "w-20"
-          }`}
+        className={`hidden lg:block fixed top-0 left-0 h-full bg-slate-800/90 border-r border-emerald-400/20 flex flex-col items-center py-6 px-2 shadow-xl backdrop-blur-md transition-all duration-300 z-40 ${
+          expanded ? "w-56" : "w-20"
+        }`}
       >
         {/* Toggle Button */}
         <button
           className="mb-8 w-12 h-12 flex items-center justify-center rounded-xl hover:bg-emerald-400/10 transition-all duration-200 hover:scale-105"
           onClick={toggle}
-          aria-label={expanded ? "Minimize sidebar" : "Expand sidebar"}
+          aria-label={expanded ? tCommon("minimize") : tCommon("expand")}
         >
           {expanded ? (
             <ChevronLeft size={22} className="text-emerald-400" />
@@ -69,11 +80,13 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative px-2 ${expanded ? "justify-start" : "justify-center"
-                  } ${isActive
+                className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative px-2 ${
+                  expanded ? "justify-start" : "justify-center"
+                } ${
+                  isActive
                     ? "bg-emerald-400/20 border border-emerald-400/40 shadow-lg"
                     : "hover:bg-emerald-400/10 hover:border hover:border-emerald-400/20"
-                  }`}
+                }`}
               >
                 {/* Active indicator bar */}
                 {isActive && (
@@ -83,20 +96,22 @@ export function Sidebar() {
                 <span className="flex justify-center items-center w-12 h-12">
                   <Icon
                     size={22}
-                    className={`transition-colors duration-200 ${isActive
+                    className={`transition-colors duration-200 ${
+                      isActive
                         ? "text-emerald-400"
                         : "text-white group-hover:text-emerald-400"
-                      }`}
+                    }`}
                   />
                 </span>
 
                 {/* Only render label if expanded */}
                 {expanded && (
                   <span
-                    className={`ml-4 font-mono text-base transition-colors duration-200 ${isActive
+                    className={`ml-4 font-mono text-base transition-colors duration-200 ${
+                      isActive
                         ? "text-emerald-400 font-semibold"
                         : "text-white group-hover:text-emerald-400"
-                      }`}
+                    }`}
                   >
                     {item.label}
                   </span>
@@ -129,7 +144,7 @@ export function Sidebar() {
       {/* Mobile Bottom Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-800/95 border-t border-emerald-400/20 backdrop-blur-md">
         <div className="flex justify-around items-center py-2 px-4">
-          {navItems.slice(0, 5).map((item) => {
+          {navItems.slice(0, 6).map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 
@@ -137,10 +152,11 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center p-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center ${isActive
+                className={`flex flex-col items-center p-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center ${
+                  isActive
                     ? "bg-emerald-400/20 text-emerald-400"
                     : "text-white hover:text-emerald-400 hover:bg-emerald-400/10"
-                  }`}
+                }`}
               >
                 <Icon size={20} />
                 <span className="text-xs font-mono mt-1">{item.label}</span>
@@ -154,7 +170,7 @@ export function Sidebar() {
             title="Logout"
           >
             <LogOut size={20} />
-            <span className="text-xs font-mono mt-1">Logout</span>
+            <span className="text-xs font-mono mt-1">{tCommon("logout")}</span>
           </button>
         </div>
       </div>
@@ -169,8 +185,9 @@ export function Sidebar() {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`lg:hidden fixed top-0 left-0 h-full bg-slate-800/95 border-r border-emerald-400/20 flex flex-col items-center py-6 px-2 shadow-xl backdrop-blur-md transition-all duration-300 z-50 ${mobileOpen ? "w-56 translate-x-0" : "w-56 -translate-x-full"
-          }`}
+        className={`lg:hidden fixed top-0 left-0 h-full bg-slate-800/95 border-r border-emerald-400/20 flex flex-col items-center py-6 px-2 shadow-xl backdrop-blur-md transition-all duration-300 z-50 ${
+          mobileOpen ? "w-56 translate-x-0" : "w-56 -translate-x-full"
+        }`}
       >
         <div className="flex flex-col gap-2 flex-1 w-full items-center">
           {navItems.map((item) => {
@@ -182,10 +199,11 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative px-2 justify-start ${isActive
+                className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative px-2 justify-start ${
+                  isActive
                     ? "bg-emerald-400/20 border border-emerald-400/40 shadow-lg"
                     : "hover:bg-emerald-400/10 hover:border hover:border-emerald-400/20"
-                  }`}
+                }`}
               >
                 {isActive && (
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-emerald-400 rounded-r-full"></div>
@@ -194,18 +212,20 @@ export function Sidebar() {
                 <span className="flex justify-center items-center w-12 h-12">
                   <Icon
                     size={22}
-                    className={`transition-colors duration-200 ${isActive
+                    className={`transition-colors duration-200 ${
+                      isActive
                         ? "text-emerald-400"
                         : "text-white group-hover:text-emerald-400"
-                      }`}
+                    }`}
                   />
                 </span>
 
                 <span
-                  className={`ml-4 font-mono text-base transition-colors duration-200 ${isActive
+                  className={`ml-4 font-mono text-base transition-colors duration-200 ${
+                    isActive
                       ? "text-emerald-400 font-semibold"
                       : "text-white group-hover:text-emerald-400"
-                    }`}
+                  }`}
                 >
                   {item.label}
                 </span>
