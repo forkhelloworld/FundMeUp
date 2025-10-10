@@ -25,11 +25,15 @@ async function seedAchievements() {
       update: {
         title: a.title,
         description: a.description,
+        titleUk: a.titleUk,
+        descriptionUk: a.descriptionUk,
       },
       create: {
         key,
         title: a.title,
         description: a.description,
+        titleUk: a.titleUk,
+        descriptionUk: a.descriptionUk,
       },
     });
   }
