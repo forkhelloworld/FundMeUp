@@ -1,14 +1,31 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface QuizOption {
-  id: string;
+  id?: string;
   text: string;
+}
+
+// Convert options to consistent format
+function normalizeOptions(options: (string | QuizOption)[]): QuizOption[] {
+  return options.map((option, index) => {
+    if (typeof option === "string") {
+      return {
+        id: String.fromCharCode(97 + index), // 'a', 'b', 'c', 'd'
+        text: option,
+      };
+    }
+    return {
+      id: option.id || String.fromCharCode(97 + index),
+      text: option.text,
+    };
+  });
 }
 
 interface QuizProps {
   question: string;
-  options: QuizOption[];
+  options: (string | QuizOption)[];
   selectedAnswer?: string;
   onAnswerSelect: (answerId: string) => void;
   onCheckAnswer?: () => void;
@@ -29,15 +46,18 @@ export function Quiz({
   explanation,
   animationVariant,
 }: QuizProps) {
+  const t = useTranslations("lessons.quiz");
+  const normalizedOptions = normalizeOptions(options);
+
   return (
     <motion.div {...animationVariant} className="space-y-6">
       <h4 className="text-white font-semibold mb-3">{question}</h4>
 
       <div className="space-y-3 mb-6">
-        {options.map((option) => (
+        {normalizedOptions.map((option, index) => (
           <button
-            key={option.id}
-            onClick={() => onAnswerSelect(option.id)}
+            key={option.id || index}
+            onClick={() => option.id && onAnswerSelect(option.id)}
             className={`w-full p-3 text-left rounded-lg border transition-colors ${
               selectedAnswer === option.id
                 ? "border-green-500 bg-green-900/30"
@@ -45,7 +65,7 @@ export function Quiz({
             }`}
           >
             <span className="text-green-400 font-semibold mr-3">
-              {option.id.toUpperCase()})
+              {option.id?.toUpperCase() || t("unknown")})
             </span>
             <span className="text-gray-300">{option.text}</span>
           </button>
@@ -57,7 +77,7 @@ export function Quiz({
           onClick={onCheckAnswer}
           className="w-full bg-green-600 hover:bg-green-700"
         >
-          Check Answer
+          {t("submit")}
         </Button>
       )}
 
@@ -69,7 +89,9 @@ export function Quiz({
           className="mt-4 p-4 bg-green-900/30 rounded-lg border border-green-700"
         >
           <p className="text-green-200 text-center mb-2">
-            <strong>Correct Answer: {correctAnswer}</strong>
+            <strong>
+              {t("results.correct")}: {correctAnswer}
+            </strong>
           </p>
           {explanation && (
             <p className="text-green-300 text-sm text-center">{explanation}</p>

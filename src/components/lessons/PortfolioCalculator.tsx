@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Card } from "../ui/card";
+import { useUserProfileStore } from "@/lib/userProfile-store";
+import { useTranslations } from "next-intl";
 
 const allocations = {
   conservative: { stocks: 40, bonds: 60, domestic: 70, international: 30 },
@@ -9,41 +11,58 @@ const allocations = {
 } as const;
 
 export function PortfolioCalculator() {
-  const [age, setAge] = useState(30);
+  const t = useTranslations(
+    "lessons.calculators.portfolioCalculator.personalAllocation"
+  );
+  const { currentAge, monthlyIncome, monthlyExpenses, setUserProfileData } =
+    useUserProfileStore();
+  const monthlyInvestment = monthlyIncome - monthlyExpenses;
   const [timeHorizon, setTimeHorizon] = useState(20);
   const [riskTolerance, setRiskTolerance] = useState("moderate");
-  const [monthlyInvestment, setMonthlyInvestment] = useState(500);
   const currentAlloc = allocations[riskTolerance as keyof typeof allocations];
+
+  const handleAgeChange = (newAge: number) => {
+    setUserProfileData({
+      ...useUserProfileStore.getState(),
+      currentAge: newAge,
+    });
+  };
+
+  const handleMonthlyInvestmentChange = (newInvestment: number) => {
+    const newMonthlyIncome = newInvestment + monthlyExpenses;
+    setUserProfileData({
+      ...useUserProfileStore.getState(),
+      monthlyIncome: newMonthlyIncome,
+    });
+  };
 
   return (
     <section className="mb-16">
-      <h2 className="text-3xl font-bold mb-8 text-center">
-        🧮 Build Your Personal Allocation
-      </h2>
+      <h2 className="text-3xl font-bold mb-8 text-center">{t("title")}</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="bg-slate-800/50 border-slate-700 p-6">
           <h3 className="text-xl font-semibold mb-4 text-white">
-            Your Profile
+            {t("profile.title")}
           </h3>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Age: {age}
+                {t("profile.age", { age: currentAge })}
               </label>
               <input
                 type="range"
                 min="18"
                 max="65"
-                value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
+                value={currentAge}
+                onChange={(e) => handleAgeChange(Number(e.target.value))}
                 className="w-full"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Years to Retirement: {timeHorizon}
+                {t("profile.yearsToRetirement", { years: timeHorizon })}
               </label>
               <input
                 type="range"
@@ -57,7 +76,7 @@ export function PortfolioCalculator() {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Risk Tolerance
+                {t("profile.riskTolerance")}
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {["conservative", "moderate", "aggressive"].map((risk) => (
@@ -70,7 +89,7 @@ export function PortfolioCalculator() {
                         : "bg-slate-700 hover:bg-slate-600"
                     }`}
                   >
-                    {risk.charAt(0).toUpperCase() + risk.slice(1)}
+                    {t(`profile.riskToleranceOptions.${risk}`)}
                   </button>
                 ))}
               </div>
@@ -78,12 +97,14 @@ export function PortfolioCalculator() {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Monthly Investment
+                {t("profile.monthlyInvestment")}
               </label>
               <input
                 type="number"
                 value={monthlyInvestment}
-                onChange={(e) => setMonthlyInvestment(Number(e.target.value))}
+                onChange={(e) =>
+                  handleMonthlyInvestmentChange(Number(e.target.value))
+                }
                 className="w-full p-2 bg-slate-900 border border-slate-600 rounded text-white"
                 placeholder="500"
               />
@@ -93,12 +114,14 @@ export function PortfolioCalculator() {
 
         <Card className="bg-gradient-to-br from-blue-900/30 to-green-900/30 border-blue-700 p-6">
           <h3 className="text-xl font-semibold mb-4 text-white">
-            Your Recommended Portfolio
+            {t("recommendedPortfolio.title")}
           </h3>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-blue-900/40 p-4 rounded-lg text-center">
-                <p className="text-blue-300 text-sm">ITOT (US Stocks)</p>
+                <p className="text-blue-300 text-sm">
+                  {t("recommendedPortfolio.itot")}
+                </p>
                 <p className="text-2xl font-bold">
                   {Math.round(
                     (currentAlloc.stocks * currentAlloc.domestic) / 100
@@ -107,7 +130,9 @@ export function PortfolioCalculator() {
                 </p>
               </div>
               <div className="bg-green-900/40 p-4 rounded-lg text-center">
-                <p className="text-green-300 text-sm">VXUS (Intl Stocks)</p>
+                <p className="text-green-300 text-sm">
+                  {t("recommendedPortfolio.vxus")}
+                </p>
                 <p className="text-2xl font-bold">
                   {Math.round(
                     (currentAlloc.stocks * currentAlloc.international) / 100
@@ -116,13 +141,17 @@ export function PortfolioCalculator() {
                 </p>
               </div>
               <div className="bg-yellow-900/40 p-4 rounded-lg text-center">
-                <p className="text-yellow-300 text-sm">AGG (US Bonds)</p>
+                <p className="text-yellow-300 text-sm">
+                  {t("recommendedPortfolio.agg")}
+                </p>
                 <p className="text-2xl font-bold">
                   {Math.round(currentAlloc.bonds * 0.8)}%
                 </p>
               </div>
               <div className="bg-purple-900/40 p-4 rounded-lg text-center">
-                <p className="text-purple-300 text-sm">BNDX (Intl Bonds)</p>
+                <p className="text-purple-300 text-sm">
+                  {t("recommendedPortfolio.bndx")}
+                </p>
                 <p className="text-2xl font-bold">
                   {Math.round(currentAlloc.bonds * 0.2)}%
                 </p>
@@ -131,7 +160,7 @@ export function PortfolioCalculator() {
 
             <div className="bg-slate-800/50 p-4 rounded-lg">
               <h4 className="font-semibold mb-2">
-                Monthly Investment Breakdown
+                {t("recommendedPortfolio.monthlyBreakdown")}
               </h4>
               <div className="text-sm space-y-1 text-gray-300">
                 <p>

@@ -1,22 +1,29 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Link from "next/link";
 import { lessons } from "@/constants/lessons";
+import { useAchievementChecker } from "@/lib/achievement-checker";
+import { useTranslations } from "next-intl";
 
 export function CompleteLessonButton({ slug }: { slug: string }) {
+  const t = useTranslations("lessons");
   const [submitting, setSubmitting] = useState(false);
+  const { checkAndAwardLessonAchievement } = useAchievementChecker();
+
   let nextSlug: string;
   try {
     nextSlug = lessons[lessons.findIndex((l) => l.slug === slug) + 1].slug;
   } catch {
     return null;
   }
+
   const onComplete = async () => {
     try {
       setSubmitting(true);
+
+      // Record lesson completion
       const res = await fetch("/api/user/events/lesson-completed", {
         method: "POST",
         credentials: "include",
@@ -24,26 +31,17 @@ export function CompleteLessonButton({ slug }: { slug: string }) {
         body: JSON.stringify({ slug }),
       });
       const data = await res.json();
+      console.log("complete button res data ", data);
       if (!res.ok)
-        throw new Error(data?.error || "Failed to record completion");
+        throw new Error(data?.error || t("errors.failedToRecordCompletion"));
 
-      const awarded: string[] = data?.awarded ?? [];
-      if (awarded.length > 0) {
-        for (const key of awarded) {
-          if (key === "first-step") {
-            toast.success("Achievement unlocked: First Step", {
-              description: "Completed your first lesson",
-            });
-          } else {
-            toast.success(`Achievement unlocked: ${key}`);
-          }
-        }
-      } else {
-        toast("Progress saved", { description: "Lesson completion recorded." });
-      }
+      // Check and award lesson achievements (only one per call)
+      await checkAndAwardLessonAchievement();
     } catch (e) {
-      const message = e instanceof Error ? e.message : "Something went wrong";
-      toast.error("Could not complete lesson", { description: message });
+      console.log(e);
+      const message =
+        e instanceof Error ? e.message : t("errors.somethingWentWrong");
+      toast.error(t("errors.couldNotCompleteLesson"), { description: message });
     } finally {
       setSubmitting(false);
     }
@@ -52,7 +50,9 @@ export function CompleteLessonButton({ slug }: { slug: string }) {
   return (
     <Link href={`/lessons/${nextSlug}`}>
       <Button onClick={onComplete} disabled={submitting} variant="default">
-        {submitting ? "Completing..." : "Next lesson"}
+        {submitting
+          ? t("navigation.completing")
+          : t("navigation.nextLessonButton")}
       </Button>
     </Link>
   );
