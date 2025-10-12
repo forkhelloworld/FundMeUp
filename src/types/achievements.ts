@@ -1,9 +1,7 @@
 export interface ApiAchievement {
-  id: number;
+  id: string;
   key: string;
   title: string;
   description: string;
   unlocked: boolean;
 }
-
-

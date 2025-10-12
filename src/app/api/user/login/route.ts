@@ -1,4 +1,3 @@
-import { recordEventAndEvaluate } from "@/lib/achievements/service";
 import {
   AuthenticationError,
   createApiHandler,
@@ -34,9 +33,6 @@ async function loginUser(request: NextRequest) {
     lastName: user.lastName,
   });
 
-  // Record login event and evaluate achievements
-  const awarded = await recordEventAndEvaluate(user.id, { type: "login" });
-
   const response = NextResponse.json({
     user: {
       id: user.id,
@@ -45,7 +41,6 @@ async function loginUser(request: NextRequest) {
       lastName: user.lastName,
     },
     token,
-    achievementsAwarded: awarded,
   });
 
   // Set token in cookie for middleware

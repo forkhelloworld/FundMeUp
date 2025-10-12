@@ -1,28 +1,41 @@
 "use client";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { fadeInLeft, fadeInRight, scaleIn } from "@/constants/animations";
-import { useState } from "react";
+import { useUserProfileStore } from "@/lib/userProfile-store";
 import { fiCalculatorSchema } from "@/lib/validationSchemes";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { toast } from "sonner";
+import { useAchievementChecker } from "@/lib/achievement-checker";
+import { useTranslations } from "next-intl";
 
 export function FICalculator({
-  onCurrentAgeChange,
   onViewportEnter,
 }: {
-  onCurrentAgeChange?: (age: number) => void;
   onViewportEnter?: () => void;
 }) {
-  const [currentAge, setCurrentAge] = useState(25);
-  const [selectedFIAge, setSelectedFIAge] = useState(50);
-  const [currentNetWorth, setCurrentNetWorth] = useState(10000);
-  const [monthlyIncome, setMonthlyIncome] = useState(5000);
-  const [monthlyExpenses, setMonthlyExpenses] = useState(4000);
+  const t = useTranslations("lessons.calculators.fiCalculator");
+  const tErrors = useTranslations("lessons.errors");
+
+  const {
+    currentAge,
+    selectedFIAge,
+    currentNetWorth,
+    monthlyIncome,
+    monthlyExpenses,
+    setUserProfileData,
+  } = useUserProfileStore();
+
   const [savingsRate, setSavingsRate] = useState(20);
   const [expectedReturn, setExpectedReturn] = useState(7);
   const [showFICalculation, setShowFICalculation] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const {
+    checkAndAwardSimulationAchievement,
+    checkAndAwardTimeBasedAchievement,
+  } = useAchievementChecker();
 
   const validateAll = () => {
     const result = fiCalculatorSchema.safeParse({
@@ -70,11 +83,13 @@ export function FICalculator({
       : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
   const additionalMonthlySavingsNeeded = fiGap > 0 ? fiGap / denom : 0;
 
-  if (!onCurrentAgeChange) {
-    onCurrentAgeChange = (age: number) => {
-      setCurrentAge(age);
-    };
-  }
+  const handleUserProfileDataChange = (field: string, value: number) => {
+    setUserProfileData({
+      ...useUserProfileStore.getState(),
+      [field]: value,
+    });
+    validateAll();
+  };
 
   return (
     <motion.div
@@ -85,19 +100,22 @@ export function FICalculator({
         {...fadeInLeft}
         className="bg-slate-800 p-6 rounded-lg border border-slate-700"
       >
-        <h3 className="text-white font-semibold mb-4">Your Financial Plan</h3>
+        <h3 className="text-white font-semibold mb-4">{t("title")}</h3>
 
         <div className="space-y-4">
           <div>
-            <label className="text-gray-300 block mb-2">Current Age</label>
+            <label className="text-gray-300 block mb-2">
+              {t("currentAge")}
+            </label>
             <input
               type="number"
               value={currentAge}
-              onChange={(e) => {
-                e.preventDefault();
-                onCurrentAgeChange(Number(e.target.value));
-                validateAll();
-              }}
+              onChange={(e) =>
+                handleUserProfileDataChange(
+                  "currentAge",
+                  Number(e.target.value)
+                )
+              }
               onFocus={(e) => e.target.select()}
               aria-invalid={Boolean(errors.currentAge) || undefined}
               aria-describedby={
@@ -117,14 +135,18 @@ export function FICalculator({
           </div>
 
           <div>
-            <label className="text-gray-300 block mb-2">Target FI Age</label>
+            <label className="text-gray-300 block mb-2">
+              {t("retirementAge")}
+            </label>
             <input
               type="number"
               value={selectedFIAge}
-              onChange={(e) => {
-                setSelectedFIAge(Number(e.target.value));
-                validateAll();
-              }}
+              onChange={(e) =>
+                handleUserProfileDataChange(
+                  "selectedFIAge",
+                  Number(e.target.value)
+                )
+              }
               onFocus={(e) => e.target.select()}
               aria-invalid={Boolean(errors.selectedFIAge) || undefined}
               aria-describedby={
@@ -145,15 +167,17 @@ export function FICalculator({
 
           <div>
             <label className="text-gray-300 block mb-2">
-              Current Net Worth
+              {t("currentSavings")}
             </label>
             <input
               type="number"
               value={currentNetWorth}
-              onChange={(e) => {
-                setCurrentNetWorth(Number(e.target.value));
-                validateAll();
-              }}
+              onChange={(e) =>
+                handleUserProfileDataChange(
+                  "currentNetWorth",
+                  Number(e.target.value)
+                )
+              }
               onFocus={(e) => e.target.select()}
               aria-invalid={Boolean(errors.currentNetWorth) || undefined}
               aria-describedby={
@@ -176,14 +200,18 @@ export function FICalculator({
           </div>
 
           <div>
-            <label className="text-gray-300 block mb-2">Monthly Income</label>
+            <label className="text-gray-300 block mb-2">
+              {t("monthlyExpenses")}
+            </label>
             <input
               type="number"
               value={monthlyIncome}
-              onChange={(e) => {
-                setMonthlyIncome(Number(e.target.value));
-                validateAll();
-              }}
+              onChange={(e) =>
+                handleUserProfileDataChange(
+                  "monthlyIncome",
+                  Number(e.target.value)
+                )
+              }
               onFocus={(e) => e.target.select()}
               aria-invalid={Boolean(errors.monthlyIncome) || undefined}
               aria-describedby={
@@ -203,14 +231,18 @@ export function FICalculator({
           </div>
 
           <div>
-            <label className="text-gray-300 block mb-2">Monthly Expenses</label>
+            <label className="text-gray-300 block mb-2">
+              {t("monthlyExpenses")}
+            </label>
             <input
               type="number"
               value={monthlyExpenses}
-              onChange={(e) => {
-                setMonthlyExpenses(Number(e.target.value));
-                validateAll();
-              }}
+              onChange={(e) =>
+                handleUserProfileDataChange(
+                  "monthlyExpenses",
+                  Number(e.target.value)
+                )
+              }
               onFocus={(e) => e.target.select()}
               aria-invalid={Boolean(errors.monthlyExpenses) || undefined}
               aria-describedby={
@@ -234,7 +266,7 @@ export function FICalculator({
 
           <div>
             <label className="text-gray-300 block mb-2">
-              Expected Annual Return (%)
+              {t("expectedReturn")}
             </label>
             <input
               type="number"
@@ -266,7 +298,7 @@ export function FICalculator({
 
           <div>
             <label className="text-gray-300 block mb-2">
-              Current Savings Rate: {savingsRate}%
+              {t("savingsRate")}: {savingsRate}%
             </label>
             <input
               type="range"
@@ -291,20 +323,23 @@ export function FICalculator({
         </div>
 
         <Button
-          onClick={() => {
+          onClick={async () => {
             if (validateAll()) {
               setShowFICalculation(true);
+
+              // Check achievements after running simulation
+              await checkAndAwardSimulationAchievement();
+              await checkAndAwardTimeBasedAchievement();
             } else {
               setShowFICalculation(false);
-              toast.error("Please correct the highlighted fields", {
-                description:
-                  "Some inputs are invalid. Review errors and try again.",
+              toast.error(tErrors("pleaseCorrectFields"), {
+                description: tErrors("someInputsInvalid"),
               });
             }
           }}
           className="w-full bg-green-600 hover:bg-green-700 mt-6"
         >
-          Calculate My Path to FI
+          {t("calculate")}
         </Button>
       </motion.div>
 
@@ -312,25 +347,27 @@ export function FICalculator({
         {...fadeInRight}
         className="bg-slate-800 p-6 rounded-lg border border-slate-700"
       >
-        <h3 className="text-white font-semibold mb-4">Your FI Analysis</h3>
+        <h3 className="text-white font-semibold mb-4">{t("results.title")}</h3>
 
         {showFICalculation && (
           <motion.div {...scaleIn} className="space-y-4">
             <div className="bg-blue-900/30 p-4 rounded-lg">
               <h4 className="text-blue-300 font-semibold mb-2">
-                Your FI Number
+                {t("results.targetAmount")}
               </h4>
               <p className="text-2xl font-bold text-blue-200">
                 ${fiNumber.toLocaleString()}
               </p>
               <p className="text-blue-300 text-sm">
-                Based on ${annualExpenses.toLocaleString()} annual expenses
+                {t("results.basedOnExpenses", {
+                  amount: annualExpenses.toLocaleString(),
+                })}
               </p>
             </div>
 
             <div className="bg-green-900/30 p-4 rounded-lg">
               <h4 className="text-green-300 font-semibold mb-2">
-                Current Progress
+                {t("results.currentProgress")}
               </h4>
               <div className="mb-2">
                 <Progress
@@ -349,37 +386,43 @@ export function FICalculator({
 
             <div className="bg-purple-900/30 p-4 rounded-lg">
               <h4 className="text-purple-300 font-semibold mb-2">
-                Projected at Age {selectedFIAge}
+                {t("results.projectedAtAge", { age: selectedFIAge })}
               </h4>
               <p className="text-2xl font-bold text-purple-200">
                 ${Math.round(totalFutureValue).toLocaleString()}
               </p>
               <p className="text-purple-300 text-sm">
-                Monthly savings: ${monthlySavings.toLocaleString()}
+                {t("results.monthlySavingsAmount", {
+                  amount: monthlySavings.toLocaleString(),
+                })}
               </p>
             </div>
 
             {fiGap > 0 ? (
               <div className="bg-red-900/30 p-4 rounded-lg">
                 <h4 className="text-red-300 font-semibold mb-2">
-                  Gap Analysis
+                  {t("results.gapAnalysis")}
                 </h4>
                 <p className="text-red-200 mb-2">
-                  Shortfall: ${Math.round(fiGap).toLocaleString()}
+                  {t("results.shortfall", {
+                    amount: Math.round(fiGap).toLocaleString(),
+                  })}
                 </p>
                 <p className="text-red-300 text-sm">
-                  Need additional $
-                  {Math.round(additionalMonthlySavingsNeeded).toLocaleString()}
-                  /month
+                  {t("results.additionalNeeded", {
+                    amount: Math.round(
+                      additionalMonthlySavingsNeeded
+                    ).toLocaleString(),
+                  })}
                 </p>
               </div>
             ) : (
               <div className="bg-green-900/30 p-4 rounded-lg">
                 <h4 className="text-green-300 font-semibold mb-2">
-                  🎉 Congratulations!
+                  {t("results.congratulations")}
                 </h4>
                 <p className="text-green-200">
-                  You&apos;re on track to achieve FI by age {selectedFIAge}!
+                  {t("results.onTrack", { age: selectedFIAge })}
                 </p>
               </div>
             )}

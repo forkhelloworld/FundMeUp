@@ -181,13 +181,19 @@ export const useUserStore = create<UserState>()(
       },
       fetchAchievements: async () => {
         set({ isLoading: true, error: null });
-        const { token } = get()
+        const { token } = get();
         try {
-          const res = await fetch("/api/achievements", {
+          // Get current locale from the URL or default to 'en'
+          const currentLocale =
+            typeof window !== "undefined"
+              ? window.location.pathname.split("/")[1] || "en"
+              : "en";
+
+          const res = await fetch(`/api/achievements?locale=${currentLocale}`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
             },
             cache: "no-store",
           });
@@ -197,14 +203,12 @@ export const useUserStore = create<UserState>()(
           }
           const json = (await res.json()) as { achievements: ApiAchievement[] };
           set({ achievements: json.achievements ?? [], isLoading: false });
-          return json.achievements ?? []
+          return json.achievements ?? [];
         } catch (e) {
-          console.log(e)
           const message = e instanceof Error ? e.message : "Unknown error";
           set({ error: message, isLoading: false });
         }
       },
-
     }),
     {
       name: "fundmeup-user-storage",
