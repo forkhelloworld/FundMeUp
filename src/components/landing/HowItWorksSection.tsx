@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getHowItWorksStepsWithIcons } from "@/utils/landingUtils";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useTranslations } from "next-intl";
 
 export const HowItWorksSection = () => {
+  const t = useTranslations("landing.howItWorks");
   const steps = getHowItWorksStepsWithIcons();
   const { isVisible, elementRef } = useScrollAnimation({
     threshold: 0.2,
@@ -22,14 +24,12 @@ export const HowItWorksSection = () => {
           }`}
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            How It{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              Works
+              {t("title")}{" "}
             </span>
           </h2>
           <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            Three simple steps to transform your financial future through
-            interactive learning.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -57,12 +57,12 @@ export const HowItWorksSection = () => {
                   {step.icon}
                 </div>
                 <CardTitle className="text-2xl font-bold">
-                  {step.title}
+                  {t(`steps.${step.id}.title`)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400 text-center leading-relaxed">
-                  {step.description}
+                  {t(`steps.${step.id}.description`)}
                 </p>
               </CardContent>
             </Card>

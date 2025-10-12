@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { FaArrowRight } from "react-icons/fa";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export const FinalCTASection = () => {
+  const t = useTranslations("landing.finalCta");
   const { isVisible, elementRef } = useScrollAnimation({
     threshold: 0.2,
     rootMargin: "-50px",
@@ -21,14 +23,10 @@ export const FinalCTASection = () => {
           }`}
         >
           <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6">
-            Start building your{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              financial future
-            </span>{" "}
-            today
+            {t("title")}
           </h2>
           <p className="text-base sm:text-xl text-slate-400 mb-6 sm:mb-8 max-w-2xl mx-auto">
-            Join our community and start your journey to financial independence.
+            {t("subtitle")}
           </p>
 
           <div
@@ -40,7 +38,7 @@ export const FinalCTASection = () => {
                 size="lg"
                 className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white h-11 sm:h-12 text-base sm:text-lg font-semibold"
               >
-                Sign Up Free
+                {t("cta")}
                 <FaArrowRight className="ml-2" />
               </Button>
             </Link>

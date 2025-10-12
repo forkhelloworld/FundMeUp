@@ -1,17 +1,18 @@
+"use client";
 import { FICalculator } from "@/components/lessons/FICalculator";
 import { PortfolioCalculator } from "@/components/lessons/PortfolioCalculator";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Link } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 
 export default function SimulationsPage() {
-  const t = useTranslations("simulation.page");
+  const t = useTranslations("simulations.page");
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-6 md:py-8 space-y-6 md:space-y-8">
       <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-        Simulations
+        {t("title")}
       </h1>
       <div>
         <Card className="mb-6 md:mb-8">
@@ -19,7 +20,9 @@ export default function SimulationsPage() {
             <CardTitle>{t("configureSimulation")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-4">{t("setupDescription")}</p>
+            <p className="mb-4">
+              {t("setupDescription")}
+            </p>
             <Button asChild>
               <Link href="/settings">{t("goToSettings")}</Link>
             </Button>

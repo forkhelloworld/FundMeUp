@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { getFeaturesWithIcons } from "@/utils/landingUtils";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export const FeaturesSection = () => {
+  const t = useTranslations("landing.features");
   const features = getFeaturesWithIcons();
   const { isVisible, elementRef } = useScrollAnimation({
     threshold: 0.2,
@@ -24,9 +26,8 @@ export const FeaturesSection = () => {
           }`}
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-            Key{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              Features
+              {t("title")}{" "}
             </span>
           </h2>
         </div>
@@ -49,12 +50,12 @@ export const FeaturesSection = () => {
                   {feature.icon}
                 </div>
                 <CardTitle className="text-base sm:text-lg font-bold">
-                  {feature.title}
+                  {t(`items.${feature.id}.title`)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400 text-sm sm:text-base text-center leading-relaxed">
-                  {feature.description}
+                  {t(`items.${feature.id}.description`)}
                 </p>
               </CardContent>
             </Card>
@@ -73,20 +74,19 @@ export const FeaturesSection = () => {
                 <span className="text-purple-400 text-2xl sm:text-3xl">★</span>
               </div>
               <CardTitle className="text-base sm:text-lg font-bold">
-                Short Modules
+                {t("items.short-modules.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-4">
-                Learn with short, interactive modules. No boring lectures—just
-                actionable knowledge.
+                {t("items.short-modules.description")}
               </p>
               <Link href="/register">
                 <Button
                   size="sm"
                   className="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white"
                 >
-                  Try a Challenge
+                  {t("items.short-modules.cta")}
                 </Button>
               </Link>
             </CardContent>

@@ -10,17 +10,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import type { ApiAchievement } from "@/types/achievements";
+import { useTranslations } from "next-intl";
 
 export function AchievementsGrid({
   achievements,
 }: {
   achievements: ApiAchievement[];
 }) {
+  const t = useTranslations("achievements");
+
   const onOpen = (a: ApiAchievement) => {
     if (a.unlocked) {
-      toast.success(`Achievement unlocked: ${a.title}`);
+      toast.success(t("achievementUnlocked", { title: a.title }));
     } else {
-      toast(`Achievement: ${a.title}`, { description: a.description });
+      toast(t("achievementToast", { title: a.title }), {
+        description: a.description,
+      });
     }
   };
 
@@ -54,12 +59,12 @@ export function AchievementsGrid({
                 <div className="grid gap-1">
                   <CardTitle className="text-lg">{ach.title}</CardTitle>
                   <div className="flex items-center gap-2">
-                    <CardDescription>Achievement</CardDescription>
+                    <CardDescription>{t("achievement")}</CardDescription>
                     <Badge
                       variant={isUnlocked ? "default" : "secondary"}
                       className="h-5 px-2 text-xs"
                     >
-                      {isUnlocked ? "Unlocked" : "Locked"}
+                      {isUnlocked ? t("unlocked") : t("locked")}
                     </Badge>
                   </div>
                 </div>

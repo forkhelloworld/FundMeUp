@@ -23,10 +23,14 @@ import {
 } from "@/components/ui/form";
 import { useUserStore } from "@/lib/user-store";
 import { loginSchema } from "@/lib/validationSchemes";
+import { useTranslations } from "next-intl";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+  const t = useTranslations("auth.login");
+  const tCommon = useTranslations("common");
+  const tMessages = useTranslations("auth.messages");
   const { login, isLoading } = useUserStore();
   const router = useRouter();
 
@@ -42,7 +46,7 @@ export function LoginForm() {
     try {
       await login(data.email, data.password);
 
-      toast.success("Welcome back! 👋", {
+      toast.success(tMessages("loginSuccess"), {
         description: "You've successfully logged in to FundMeUp.",
       });
 
@@ -50,7 +54,7 @@ export function LoginForm() {
       router.push("/lessons");
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Login failed", {
+      toast.error(tMessages("loginError"), {
         description:
           error instanceof Error
             ? error.message
@@ -63,10 +67,10 @@ export function LoginForm() {
     <Card className="w-full max-w-md mx-auto bg-slate-800/50 border-slate-700 shadow-2xl backdrop-blur-md rounded-2xl hover:shadow-emerald-500/10 transition-all duration-300">
       <CardHeader>
         <CardTitle className="text-emerald-400 font-mono text-2xl">
-          Welcome Back
+          {t("title")}
         </CardTitle>
         <CardDescription className="text-slate-400 font-sans">
-          Sign in to continue your financial education journey
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -78,7 +82,7 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-mono text-emerald-400">
-                    Email
+                    {t("email")}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -99,7 +103,7 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-mono text-emerald-400">
-                    Password
+                    {t("password")}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -119,7 +123,7 @@ export function LoginForm() {
               className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-mono text-lg shadow-lg border-0 transition-all duration-200 hover:scale-105"
               disabled={isLoading}
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isLoading ? tCommon("loading") : t("signIn")}
             </Button>
           </form>
         </Form>

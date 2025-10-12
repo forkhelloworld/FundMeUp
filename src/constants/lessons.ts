@@ -5,6 +5,50 @@ import {
   FaUniversity,
 } from "react-icons/fa";
 
+export const getLessons = (t: (key: string) => string) => [
+  {
+    id: 1,
+    slug: "why-you-should-invest",
+    title: t("lessons.whyYouShouldInvest.title"),
+    description: t("lessons.whyYouShouldInvest.description"),
+    duration: 5,
+    progress: 0,
+    category: t("lessons.category"),
+    icon: FaChartLine,
+  },
+  {
+    id: 2,
+    slug: "set-your-financial-goal",
+    title: t("lessons.setFinancialGoal.title"),
+    description: t("lessons.setFinancialGoal.description"),
+    duration: 7,
+    progress: 0,
+    category: t("lessons.category"),
+    icon: FaPiggyBank,
+  },
+  {
+    id: 3,
+    slug: "investing-basics",
+    title: t("lessons.investingBasics.title"),
+    description: t("lessons.investingBasics.description"),
+    duration: 10,
+    progress: 0,
+    category: t("lessons.category"),
+    icon: FaBalanceScale,
+  },
+  {
+    id: 4,
+    slug: "build-your-first-portfolio",
+    title: t("lessons.buildPortfolio.title"),
+    description: t("lessons.buildPortfolio.description"),
+    duration: 6,
+    progress: 0,
+    category: t("lessons.category"),
+    icon: FaUniversity,
+  },
+];
+
+// Keep the original lessons array for backward compatibility
 export const lessons = [
   {
     id: 1,

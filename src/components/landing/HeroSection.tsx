@@ -37,12 +37,11 @@ export const HeroSection = ({ isVisible }: HeroSectionProps) => {
             {t("title")}
           </span>
           <br />
-          <span className="text-white">Learn to Invest.</span>
+          <span className="text-white">{t("subtitle")}</span>
         </h1>
 
         <p className="text-base sm:text-lg md:text-2xl text-slate-400 mb-6 sm:mb-8 max-w-2xl md:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl mx-auto leading-relaxed">
-          Interactive, gamified finance education built for the digital
-          generation.
+          {t("description")}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-10 sm:mb-12">

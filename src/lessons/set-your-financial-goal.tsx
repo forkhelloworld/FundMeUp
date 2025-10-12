@@ -15,8 +15,10 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function SetFinancialPlanPage() {
+  const t = useTranslations("lessons.setFinancialGoal");
   const { state, actions } = useLessonState();
 
   // Progress tracking
@@ -30,36 +32,27 @@ export default function SetFinancialPlanPage() {
       <LessonHero
         animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(1)}
-        title={
-          <>
-            🎯 Set Your <span className="text-green-400">Financial Plan</span>
-          </>
-        }
-        subtitle="Your Complete Roadmap to Financial Independence"
-        description="Financial independence isn&lsquo;t just a dream—it&lsquo;s a mathematical equation you can solve."
+        title={<>{t("title")}</>}
+        subtitle={t("subtitle")}
+        description={t("description")}
       />
 
       {/* Why a Financial Plan Matters */}
       <LessonSection
-        title="🗺️ Why You Need a Financial Plan (Not Just Goals)"
+        title={t("sections.financialPlan.title")}
         animationVariant={fadeInLeft}
         onViewportEnter={() => handleProgress(2)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
-          Most people set random financial goals: &ldquo;save for
-          retirement,&ldquo; &ldquo;buy a house,&ldquo; &ldquo;have an emergency
-          fund.&ldquo; But these scattered goals often conflict with each other
-          and lack a unifying purpose.
+          {t("sections.financialPlan.content")}
         </p>
 
         <div className="bg-blue-900/30 p-6 rounded-lg border border-blue-700 mb-6">
           <h3 className="text-blue-200 font-semibold text-center mb-4">
-            A financial plan is different—it&lsquo;s your complete strategy for
-            achieving financial independence
+            {t("sections.financialPlan.definition")}
           </h3>
           <p className="text-blue-300 text-center">
-            Financial Independence (FI) = Having enough passive income to cover
-            your lifestyle indefinitely
+            {t("sections.financialPlan.fiDefinition")}
           </p>
         </div>
 
@@ -69,13 +62,14 @@ export default function SetFinancialPlanPage() {
             className="bg-red-900/20 p-4 rounded-lg border border-red-700"
           >
             <h4 className="text-red-300 font-semibold mb-3">
-              ❌ Random Goals Approach:
+              {t("sections.financialPlan.randomGoals.title")}
             </h4>
             <ul className="text-gray-300 text-sm space-y-2">
-              <li>• Conflicting priorities and timelines</li>
-              <li>• No clear path to financial freedom</li>
-              <li>• Reactive money management</li>
-              <li>• Always chasing the next financial milestone</li>
+              {t
+                .raw("sections.financialPlan.randomGoals.items")
+                .map((item: string, index: number) => (
+                  <li key={index}>• {item}</li>
+                ))}
             </ul>
           </motion.div>
 
@@ -84,13 +78,14 @@ export default function SetFinancialPlanPage() {
             className="bg-green-900/20 p-4 rounded-lg border border-green-700"
           >
             <h4 className="text-green-300 font-semibold mb-3">
-              ✅ Strategic Financial Plan:
+              {t("sections.financialPlan.strategicPlan.title")}
             </h4>
             <ul className="text-gray-300 text-sm space-y-2">
-              <li>• One clear destination: Financial Independence</li>
-              <li>• All goals work together toward FI</li>
-              <li>• Proactive wealth building strategy</li>
-              <li>• Freedom to choose your life path</li>
+              {t
+                .raw("sections.financialPlan.strategicPlan.items")
+                .map((item: string, index: number) => (
+                  <li key={index}>• {item}</li>
+                ))}
             </ul>
           </motion.div>
         </div>
@@ -98,13 +93,12 @@ export default function SetFinancialPlanPage() {
 
       {/* The Financial Independence Framework */}
       <LessonSection
-        title="💰 The Financial Independence Framework"
+        title={t("sections.fiFramework.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(3)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
-          Financial Independence follows a simple mathematical formula that
-          anyone can understand and implement:
+          {t("sections.fiFramework.content")}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -114,13 +108,13 @@ export default function SetFinancialPlanPage() {
           >
             <div className="text-4xl mb-4">🎯</div>
             <h3 className="text-blue-300 font-semibold mb-3">
-              Step 1: Know Your FI Number
+              {t("sections.fiFramework.steps.0.title")}
             </h3>
             <p className="text-gray-300 text-sm">
-              Annual Expenses × 25 = Your FI Number
+              {t("sections.fiFramework.steps.0.formula")}
             </p>
             <p className="text-blue-200 text-xs mt-2">
-              Based on the 4% withdrawal rule
+              {t("sections.fiFramework.steps.0.note")}
             </p>
           </motion.div>
 
@@ -131,13 +125,13 @@ export default function SetFinancialPlanPage() {
           >
             <div className="text-4xl mb-4">📊</div>
             <h3 className="text-green-300 font-semibold mb-3">
-              Step 2: Calculate Timeline
+              {t("sections.fiFramework.steps.1.title")}
             </h3>
             <p className="text-gray-300 text-sm">
-              Higher savings rate = Faster FI
+              {t("sections.fiFramework.steps.1.formula")}
             </p>
             <p className="text-green-200 text-xs mt-2">
-              50% savings rate = ~17 years to FI
+              {t("sections.fiFramework.steps.1.note")}
             </p>
           </motion.div>
 
@@ -148,37 +142,53 @@ export default function SetFinancialPlanPage() {
           >
             <div className="text-4xl mb-4">🚀</div>
             <h3 className="text-purple-300 font-semibold mb-3">
-              Step 3: Execute Plan
+              {t("sections.fiFramework.steps.2.title")}
             </h3>
             <p className="text-gray-300 text-sm">
-              Automate investments, optimize taxes, track progress
+              {t("sections.fiFramework.steps.2.formula")}
             </p>
             <p className="text-purple-200 text-xs mt-2">
-              Consistency beats perfection
+              {t("sections.fiFramework.steps.2.note")}
             </p>
           </motion.div>
         </div>
 
         <div className="bg-yellow-900/20 p-4 rounded-lg border border-yellow-700">
           <h4 className="text-yellow-300 font-semibold mb-3">
-            The Magic of High Savings Rates:
+            {t("sections.fiFramework.savingsRates.title")}
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div className="text-center">
-              <div className="text-yellow-200 font-bold">10% saved</div>
-              <div className="text-gray-300">51 years to FI</div>
+              <div className="text-yellow-200 font-bold">
+                {t("sections.fiFramework.savingsRates.rates.0.rate")}
+              </div>
+              <div className="text-gray-300">
+                {t("sections.fiFramework.savingsRates.rates.0.time")}
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-yellow-200 font-bold">25% saved</div>
-              <div className="text-gray-300">32 years to FI</div>
+              <div className="text-yellow-200 font-bold">
+                {t("sections.fiFramework.savingsRates.rates.1.rate")}
+              </div>
+              <div className="text-gray-300">
+                {t("sections.fiFramework.savingsRates.rates.1.time")}
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-yellow-200 font-bold">50% saved</div>
-              <div className="text-gray-300">17 years to FI</div>
+              <div className="text-yellow-200 font-bold">
+                {t("sections.fiFramework.savingsRates.rates.2.rate")}
+              </div>
+              <div className="text-gray-300">
+                {t("sections.fiFramework.savingsRates.rates.2.time")}
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-yellow-200 font-bold">75% saved</div>
-              <div className="text-gray-300">7 years to FI</div>
+              <div className="text-yellow-200 font-bold">
+                {t("sections.fiFramework.savingsRates.rates.3.rate")}
+              </div>
+              <div className="text-gray-300">
+                {t("sections.fiFramework.savingsRates.rates.3.time")}
+              </div>
             </div>
           </div>
         </div>
@@ -186,222 +196,166 @@ export default function SetFinancialPlanPage() {
 
       {/* Financial Independence Calculator */}
       <LessonSection
-        title="🧮 Your Personal FI Calculator"
+        title={t("sections.fiCalculator.title")}
         animationVariant={slideInFromBottom}
         onViewportEnter={() => handleProgress(4)}
       >
         <p className="text-gray-300 mb-6">
-          Let&lsquo;s calculate your personalized path to financial
-          independence:
+          {t("sections.fiCalculator.content")}
         </p>
 
-        <FICalculator
-          onCurrentAgeChange={(age) => actions.updateInput("currentAge", age)}
-          onViewportEnter={() => handleProgress(4)}
-        />
+        <FICalculator onViewportEnter={() => handleProgress(4)} />
       </LessonSection>
 
       {/* Building Your Supporting Goals */}
       <LessonSection
-        title="🎯 Building Your Supporting Goals"
+        title={t("sections.supportingGoals.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(5)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
-          Once you have your FI plan, all other financial goals should support
-          this primary objective. Here&lsquo;s how to structure your supporting
-          goals:
+          {t("sections.supportingGoals.content")}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              title: "Foundation Goals",
-              color: "red",
-              icon: "🏗️",
-              goals: [
-                "Emergency fund (3-6 months expenses)",
-                "High-interest debt elimination",
-                "Adequate insurance coverage",
-                "Employer 401(k) match maximization",
-              ],
-            },
-            {
-              title: "Acceleration Goals",
-              color: "blue",
-              icon: "🚀",
-              goals: [
-                "Optimize tax-advantaged accounts",
-                "Increase income through skills/career",
-                "Reduce major expenses (housing, transport)",
-                "Build additional income streams",
-              ],
-            },
-            {
-              title: "Lifestyle Goals",
-              color: "green",
-              icon: "🎨",
-              goals: [
-                "Travel fund (within FI timeline)",
-                "Home purchase (if aligned with FI)",
-                "Education/skill development",
-                "Major purchases (analyze FI impact)",
-              ],
-            },
-          ].map((category, index) => (
-            <motion.div
-              key={index}
-              {...fadeInUp}
-              transition={{ delay: index * 0.1 }}
-              className={`bg-${category.color}-900/20 p-6 rounded-lg border border-${category.color}-700`}
-            >
-              <div className="text-center mb-4">
-                <div className="text-4xl mb-2">{category.icon}</div>
-                <h3 className={`text-${category.color}-300 font-semibold`}>
-                  {category.title}
-                </h3>
-              </div>
-              <ul className="text-gray-300 text-sm space-y-2">
-                {category.goals.map((goal, goalIndex) => (
-                  <li key={goalIndex} className="flex items-start gap-2">
-                    <span className={`text-${category.color}-400 mt-1`}>•</span>
-                    <span>{goal}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+          {t.raw("sections.supportingGoals.categories").map(
+            (
+              category: {
+                title: string;
+                description: string;
+                icon: string;
+                color: string;
+                goals: Array<string>;
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...fadeInUp}
+                transition={{ delay: index * 0.1 }}
+                className={`bg-${
+                  category.color || "blue"
+                }-900/20 p-6 rounded-lg border border-${
+                  category.color || "blue"
+                }-700`}
+              >
+                <div className="text-center mb-4">
+                  <div className="text-4xl mb-2">{category.icon}</div>
+                  <h3
+                    className={`text-${
+                      category.color || "blue"
+                    }-300 font-semibold`}
+                  >
+                    {category.title}
+                  </h3>
+                </div>
+                <ul className="text-gray-300 text-sm space-y-2">
+                  {category.goals.map((goal: string, goalIndex: number) => (
+                    <li key={goalIndex} className="flex items-start gap-2">
+                      <span
+                        className={`text-${category.color || "blue"}-400 mt-1`}
+                      >
+                        •
+                      </span>
+                      <span>{goal}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )
+          )}
         </div>
 
         <div className="bg-yellow-900/20 p-6 rounded-lg border border-yellow-700 mt-6">
           <h4 className="text-yellow-300 font-semibold mb-3 text-center">
-            💡 The FI Filter: Before Adding Any Goal, Ask:
+            {t("sections.supportingGoals.fiFilter.title")}
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div>
-              <p className="text-yellow-200 font-medium">
-                &ldquo;Does this support my FI plan?&ldquo;
-              </p>
-            </div>
-            <div>
-              <p className="text-yellow-200 font-medium">
-                &ldquo;How will this impact my timeline?&ldquo;
-              </p>
-            </div>
-            <div>
-              <p className="text-yellow-200 font-medium">
-                &ldquo;Is there a more FI-aligned alternative?&ldquo;
-              </p>
-            </div>
+            {t
+              .raw("sections.supportingGoals.fiFilter.questions")
+              .map((question: string, index: number) => (
+                <div key={index}>
+                  <p className="text-yellow-200 font-medium">{question}</p>
+                </div>
+              ))}
           </div>
         </div>
       </LessonSection>
 
       {/* The FI Planning Process */}
       <LessonSection
-        title="📋 Your FI Planning Process"
+        title={t("sections.planningProcess.title")}
         animationVariant={fadeInLeft}
         onViewportEnter={() => handleProgress(6)}
       >
         <p className="text-gray-300 mb-6">
-          Creating a financial plan isn&lsquo;t a one-time activity.
-          Here&lsquo;s your systematic approach:
+          {t("sections.planningProcess.content")}
         </p>
 
         <div className="space-y-6">
-          {[
-            {
-              phase: "Month 1: Foundation",
-              color: "blue",
-              tasks: [
-                "Calculate your FI number and timeline",
-                "Set up automatic savings and investments",
-                "Build your emergency fund",
-                "Maximize employer retirement matching",
-              ],
-            },
-            {
-              phase: "Month 2-3: Optimization",
-              color: "green",
-              tasks: [
-                "Optimize your tax-advantaged accounts",
-                "Automate your investment contributions",
-                "Track and reduce unnecessary expenses",
-                "Set up progress monitoring system",
-              ],
-            },
-            {
-              phase: "Month 4-6: Acceleration",
-              color: "purple",
-              tasks: [
-                "Focus on increasing income",
-                "Consider house hacking or real estate",
-                "Build additional income streams",
-                "Optimize tax strategies",
-              ],
-            },
-            {
-              phase: "Ongoing: Maintenance",
-              color: "orange",
-              tasks: [
-                "Monthly progress reviews",
-                "Quarterly plan adjustments",
-                "Annual comprehensive review",
-                "Celebrate milestones achieved",
-              ],
-            },
-          ].map((phase, index) => (
-            <motion.div
-              key={index}
-              {...fadeInLeft}
-              transition={{ delay: index * 0.1 }}
-              className={`bg-${phase.color}-900/20 p-6 rounded-lg border border-${phase.color}-700`}
-            >
-              <h3 className={`text-${phase.color}-300 font-semibold mb-4`}>
-                {phase.phase}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {phase.tasks.map((task, taskIndex) => (
-                  <div key={taskIndex} className="flex items-start gap-2">
-                    <span className={`text-${phase.color}-400 mt-1`}>✓</span>
-                    <span className="text-gray-300 text-sm">{task}</span>
+          {t
+            .raw("sections.planningProcess.phases")
+            .map(
+              (
+                phase: { phase: string; color: string; tasks: Array<string> },
+                index: number
+              ) => (
+                <motion.div
+                  key={index}
+                  {...fadeInLeft}
+                  transition={{ delay: index * 0.1 }}
+                  className={`bg-${
+                    phase.color || "blue"
+                  }-900/20 p-6 rounded-lg border border-${
+                    phase.color || "blue"
+                  }-700`}
+                >
+                  <h3
+                    className={`text-${
+                      phase.color || "blue"
+                    }-300 font-semibold mb-4`}
+                  >
+                    {phase.phase}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {phase.tasks.map((task: string, taskIndex: number) => (
+                      <div key={taskIndex} className="flex items-start gap-2">
+                        <span
+                          className={`text-${phase.color || "blue"}-400 mt-1`}
+                        >
+                          ✓
+                        </span>
+                        <span className="text-gray-300 text-sm">{task}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              )
+            )}
         </div>
       </LessonSection>
 
       {/* Financial Plan Quiz */}
       <LessonSection
-        title="🧠 Financial Plan Knowledge Check"
+        title={t("sections.quiz.title")}
         animationVariant={slideInFromBottom}
         onViewportEnter={() => handleProgress(7)}
       >
         <Quiz
-          question="What's the main advantage of having a financial independence plan versus scattered financial goals?"
-          options={[
-            { id: "a", text: "It's easier to achieve multiple small goals" },
-            {
-              id: "b",
-              text: "All goals work together toward one unified objective",
-            },
-            { id: "c", text: "You can retire earlier than everyone else" },
-            { id: "d", text: "It requires less monthly savings" },
-          ]}
+          question={t("sections.quiz.question")}
+          options={t.raw("sections.quiz.options")}
           selectedAnswer={state.quizAnswer}
-          onAnswerSelect={actions.setQuizAnswer}
+          onAnswerSelect={(answer) => actions.updateInput("quizAnswer", answer)}
           onCheckAnswer={() => actions.toggleVisibility("showQuizResult")}
           showResult={state.showQuizResult}
-          correctAnswer="B) All goals work together toward one unified objective"
-          explanation="A financial independence plan provides a unified framework where every financial decision supports your ultimate goal of FI. This eliminates conflicting priorities and ensures optimal resource allocation toward building wealth and achieving financial freedom."
+          correctAnswer={t("sections.quiz.correctAnswer")}
+          explanation={t("sections.quiz.explanation")}
         />
       </LessonSection>
 
       {/* Implementation Checklist */}
       <LessonSection
-        title="✅ Your FI Plan Implementation Checklist"
+        title={t("sections.implementationChecklist.title")}
         animationVariant={fadeInRight}
         onViewportEnter={() => handleProgress(8)}
       >
@@ -410,19 +364,18 @@ export default function SetFinancialPlanPage() {
             {...fadeInLeft}
             className="bg-slate-800 p-6 rounded-lg border border-slate-700"
           >
-            <h4 className="text-white font-semibold mb-4">This Week:</h4>
+            <h4 className="text-white font-semibold mb-4">
+              {t("sections.implementationChecklist.thisWeek.title")}:
+            </h4>
             <div className="space-y-3">
-              {[
-                "Calculate your FI number using the 25x rule",
-                "Determine your current savings rate",
-                "Set your target FI age and timeline",
-                "Open a dedicated FI tracking spreadsheet",
-              ].map((task, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <input type="checkbox" className="mt-1" />
-                  <span className="text-gray-300 text-sm">{task}</span>
-                </div>
-              ))}
+              {t
+                .raw("sections.implementationChecklist.thisWeek.tasks")
+                .map((task: string, index: number) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <input type="checkbox" className="mt-1" />
+                    <span className="text-gray-300 text-sm">{task}</span>
+                  </div>
+                ))}
             </div>
           </motion.div>
 
@@ -430,19 +383,18 @@ export default function SetFinancialPlanPage() {
             {...fadeInRight}
             className="bg-slate-800 p-6 rounded-lg border border-slate-700"
           >
-            <h4 className="text-white font-semibold mb-4">This Month:</h4>
+            <h4 className="text-white font-semibold mb-4">
+              {t("sections.implementationChecklist.thisMonth.title")}:
+            </h4>
             <div className="space-y-3">
-              {[
-                "Automate investments toward your FI goal",
-                "Complete your emergency fund if needed",
-                "Optimize all tax-advantaged accounts",
-                "Create your supporting goals framework",
-              ].map((task, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <input type="checkbox" className="mt-1" />
-                  <span className="text-gray-300 text-sm">{task}</span>
-                </div>
-              ))}
+              {t
+                .raw("sections.implementationChecklist.thisMonth.tasks")
+                .map((task: string, index: number) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <input type="checkbox" className="mt-1" />
+                    <span className="text-gray-300 text-sm">{task}</span>
+                  </div>
+                ))}
             </div>
           </motion.div>
         </div>
@@ -450,21 +402,13 @@ export default function SetFinancialPlanPage() {
 
       {/* Key Takeaways */}
       <LessonSection
-        title="🎉 Key Takeaways"
+        title={t("sections.keyTakeaways.title")}
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(9)}
       >
         <KeyTakeaways
           animationVariant={fadeInLeft}
-          items={[
-            "Financial independence is your north star—all goals should support it",
-            "Your FI number = Annual expenses × 25 (4% withdrawal rule)",
-            "Higher savings rate = Dramatically shorter timeline to FI",
-            "Automate everything—consistency beats perfection every time",
-            "Use the FI filter—does this goal support or delay your independence?",
-            "Track progress monthly—what gets measured gets managed",
-            "Supporting goals should accelerate, not derail, your FI plan",
-          ]}
+          items={t.raw("sections.keyTakeaways.items")}
         />
       </LessonSection>
 
@@ -472,19 +416,11 @@ export default function SetFinancialPlanPage() {
       <NextStepsCard
         animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(10)}
-        description={
-          "Now that you have a clear financial independence plan, our next lesson will teach you the fundamentals of investing. You'll learn how to build the investment portfolio that will power your journey to FI."
-        }
+        title={t("sections.nextSteps.title")}
+        description={t("sections.nextSteps.description")}
         progressValue={50}
-        lessonLabel={`Lesson 2 of 4 — ${state.lessonProgress === 100
-            ? "Complete! You've mastered financial planning."
-            : "Keep exploring to complete this lesson."
-          }`}
-        completeMessage={
-          state.lessonProgress === 100
-            ? "Remember: Financial independence isn't about having millions—it's about having enough to choose how you spend your time."
-            : undefined
-        }
+        lessonLabel={t("sections.nextSteps.lessonLabel")}
+        completeMessage={t("sections.nextSteps.completeMessage")}
       />
     </div>
   );

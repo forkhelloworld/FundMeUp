@@ -7,53 +7,58 @@ import {
   useScrollCountAnimation,
   useScrollAnimation,
 } from "@/hooks/useScrollAnimation";
+import { useTranslations } from "next-intl";
 
-const InteractiveChart = ({ count }: { count: number }) => (
-  <div className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 xl:w-96 xl:h-96 mx-auto">
-    <svg
-      viewBox="0 0 200 200"
-      className="w-full h-full transform -rotate-90"
-      aria-label="Investment statistics chart"
-    >
-      <circle
-        cx="100"
-        cy="100"
-        r={CIRCLE_RADIUS}
-        fill="none"
-        stroke="rgb(51 65 85)"
-        strokeWidth="16"
-      />
-      <circle
-        cx="100"
-        cy="100"
-        r={CIRCLE_RADIUS}
-        fill="none"
-        stroke="url(#gradient)"
-        strokeWidth="16"
-        strokeDasharray={CIRCLE_CIRCUMFERENCE}
-        strokeDashoffset={CIRCLE_CIRCUMFERENCE * (1 - count / 100)}
-        strokeLinecap="round"
-        className="transition-all duration-2000 ease-out"
-      />
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="rgb(239 68 68)" />
-          <stop offset="100%" stopColor="rgb(249 115 22)" />
-        </linearGradient>
-      </defs>
-    </svg>
-    <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <div className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold text-red-400 mb-1 sm:mb-2">
-        {count}%
-      </div>
-      <div className="text-slate-400 text-center text-xs sm:text-sm">
-        of people
-        <br />
-        don&apos;t invest
+const InteractiveChart = ({ count }: { count: number }) => {
+  const t = useTranslations("landing.problem");
+
+  return (
+    <div className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 xl:w-96 xl:h-96 mx-auto">
+      <svg
+        viewBox="0 0 200 200"
+        className="w-full h-full transform -rotate-90"
+        aria-label="Investment statistics chart"
+      >
+        <circle
+          cx="100"
+          cy="100"
+          r={CIRCLE_RADIUS}
+          fill="none"
+          stroke="rgb(51 65 85)"
+          strokeWidth="16"
+        />
+        <circle
+          cx="100"
+          cy="100"
+          r={CIRCLE_RADIUS}
+          fill="none"
+          stroke="url(#gradient)"
+          strokeWidth="16"
+          strokeDasharray={CIRCLE_CIRCUMFERENCE}
+          strokeDashoffset={CIRCLE_CIRCUMFERENCE * (1 - count / 100)}
+          strokeLinecap="round"
+          className="transition-all duration-2000 ease-out"
+        />
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgb(239 68 68)" />
+            <stop offset="100%" stopColor="rgb(249 115 22)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold text-red-400 mb-1 sm:mb-2">
+          {count}%
+        </div>
+        <div className="text-slate-400 text-center text-xs sm:text-sm">
+          {t("statistic")}
+          <br />
+          {t("subtitle")}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ProblemPoint = ({
   point,
@@ -63,32 +68,40 @@ const ProblemPoint = ({
   point: (typeof PROBLEM_POINTS)[0];
   index: number;
   isVisible: boolean;
-}) => (
-  <div
-    className={`flex items-start gap-3 sm:gap-4 transition-all duration-700 ease-out ${
-      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-    }`}
-    style={{
-      transitionDelay: `${index * 200}ms`,
-    }}
-  >
+}) => {
+  const t = useTranslations(`landing.problem.points.${point.id}`);
+
+  return (
     <div
-      className={`w-10 h-10 sm:w-12 sm:h-12 ${point.bgColor} rounded-full flex items-center justify-center flex-shrink-0`}
+      className={`flex items-start gap-3 sm:gap-4 transition-all duration-700 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+      style={{
+        transitionDelay: `${index * 200}ms`,
+      }}
     >
-      <span className={`${point.textColor} text-lg sm:text-xl`}>
-        {point.emoji}
-      </span>
+      <div
+        className={`w-10 h-10 sm:w-12 sm:h-12 ${point.bgColor} rounded-full flex items-center justify-center flex-shrink-0`}
+      >
+        <span className={`${point.textColor} text-lg sm:text-xl`}>
+          {point.emoji}
+        </span>
+      </div>
+      <div>
+        <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">
+          {t("title")}
+        </h3>
+        <p className="text-slate-400 text-sm sm:text-base">
+          {t("description")}
+        </p>
+      </div>
     </div>
-    <div>
-      <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">
-        {point.title}
-      </h3>
-      <p className="text-slate-400 text-sm sm:text-base">{point.description}</p>
-    </div>
-  </div>
-);
+  );
+};
 
 export const ProblemStatement = () => {
+  const t = useTranslations("landing.problem");
+
   // Use scroll-triggered count animation
   const { count, elementRef: chartRef } = useScrollCountAnimation(70, 500, {
     threshold: 0.3, // Trigger when 30% of the section is visible
@@ -110,14 +123,11 @@ export const ProblemStatement = () => {
           }`}
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-            Financial literacy is low.{" "}
-            <span className="text-red-400">70% of people</span> don&apos;t
-            invest.
+            {t("title")} <span className="text-red-400">{t("statistic")}</span>{" "}
+            {t("subtitle")}
           </h2>
           <p className="text-base sm:text-xl text-slate-400 max-w-2xl md:max-w-3xl mx-auto">
-            Most people miss out on the power of investing early. FundMeUp is
-            here to change that with interactive, personalized learning for
-            everyone.
+            {t("description")}
           </p>
         </div>
 
