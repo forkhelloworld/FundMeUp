@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
-import { syncAchievements } from "@/lib/achievements/sync";
 
 interface JwtPayloadWithId {
-  id: number;
+  id: string;
 }
 
 export async function GET(request: NextRequest) {
-  await syncAchievements();
-
   const authHeader = request.headers.get("authorization");
   const cookieToken = request.cookies.get("auth-token")?.value || null;
   const rawToken = extractTokenFromHeader(authHeader) || cookieToken;
@@ -19,12 +16,25 @@ export async function GET(request: NextRequest) {
 
   const userId = payload?.id ?? null;
 
+  // Get locale from query parameter, Accept-Language header, or default to 'en'
+  const url = new URL(request.url);
+  const localeParam = url.searchParams.get("locale");
+  const acceptLanguage = request.headers.get("accept-language") || "en";
+  const locale = localeParam || (acceptLanguage.startsWith("uk") ? "uk" : "en");
+
   const all = await prisma.achievement.findMany({
     orderBy: { id: "asc" },
-    select: { id: true, key: true, title: true, description: true },
+    select: {
+      id: true,
+      key: true,
+      title: true,
+      description: true,
+      titleUk: true,
+      descriptionUk: true,
+    },
   });
 
-  let unlockedIds = new Set<number>();
+  let unlockedIds = new Set<string>();
   if (userId) {
     const unlocked = await prisma.userAchievement.findMany({
       where: { userId },
@@ -36,10 +46,10 @@ export async function GET(request: NextRequest) {
   const data = all.map((a) => ({
     id: a.id,
     key: a.key,
-    title: a.title,
-    description: a.description,
+    title: locale === "uk" && a.titleUk ? a.titleUk : a.title,
+    description:
+      locale === "uk" && a.descriptionUk ? a.descriptionUk : a.description,
     unlocked: unlockedIds.has(a.id),
   }));
-
   return NextResponse.json({ achievements: data });
 }

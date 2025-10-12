@@ -1,9 +1,10 @@
 "use client";
 import { LessonSection } from "@/components/lessons/LessonSection";
 import { Quiz } from "@/components/lessons/Quiz";
+import { LessonHero } from "@/components/lessons/LessonHero";
+import { KeyTakeaways } from "@/components/lessons/KeyTakeaways";
+import { NextStepsCard } from "@/components/lessons/NextStepsCard";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {
   bounceIn,
   fadeInLeft,
@@ -15,7 +16,6 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function InvestingBasicsPage() {
   const { state, actions } = useLessonState();
@@ -66,23 +66,19 @@ export default function InvestingBasicsPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center px-6 py-12">
       {/* Hero Section */}
-      <motion.div
-        {...bounceIn}
-        className="text-center max-w-5xl mb-12"
+      <LessonHero
+        animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(1)}
-      >
-        <h1 className="text-5xl font-bold mb-6">
-          📈 <span className="text-green-400">Investing Basics</span>
-        </h1>
-        <p className="text-gray-300 text-xl leading-relaxed">
-          Your Complete Guide to Making Your Money Work for You
-        </p>
-        <p className="text-gray-400 text-lg mt-4">
-          You now understand WHY you need to invest and WHAT you&lsquo;re
-          investing for. Now comes the exciting part: HOW to actually make your
-          money grow.
-        </p>
-      </motion.div>
+        title={
+          <>
+            📈 <span className="text-green-400">Investing Basics</span>
+          </>
+        }
+        subtitle="Your Complete Guide to Making Your Money Work for You"
+        description={
+          "You now understand WHY you need to invest and WHAT you&lsquo;re investing for. Now comes the exciting part: HOW to actually make your money grow."
+        }
+      />
 
       {/* From Goals to Action */}
       <LessonSection
@@ -322,10 +318,11 @@ export default function InvestingBasicsPage() {
                   onClick={() =>
                     actions.updateInput("timeHorizon", option.value)
                   }
-                  className={`p-3 rounded-lg border transition-colors ${state.timeHorizon === option.value
-                    ? "border-green-500 bg-green-900/30"
-                    : "border-slate-700 bg-slate-800 hover:bg-slate-700"
-                    }`}
+                  className={`p-3 rounded-lg border transition-colors ${
+                    state.timeHorizon === option.value
+                      ? "border-green-500 bg-green-900/30"
+                      : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                  }`}
                 >
                   <span className="text-gray-300">{option.label}</span>
                 </button>
@@ -348,10 +345,11 @@ export default function InvestingBasicsPage() {
                   onClick={() =>
                     actions.updateInput("riskTolerance", option.value)
                   }
-                  className={`p-3 rounded-lg border transition-colors ${state.riskTolerance === option.value
-                    ? "border-green-500 bg-green-900/30"
-                    : "border-slate-700 bg-slate-800 hover:bg-slate-700"
-                    }`}
+                  className={`p-3 rounded-lg border transition-colors ${
+                    state.riskTolerance === option.value
+                      ? "border-green-500 bg-green-900/30"
+                      : "border-slate-700 bg-slate-800 hover:bg-slate-700"
+                  }`}
                 >
                   <span className="text-gray-300">{option.label}</span>
                 </button>
@@ -751,8 +749,10 @@ export default function InvestingBasicsPage() {
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(11)}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
+        <KeyTakeaways
+          animationVariant={fadeInLeft}
+          onViewportEnter={() => {}}
+          items={[
             "Start simple - Index funds and ETFs are perfect for beginners",
             "Diversify broadly - Don't put all money in one investment",
             "Match risk to timeline - Longer goals can handle more risk",
@@ -760,59 +760,29 @@ export default function InvestingBasicsPage() {
             "Stay the course - Time in the market beats timing the market",
             "Keep costs low - Fees compound against you over time",
             "Think decades, not days - Successful investing is boring",
-          ].map((takeaway, index) => (
-            <motion.div
-              key={index}
-              {...fadeInLeft}
-              transition={{ delay: index * 0.1 }}
-              className="flex items-start gap-3"
-            >
-              <span className="text-green-400 text-lg">✓</span>
-              <p className="text-gray-300 text-sm">{takeaway}</p>
-            </motion.div>
-          ))}
-        </div>
+          ]}
+        />
       </LessonSection>
 
       {/* Next Steps */}
-      <motion.div
-        {...bounceIn}
-        className="w-full max-w-5xl text-center"
+      <NextStepsCard
+        animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(12)}
-      >
-        <Card className="bg-slate-900 border-slate-800 p-6">
-          <h3 className="text-xl font-semibold text-green-400 mb-4">
-            🚀 What&lsquo;s Next?
-          </h3>
-          <p className="text-gray-300 mb-6">
-            Now that you understand the basics of investing, our next lesson
-            will teach you how to actually build your first portfolio.
-            You&lsquo;ll learn specific fund recommendations, how to allocate
-            your money, and how to put together a complete investment plan that
-            matches your goals.
-          </p>
-
-          <Progress value={75} className="mb-4" />
-          <p className="text-sm text-gray-400 mb-6">
-            Lesson 3 of 4 —{" "}
-            {state.lessonProgress === 100
-              ? "Complete! You've mastered investing basics."
-              : "Keep exploring to complete this lesson."}
-          </p>
-
-          <Link href="/lessons/build-your-first-portfolio">
-            <Button>Next Lesson →</Button>
-          </Link>
-
-          {state.lessonProgress === 100 && (
-            <motion.p {...scaleIn} className="text-green-400 text-sm mt-4">
-              Remember: The best investment strategy is the one you can stick
-              with. Don&lsquo;t let perfect be the enemy of good – start
-              investing today, even if it&lsquo;s not perfect.
-            </motion.p>
-          )}
-        </Card>
-      </motion.div>
+        description={
+          "Now that you understand the basics of investing, our next lesson will teach you how to actually build your first portfolio. You&lsquo;ll learn specific fund recommendations, how to allocate your money, and how to put together a complete investment plan that matches your goals."
+        }
+        progressValue={75}
+        lessonLabel={`Lesson 3 of 4 — ${
+          state.lessonProgress === 100
+            ? "Complete! You've mastered investing basics."
+            : "Keep exploring to complete this lesson."
+        }`}
+        completeMessage={
+          state.lessonProgress === 100
+            ? "Remember: The best investment strategy is the one you can stick with. Don&lsquo;t let perfect be the enemy of good – start investing today, even if it&lsquo;s not perfect."
+            : undefined
+        }
+      />
     </div>
   );
 }

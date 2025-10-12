@@ -60,6 +60,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/((?!_next|.*\\..*|api).*)", // all non-API paths without static files
-    "/api/user/:path*", // keep API user routes matched for auth
+    "/api/user/", // keep API user routes matched for auth
   ],
 };

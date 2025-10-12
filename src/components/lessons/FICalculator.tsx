@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { fadeInLeft, fadeInRight, scaleIn } from "@/constants/animations";
 import { useState } from "react";
+import { fiCalculatorSchema } from "@/lib/validationSchemes";
+import { toast } from "sonner";
 
 export function FICalculator({
   onCurrentAgeChange,
@@ -20,6 +22,30 @@ export function FICalculator({
   const [savingsRate, setSavingsRate] = useState(20);
   const [expectedReturn, setExpectedReturn] = useState(7);
   const [showFICalculation, setShowFICalculation] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateAll = () => {
+    const result = fiCalculatorSchema.safeParse({
+      currentAge,
+      selectedFIAge,
+      currentNetWorth,
+      monthlyIncome,
+      monthlyExpenses,
+      savingsRate,
+      expectedReturn,
+    });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of result.error.issues) {
+        const path = issue.path[0] as string;
+        if (path && !fieldErrors[path]) fieldErrors[path] = issue.message;
+      }
+      setErrors(fieldErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
 
   const annualExpenses = monthlyExpenses * 12;
   const fiNumber = annualExpenses * 25;
@@ -30,16 +56,19 @@ export function FICalculator({
   const totalMonths = yearsToFI * 12;
   const futureValueFromCurrent =
     currentNetWorth * Math.pow(1 + expectedReturn / 100, yearsToFI);
-  const futureValueFromSavings =
-    monthlySavings *
-    ((Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn);
+  const growthFactor =
+    monthlyReturn === 0
+      ? totalMonths
+      : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
+  const futureValueFromSavings = monthlySavings * growthFactor;
   const totalFutureValue = futureValueFromCurrent + futureValueFromSavings;
 
   const fiGap = Math.max(0, fiNumber - totalFutureValue);
-  const additionalMonthlySavingsNeeded =
-    fiGap > 0
-      ? fiGap / ((Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn)
-      : 0;
+  const denom =
+    monthlyReturn === 0
+      ? totalMonths
+      : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
+  const additionalMonthlySavingsNeeded = fiGap > 0 ? fiGap / denom : 0;
 
   if (!onCurrentAgeChange) {
     onCurrentAgeChange = (age: number) => {
@@ -64,9 +93,27 @@ export function FICalculator({
             <input
               type="number"
               value={currentAge}
-              onChange={(e) => onCurrentAgeChange(Number(e.target.value))}
-              className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
+              onChange={(e) => {
+                e.preventDefault();
+                onCurrentAgeChange(Number(e.target.value));
+                validateAll();
+              }}
+              onFocus={(e) => e.target.select()}
+              aria-invalid={Boolean(errors.currentAge) || undefined}
+              aria-describedby={
+                errors.currentAge ? "currentAge-error" : undefined
+              }
+              className={`w-full bg-slate-700 text-white p-3 rounded border ${
+                errors.currentAge
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-slate-600"
+              }`}
             />
+            {errors.currentAge && (
+              <p id="currentAge-error" className="mt-1 text-xs text-red-400">
+                {errors.currentAge}
+              </p>
+            )}
           </div>
 
           <div>
@@ -74,9 +121,26 @@ export function FICalculator({
             <input
               type="number"
               value={selectedFIAge}
-              onChange={(e) => setSelectedFIAge(Number(e.target.value))}
-              className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
+              onChange={(e) => {
+                setSelectedFIAge(Number(e.target.value));
+                validateAll();
+              }}
+              onFocus={(e) => e.target.select()}
+              aria-invalid={Boolean(errors.selectedFIAge) || undefined}
+              aria-describedby={
+                errors.selectedFIAge ? "selectedFIAge-error" : undefined
+              }
+              className={`w-full bg-slate-700 text-white p-3 rounded border ${
+                errors.selectedFIAge
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-slate-600"
+              }`}
             />
+            {errors.selectedFIAge && (
+              <p id="selectedFIAge-error" className="mt-1 text-xs text-red-400">
+                {errors.selectedFIAge}
+              </p>
+            )}
           </div>
 
           <div>
@@ -86,9 +150,29 @@ export function FICalculator({
             <input
               type="number"
               value={currentNetWorth}
-              onChange={(e) => setCurrentNetWorth(Number(e.target.value))}
-              className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
+              onChange={(e) => {
+                setCurrentNetWorth(Number(e.target.value));
+                validateAll();
+              }}
+              onFocus={(e) => e.target.select()}
+              aria-invalid={Boolean(errors.currentNetWorth) || undefined}
+              aria-describedby={
+                errors.currentNetWorth ? "currentNetWorth-error" : undefined
+              }
+              className={`w-full bg-slate-700 text-white p-3 rounded border ${
+                errors.currentNetWorth
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-slate-600"
+              }`}
             />
+            {errors.currentNetWorth && (
+              <p
+                id="currentNetWorth-error"
+                className="mt-1 text-xs text-red-400"
+              >
+                {errors.currentNetWorth}
+              </p>
+            )}
           </div>
 
           <div>
@@ -96,9 +180,26 @@ export function FICalculator({
             <input
               type="number"
               value={monthlyIncome}
-              onChange={(e) => setMonthlyIncome(Number(e.target.value))}
-              className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
+              onChange={(e) => {
+                setMonthlyIncome(Number(e.target.value));
+                validateAll();
+              }}
+              onFocus={(e) => e.target.select()}
+              aria-invalid={Boolean(errors.monthlyIncome) || undefined}
+              aria-describedby={
+                errors.monthlyIncome ? "monthlyIncome-error" : undefined
+              }
+              className={`w-full bg-slate-700 text-white p-3 rounded border ${
+                errors.monthlyIncome
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-slate-600"
+              }`}
             />
+            {errors.monthlyIncome && (
+              <p id="monthlyIncome-error" className="mt-1 text-xs text-red-400">
+                {errors.monthlyIncome}
+              </p>
+            )}
           </div>
 
           <div>
@@ -106,9 +207,29 @@ export function FICalculator({
             <input
               type="number"
               value={monthlyExpenses}
-              onChange={(e) => setMonthlyExpenses(Number(e.target.value))}
-              className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
+              onChange={(e) => {
+                setMonthlyExpenses(Number(e.target.value));
+                validateAll();
+              }}
+              onFocus={(e) => e.target.select()}
+              aria-invalid={Boolean(errors.monthlyExpenses) || undefined}
+              aria-describedby={
+                errors.monthlyExpenses ? "monthlyExpenses-error" : undefined
+              }
+              className={`w-full bg-slate-700 text-white p-3 rounded border ${
+                errors.monthlyExpenses
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-slate-600"
+              }`}
             />
+            {errors.monthlyExpenses && (
+              <p
+                id="monthlyExpenses-error"
+                className="mt-1 text-xs text-red-400"
+              >
+                {errors.monthlyExpenses}
+              </p>
+            )}
           </div>
 
           <div>
@@ -118,9 +239,29 @@ export function FICalculator({
             <input
               type="number"
               value={expectedReturn}
-              onChange={(e) => setExpectedReturn(Number(e.target.value))}
-              className="w-full bg-slate-700 border-slate-600 text-white p-3 rounded border"
+              onChange={(e) => {
+                setExpectedReturn(Number(e.target.value));
+                validateAll();
+              }}
+              onFocus={(e) => e.target.select()}
+              aria-invalid={Boolean(errors.expectedReturn) || undefined}
+              aria-describedby={
+                errors.expectedReturn ? "expectedReturn-error" : undefined
+              }
+              className={`w-full bg-slate-700 text-white p-3 rounded border ${
+                errors.expectedReturn
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/30"
+                  : "border-slate-600"
+              }`}
             />
+            {errors.expectedReturn && (
+              <p
+                id="expectedReturn-error"
+                className="mt-1 text-xs text-red-400"
+              >
+                {errors.expectedReturn}
+              </p>
+            )}
           </div>
 
           <div>
@@ -132,7 +273,10 @@ export function FICalculator({
               min="0"
               max="80"
               value={savingsRate}
-              onChange={(e) => setSavingsRate(Number(e.target.value))}
+              onChange={(e) => {
+                setSavingsRate(Number(e.target.value));
+                validateAll();
+              }}
               className="w-full"
             />
             <div className="flex justify-between text-xs text-gray-400 mt-1">
@@ -140,11 +284,24 @@ export function FICalculator({
               <span>40%</span>
               <span>80%</span>
             </div>
+            {errors.savingsRate && (
+              <p className="mt-1 text-xs text-red-400">{errors.savingsRate}</p>
+            )}
           </div>
         </div>
 
         <Button
-          onClick={() => setShowFICalculation(true)}
+          onClick={() => {
+            if (validateAll()) {
+              setShowFICalculation(true);
+            } else {
+              setShowFICalculation(false);
+              toast.error("Please correct the highlighted fields", {
+                description:
+                  "Some inputs are invalid. Review errors and try again.",
+              });
+            }
+          }}
           className="w-full bg-green-600 hover:bg-green-700 mt-6"
         >
           Calculate My Path to FI

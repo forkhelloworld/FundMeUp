@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
-import { recordLessonCompletion } from "@/lib/achievements/service";
+import {
+  awardAchievement,
+  type AchievementKey,
+} from "@/lib/achievements/service";
 import { handleApiError } from "@/lib/api-error";
 
 interface JwtPayloadWithId {
@@ -20,23 +23,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  let achievementKey: AchievementKey;
   try {
     const body = await request.json();
-    const slug = body?.slug || body?.lessonSlug;
+    achievementKey = body?.achievementKey;
 
-    if (!slug || typeof slug !== "string") {
+    if (!achievementKey) {
       return NextResponse.json(
-        { error: "Lesson slug is required" },
+        { error: "Achievement key required" },
         { status: 400 }
       );
     }
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
+  }
 
-    await recordLessonCompletion(userId, slug);
+  try {
+    const wasAwarded = await awardAchievement(userId, achievementKey);
+
     return NextResponse.json({
-      message: "Lesson completed successfully",
       success: true,
+      awarded: wasAwarded,
+      achievementKey,
     });
   } catch (error) {
-    return handleApiError(error, { userId });
+    return handleApiError(error, { userId, achievementKey });
   }
 }

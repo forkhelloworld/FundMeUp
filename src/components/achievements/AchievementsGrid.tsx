@@ -9,14 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-
-export interface ApiAchievement {
-  id: number;
-  key: string;
-  title: string;
-  description: string;
-  unlocked: boolean;
-}
+import type { ApiAchievement } from "@/types/achievements";
 
 export function AchievementsGrid({
   achievements,

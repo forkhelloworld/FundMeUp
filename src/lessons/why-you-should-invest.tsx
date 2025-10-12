@@ -1,9 +1,10 @@
 "use client";
 import { LessonSection } from "@/components/lessons/LessonSection";
 import { Quiz } from "@/components/lessons/Quiz";
+import { LessonHero } from "@/components/lessons/LessonHero";
+import { KeyTakeaways } from "@/components/lessons/KeyTakeaways";
+import { NextStepsCard } from "@/components/lessons/NextStepsCard";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {
   bounceIn,
   fadeInLeft,
@@ -14,8 +15,6 @@ import {
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { CompleteLessonButton } from "@/components/lessons/CompleteLessonButton";
 
 export default function LessonPage() {
   const { state, actions } = useLessonState();
@@ -28,22 +27,17 @@ export default function LessonPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center px-4 py-8 md:px-6 md:py-12">
       {/* Hero Section */}
-      <motion.div
-        {...bounceIn}
-        className="text-center max-w-5xl mb-8 md:mb-12"
+      <LessonHero
+        animationVariant={bounceIn}
         onViewportEnter={() => handleProgress(1)}
-      >
-        <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">
-          💰 Why You Need to <span className="text-green-400">Invest</span>
-        </h1>
-        <p className="text-gray-300 text-lg md:text-xl leading-relaxed">
-          Your Journey to Financial Freedom Starts Here
-        </p>
-        <p className="text-gray-400 text-base md:text-lg mt-3 md:mt-4">
-          You don&lsquo;t need to be rich to start investing. But if you never
-          start, it will be much harder to ever get rich.
-        </p>
-      </motion.div>
+        title={
+          <>
+            💰 Why You Need to <span className="text-green-400">Invest</span>
+          </>
+        }
+        subtitle="Your Journey to Financial Freedom Starts Here"
+        description="You don&lsquo;t need to be rich to start investing. But if you never start, it will be much harder to ever get rich."
+      />
 
       {/* Reality Check Section */}
       <LessonSection
@@ -156,8 +150,8 @@ export default function LessonPage() {
               {...(index === 0
                 ? fadeInLeft
                 : index === 1
-                ? fadeInUp
-                : fadeInRight)}
+                  ? fadeInUp
+                  : fadeInRight)}
               className={`bg-${pillar.color}-900/20 p-4 md:p-6 rounded-lg border border-${pillar.color}-800`}
             >
               <h3
@@ -320,71 +314,36 @@ export default function LessonPage() {
         animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(8)}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
+        <KeyTakeaways
+          animationVariant={fadeInLeft}
+          items={[
             "Inflation is your enemy - It silently erodes your purchasing power every year",
             "Time is your best friend - Starting early gives you a massive advantage",
             "You don't need to be perfect - You just need to start and be consistent",
             "Small amounts matter - $50/month invested is infinitely better than $0",
             "Knowledge is power - The more you learn, the more confident you'll become",
-          ].map((takeaway, index) => (
-            <motion.div
-              key={index}
-              {...fadeInLeft}
-              transition={{ delay: index * 0.1 }}
-              className="flex items-start gap-3"
-            >
-              <span className="text-green-400 text-base md:text-lg">✓</span>
-              <p className="text-gray-300 text-sm md:text-base">{takeaway}</p>
-            </motion.div>
-          ))}
-        </div>
+          ]}
+        />
       </LessonSection>
 
       {/* Next Steps */}
-      <motion.div
-        {...fadeInUp}
-        className="w-full max-w-5xl text-center"
+      <NextStepsCard
+        animationVariant={fadeInUp}
         onViewportEnter={() => handleProgress(9)}
-      >
-        <Card className="bg-slate-900 border-slate-800 p-4 md:p-6">
-          <h3 className="text-lg md:text-xl font-semibold text-green-400 mb-3 md:mb-4">
-            🚀 What&lsquo;s Next?
-          </h3>
-          <p className="text-gray-300 mb-4 md:mb-6 text-sm md:text-base">
-            Now that you understand WHY you need to invest, our next lesson will
-            teach you HOW to set clear, achievable financial goals. Because
-            without a target, you&lsquo;re just throwing darts in the dark.
-          </p>
-
-          <Progress value={25} className="mb-3 md:mb-4" />
-          <p className="text-sm text-gray-400 mb-4 md:mb-6">
-            Lesson 1 of 4 —{" "}
-            {state.lessonProgress === 100
-              ? "Complete! You've mastered why investing matters."
-              : "Keep exploring to complete this lesson."}
-          </p>
-
-          <Link href="/lessons/set-your-financial-goal">
-            <Button>Next Lesson →</Button>
-          </Link>
-
-          {state.lessonProgress === 100 && (
-            <motion.p {...scaleIn} className="text-green-400 text-sm mt-4">
-              Remember: Every expert was once a beginner. The difference between
-              those who build wealth and those who don&lsquo;t isn&lsquo;t
-              intelligence or income – it&lsquo;s taking action.
-            </motion.p>
-          )}
-        </Card>
-      </motion.div>
-
-      <div className="mt-8 md:mt-10 flex items-center gap-3">
-        <Link href="/lessons">
-          <Button variant="outline">Back to lessons</Button>
-        </Link>
-        <CompleteLessonButton />
-      </div>
+        description={
+          "Now that you understand WHY you need to invest, our next lesson will teach you HOW to set clear, achievable financial goals. Because without a target, you're just throwing darts in the dark."
+        }
+        progressValue={25}
+        lessonLabel={`Lesson 1 of 4 — ${state.lessonProgress === 100
+            ? "Complete! You've mastered why investing matters."
+            : "Keep exploring to complete this lesson."
+          }`}
+        completeMessage={
+          state.lessonProgress === 100
+            ? "Remember: Every expert was once a beginner. The difference between those who build wealth and those who don't isn't intelligence or income – it's taking action."
+            : undefined
+        }
+      />
     </div>
   );
 }
