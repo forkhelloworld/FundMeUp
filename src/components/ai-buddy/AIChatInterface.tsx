@@ -11,6 +11,9 @@ import {
   Calculator,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useUserStore } from "@/lib/user-store";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   id: string;
@@ -21,6 +24,7 @@ interface Message {
 
 export function AIChatInterface() {
   const t = useTranslations("aiBuddy");
+  const { token } = useUserStore();
 
   const QUICK_ACTIONS = [
     {
@@ -76,56 +80,68 @@ export function AIChatInterface() {
       timestamp: new Date(),
     };
 
+    // Prepare messages for API (include conversation history + new user message)
+    const apiMessages = [
+      ...messages.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+      {
+        role: "user" as const,
+        content: content.trim(),
+      },
+    ];
+
+    // Update UI with user message
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
 
-    // Simulate AI response (in a real app, this would call an API)
-    setTimeout(() => {
+    try {
+      // Call AI API
+      const response = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to get AI response");
+      }
+
+      const data = await response.json();
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: generateAIResponse(content),
+        content:
+          data.content || "I apologize, but I couldn't generate a response.",
         role: "assistant",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiResponse]);
+    } catch (error) {
+      console.error("AI chat error:", error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content:
+          error instanceof Error
+            ? `Sorry, there was an error: ${error.message}`
+            : "Sorry, there was an error communicating with the AI. Please try again.",
+        role: "assistant",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const handleQuickAction = (prompt: string) => {
     handleSendMessage(prompt);
-  };
-
-  const generateAIResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-
-    if (input.includes("basics") || input.includes("beginner")) {
-      return "Great question! Let me break down the basics of investing:\n\n**1. What is Investing?**\nInvesting is putting your money to work to potentially earn more money over time. Instead of just saving, you're buying assets that can grow in value.\n\n**2. Key Concepts:**\n• **Compound Interest**: Your money earns money, and that money earns more money\n• **Diversification**: Don't put all your eggs in one basket\n• **Risk vs Return**: Higher potential returns usually come with higher risk\n• **Time Horizon**: The longer you invest, the more time your money has to grow\n\n**3. Common Investment Types:**\n• **Stocks**: Ownership in companies\n• **Bonds**: Loans to governments or companies\n• **ETFs/Mutual Funds**: Collections of stocks and bonds\n• **Index Funds**: Track market indexes like the S&P 500\n\nWould you like me to explain any of these concepts in more detail?";
-    }
-
-    if (input.includes("portfolio") || input.includes("allocation")) {
-      return "Portfolio allocation is crucial for managing risk and achieving your goals! Here's a framework:\n\n**The 100-Age Rule:**\n• If you're 25, consider 75% stocks, 25% bonds\n• If you're 50, consider 50% stocks, 50% bonds\n\n**Asset Allocation by Age:**\n• **20s-30s**: 80-90% stocks, 10-20% bonds\n• **40s-50s**: 60-70% stocks, 30-40% bonds\n• **60s+**: 40-50% stocks, 50-60% bonds\n\n**Diversification Within Stocks:**\n• **Large Cap**: 40% (established companies)\n• **Mid Cap**: 20% (growing companies)\n• **Small Cap**: 10% (smaller companies)\n• **International**: 20% (global exposure)\n• **REITs**: 10% (real estate)\n\n**Key Principles:**\n• Rebalance annually\n• Consider your risk tolerance\n• Think about your time horizon\n• Don't try to time the market\n\nWhat's your current age and risk tolerance? I can help you create a more personalized allocation!";
-    }
-
-    if (input.includes("risk") || input.includes("tolerance")) {
-      return "Understanding your risk tolerance is essential for successful investing! Here's how to assess it:\n\n**Risk Tolerance Factors:**\n\n**1. Time Horizon**\n• **Short-term (1-3 years)**: Conservative approach\n• **Medium-term (3-10 years)**: Balanced approach\n• **Long-term (10+ years)**: Can take more risk\n\n**2. Financial Situation**\n• **Emergency Fund**: 3-6 months of expenses\n• **Debt Level**: High debt = lower risk tolerance\n• **Income Stability**: Stable job = can take more risk\n\n**3. Emotional Comfort**\n• How much can you lose without losing sleep?\n• Can you handle 20-30% market drops?\n• Do you panic sell during downturns?\n\n**Risk Tolerance Levels:**\n• **Conservative**: 20-30% stocks, 70-80% bonds\n• **Moderate**: 50-60% stocks, 40-50% bonds\n• **Aggressive**: 80-90% stocks, 10-20% bonds\n\n**Quick Test:**\nIf you invested $10,000 and it dropped to $7,000 in a month, would you:\nA) Sell everything (Conservative)\nB) Hold and wait (Moderate)\nC) Buy more (Aggressive)\n\nWhat's your gut reaction to market volatility?";
-    }
-
-    if (input.includes("etf") || input.includes("fund")) {
-      return "ETFs (Exchange-Traded Funds) are excellent for beginners! Here's why:\n\n**What are ETFs?**\nETFs are investment funds that trade on stock exchanges, like individual stocks, but hold a collection of assets.\n\n**Benefits:**\n• **Diversification**: One ETF can hold hundreds of stocks\n• **Low Cost**: Lower fees than mutual funds\n• **Transparency**: You know exactly what you own\n• **Flexibility**: Buy/sell anytime during market hours\n• **Tax Efficient**: Generally better tax treatment\n\n**Popular Beginner ETFs:**\n• **VTI**: Total US Stock Market\n• **VXUS**: International Stocks\n• **BND**: Total Bond Market\n• **VT**: Total World Stock Market\n\n**How to Choose:**\n• Look for low expense ratios (<0.1%)\n• Consider broad market exposure\n• Check the fund's holdings\n• Review historical performance\n\n**Sample Portfolio:**\n• 60% VTI (US stocks)\n• 20% VXUS (International)\n• 20% BND (Bonds)\n\nWould you like me to explain any specific ETFs or help you build a simple portfolio?";
-    }
-
-    if (
-      input.includes("retirement") ||
-      input.includes("401k") ||
-      input.includes("ira")
-    ) {
-      return "Retirement planning is one of the most important financial goals! Here's your roadmap:\n\n**Retirement Accounts:**\n\n**1. 401(k) - Employer Sponsored**\n• **Traditional**: Pre-tax contributions, taxed in retirement\n• **Roth**: After-tax contributions, tax-free in retirement\n• **Employer Match**: Free money! Contribute at least enough to get the full match\n\n**2. IRA - Individual Retirement Account**\n• **Traditional IRA**: Pre-tax contributions\n• **Roth IRA**: After-tax contributions (income limits apply)\n• **2024 Limits**: $7,000 ($8,000 if 50+)\n\n**Contribution Strategy:**\n1. **First**: Get full 401(k) employer match\n2. **Second**: Max out Roth IRA (if eligible)\n3. **Third**: Max out 401(k) ($23,000 in 2024)\n4. **Fourth**: Taxable brokerage account\n\n**Retirement Math:**\n• **Rule of 25**: Need 25x annual expenses\n• **4% Rule**: Can withdraw 4% annually\n• **Example**: $50,000/year expenses = $1.25M needed\n\n**Time is Your Best Friend:**\n• Start early, even with small amounts\n• Compound interest works magic over decades\n• Every year you wait costs you thousands\n\nWhat's your current age and retirement goal? I can help you calculate how much to save!";
-    }
-
-    // Default response for other queries
-    return "That's a great question! I'd be happy to help you with that. Could you provide a bit more detail about what specific aspect you'd like me to explain? For example:\n\n• Are you looking for beginner-friendly explanations?\n• Do you want to understand the risks involved?\n• Are you interested in specific investment types?\n• Do you need help with portfolio planning?\n\nI'm here to make investing concepts clear and help you make informed decisions. What would you like to dive deeper into?";
   };
 
   return (
@@ -147,14 +163,14 @@ export function AIChatInterface() {
               }`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                   message.role === "user" ? "bg-emerald-500" : "bg-blue-500"
                 }`}
               >
                 {message.role === "user" ? (
-                  <User size={16} className="text-white" />
+                  <User size={20} className="text-white" />
                 ) : (
-                  <Bot size={16} className="text-white" />
+                  <Bot size={20} className="text-white" />
                 )}
               </div>
               <div
@@ -164,9 +180,116 @@ export function AIChatInterface() {
                     : "bg-slate-800 border border-slate-700"
                 }`}
               >
-                <div className="text-sm text-slate-200 whitespace-pre-wrap">
-                  {message.content}
-                </div>
+                {message.role === "assistant" ? (
+                  <div className="text-sm text-slate-200 prose prose-invert prose-sm max-w-none">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        // Customize markdown elements styling
+                        h1: ({ node, ...props }) => (
+                          <h1
+                            className="text-lg font-bold text-slate-100 mb-2 mt-2"
+                            {...props}
+                          />
+                        ),
+                        h2: ({ node, ...props }) => (
+                          <h2
+                            className="text-base font-bold text-slate-100 mb-2 mt-2"
+                            {...props}
+                          />
+                        ),
+                        h3: ({ node, ...props }) => (
+                          <h3
+                            className="text-sm font-semibold text-slate-100 mb-1 mt-1"
+                            {...props}
+                          />
+                        ),
+                        p: ({ node, ...props }) => (
+                          <p className="mb-2 text-slate-200" {...props} />
+                        ),
+                        ul: ({ node, ...props }) => (
+                          <ul
+                            className="list-disc list-inside mb-2 space-y-1 text-slate-200"
+                            {...props}
+                          />
+                        ),
+                        ol: ({ node, ...props }) => (
+                          <ol
+                            className="list-decimal list-inside mb-2 space-y-1 text-slate-200"
+                            {...props}
+                          />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <li className="text-slate-200" {...props} />
+                        ),
+                        strong: ({ node, ...props }) => (
+                          <strong
+                            className="font-semibold text-slate-100"
+                            {...props}
+                          />
+                        ),
+                        em: ({ node, ...props }) => (
+                          <em className="italic text-slate-300" {...props} />
+                        ),
+                        code: ({ node, ...props }) => (
+                          <code
+                            className="bg-slate-700/50 text-emerald-300 px-1 py-0.5 rounded text-xs"
+                            {...props}
+                          />
+                        ),
+                        pre: ({ node, ...props }) => (
+                          <pre
+                            className="bg-slate-900 p-2 rounded mb-2 overflow-x-auto"
+                            {...props}
+                          />
+                        ),
+                        blockquote: ({ node, ...props }) => (
+                          <blockquote
+                            className="border-l-4 border-emerald-500/50 pl-3 italic text-slate-300 mb-2"
+                            {...props}
+                          />
+                        ),
+                        // Table components
+                        table: ({ node, ...props }) => (
+                          <div className="overflow-x-auto my-3">
+                            <table
+                              className="min-w-full border-collapse border border-slate-600 rounded"
+                              {...props}
+                            />
+                          </div>
+                        ),
+                        thead: ({ node, ...props }) => (
+                          <thead className="bg-slate-700/50" {...props} />
+                        ),
+                        tbody: ({ node, ...props }) => <tbody {...props} />,
+                        tr: ({ node, ...props }) => (
+                          <tr
+                            className="border-b border-slate-600 hover:bg-slate-700/30 transition-colors"
+                            {...props}
+                          />
+                        ),
+                        th: ({ node, ...props }) => (
+                          <th
+                            className="border border-slate-600 px-4 py-2 text-left font-semibold text-slate-100 bg-slate-700/70"
+                            {...props}
+                          />
+                        ),
+                        td: ({ node, ...props }) => (
+                          <td
+                            className="border border-slate-600 px-4 py-2 text-slate-200"
+                            {...props}
+                          />
+                        ),
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="text-sm text-slate-200 whitespace-pre-wrap">
+                    {message.content}
+                  </div>
+                )}
                 <div className="text-xs text-slate-400 mt-1">
                   {message.timestamp.toLocaleTimeString([], {
                     hour: "2-digit",
@@ -181,8 +304,8 @@ export function AIChatInterface() {
         {isLoading && (
           <div className="flex justify-start">
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-                <Bot size={16} className="text-white" />
+              <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                <Bot size={20} className="text-white" />
               </div>
               <div className="bg-slate-800 border border-slate-700 rounded-lg p-3">
                 <div className="flex space-x-1">
