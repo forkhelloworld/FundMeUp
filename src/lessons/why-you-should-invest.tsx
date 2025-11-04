@@ -23,7 +23,7 @@ export default function LessonPage() {
 
   // Progress tracking
   const handleProgress = (section: number) => {
-    actions.updateProgress(section, 9);
+    actions.updateProgress(section, 10);
   };
 
   return (
@@ -61,19 +61,19 @@ export default function LessonPage() {
                 <p className="text-blue-300 text-sm">
                   {t("sections.realityCheck.savingsAccount")}
                 </p>
-                <p className="text-2xl font-bold text-blue-400">$11,049</p>
+                <p className="text-2xl font-bold text-blue-400">$11,617</p>
               </div>
               <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
                 <p className="text-green-300 text-sm">
                   {t("sections.realityCheck.friendInvestment")}
                 </p>
-                <p className="text-2xl font-bold text-green-400">$38,697</p>
+                <p className="text-2xl font-bold text-green-400">$76,123</p>
               </div>
               <div className="bg-red-900/30 p-4 rounded-lg border border-red-700">
                 <p className="text-red-300 text-sm">
                   {t("sections.realityCheck.moneyLeft")}
                 </p>
-                <p className="text-2xl font-bold text-red-400">$27,648</p>
+                <p className="text-2xl font-bold text-red-400">$64,506</p>
               </div>
             </div>
             <p className="text-gray-300 text-center text-sm md:text-base">
@@ -146,11 +146,53 @@ export default function LessonPage() {
         </div>
       </LessonSection>
 
+      {/* Why Invest Now Section */}
+      <LessonSection
+        title={t("sections.whyInvestNow.title")}
+        animationVariant={fadeInRight}
+        onViewportEnter={() => handleProgress(5)}
+      >
+        <p className="text-gray-300 leading-relaxed mb-4 md:mb-6">
+          {t("sections.whyInvestNow.content")}
+        </p>
+
+        <div className="space-y-4 md:space-y-6">
+          {t
+            .raw("sections.whyInvestNow.points")
+            .map(
+              (
+                point: { title: string; description: string },
+                index: number
+              ) => (
+                <motion.div
+                  key={index}
+                  {...fadeInLeft}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-blue-900/20 border border-blue-800 rounded-lg p-4 md:p-6"
+                >
+                  <h4 className="text-blue-300 font-semibold text-base md:text-lg mb-2">
+                    {point.title}
+                  </h4>
+                  <p className="text-gray-300 text-sm md:text-base">
+                    {point.description}
+                  </p>
+                </motion.div>
+              )
+            )}
+        </div>
+
+        <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700 mt-4 md:mt-6">
+          <p className="text-blue-200 font-semibold text-center text-sm md:text-base">
+            {t("sections.whyInvestNow.conclusion")}
+          </p>
+        </div>
+      </LessonSection>
+
       {/* Myths Section */}
       <LessonSection
         title={t("sections.myths.title")}
         animationVariant={slideInFromBottom}
-        onViewportEnter={() => handleProgress(5)}
+        onViewportEnter={() => handleProgress(6)}
       >
         <div className="space-y-4 md:space-y-6">
           {t
@@ -177,7 +219,7 @@ export default function LessonPage() {
       <LessonSection
         title={t("sections.earlyStart.title")}
         animationVariant={fadeInRight}
-        onViewportEnter={() => handleProgress(6)}
+        onViewportEnter={() => handleProgress(7)}
       >
         <div className="space-y-4">
           <motion.div
@@ -189,34 +231,32 @@ export default function LessonPage() {
             </p>
           </motion.div>
 
-          {t
-            .raw("sections.earlyStart.scenarios")
-            .map(
-              (
-                scenario: {
-                  title: string;
-                  color: string;
-                  details: Array<string>;
-                },
-                index: number
-              ) => (
-                <motion.div
-                  key={index}
-                  {...fadeInLeft}
-                  transition={{ delay: index * 0.2 }}
-                  className={`bg-${scenario.color}-900/20 p-4 rounded-lg border border-${scenario.color}-700`}
-                >
-                  <h4 className={`text-${scenario.color}-300 font-semibold`}>
-                    {scenario.title}:
-                  </h4>
-                  <ul className="text-gray-300 text-sm md:text-base mt-2 space-y-1">
-                    {scenario.details.map((detail: string, i: number) => (
-                      <li key={i}>• {detail}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )
-            )}
+          {t.raw("sections.earlyStart.scenarios").map(
+            (
+              scenario: {
+                title: string;
+                color: string;
+                details: Array<string>;
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...fadeInLeft}
+                transition={{ delay: index * 0.2 }}
+                className={`bg-${scenario.color}-900/20 p-4 rounded-lg border border-${scenario.color}-700`}
+              >
+                <h4 className={`text-${scenario.color}-300 font-semibold`}>
+                  {scenario.title}:
+                </h4>
+                <ul className="text-gray-300 text-sm md:text-base mt-2 space-y-1">
+                  {scenario.details.map((detail: string, i: number) => (
+                    <li key={i}>• {detail}</li>
+                  ))}
+                </ul>
+              </motion.div>
+            )
+          )}
 
           <motion.div
             {...fadeInUp}
@@ -233,7 +273,7 @@ export default function LessonPage() {
       <LessonSection
         title={t("sections.quiz.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(7)}
+        onViewportEnter={() => handleProgress(8)}
       >
         <Quiz
           question={t("sections.quiz.question")}
@@ -251,7 +291,7 @@ export default function LessonPage() {
       <LessonSection
         title={t("sections.keyTakeaways.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(8)}
+        onViewportEnter={() => handleProgress(9)}
       >
         <KeyTakeaways
           animationVariant={fadeInLeft}
@@ -262,7 +302,7 @@ export default function LessonPage() {
       {/* Next Steps */}
       <NextStepsCard
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(9)}
+        onViewportEnter={() => handleProgress(10)}
         title={t("sections.nextSteps.title")}
         description={t("sections.nextSteps.description")}
         progressValue={25}
