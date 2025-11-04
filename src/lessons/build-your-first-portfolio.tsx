@@ -8,11 +8,11 @@ import { PortfolioCalculator } from "@/components/lessons/PortfolioCalculator";
 import {
   bounceIn,
   fadeInLeft,
-  fadeInRight,
   fadeInUp,
   slideInFromBottom,
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 export default function DiversifiedPortfolioPage() {
@@ -21,7 +21,7 @@ export default function DiversifiedPortfolioPage() {
 
   // Progress tracking
   const handleProgress = (section: number) => {
-    actions.updateProgress(section, 8);
+    actions.updateProgress(section, 9);
   };
 
   return (
@@ -35,11 +35,149 @@ export default function DiversifiedPortfolioPage() {
         description={t("description")}
       />
 
+      {/* How to Choose ETFs */}
+      <LessonSection
+        title={t("sections.howToChooseETF.title")}
+        animationVariant={{
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.6 },
+        }}
+        onViewportEnter={() => handleProgress(2)}
+      >
+        <p className="text-gray-300 leading-relaxed mb-6">
+          {t("sections.howToChooseETF.content")}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {t.raw("sections.howToChooseETF.criteria").map(
+            (
+              criterion: {
+                title: string;
+                icon: string;
+                description: string;
+                details: string[];
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...fadeInUp}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="bg-blue-900/20 border-blue-700 p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-3xl">{criterion.icon}</span>
+                    <h3 className="text-xl font-semibold text-blue-300">
+                      {criterion.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-300 mb-4">{criterion.description}</p>
+                  <ul className="space-y-2">
+                    {criterion.details.map((detail: string, i: number) => (
+                      <li
+                        key={i}
+                        className="text-gray-300 text-sm flex items-start gap-2"
+                      >
+                        <span className="text-blue-400 mt-1">•</span>
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              </motion.div>
+            )
+          )}
+        </div>
+
+        <Card className="bg-green-900/30 border-green-700 p-6">
+          <h3 className="text-lg font-semibold text-green-300 mb-3">
+            {t("sections.howToChooseETF.types.title")}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {t
+              .raw("sections.howToChooseETF.types.items")
+              .map(
+                (
+                  type: { name: string; description: string },
+                  index: number
+                ) => (
+                  <div key={index} className="bg-green-900/20 p-4 rounded">
+                    <h4 className="font-semibold text-green-200 mb-2">
+                      {type.name}
+                    </h4>
+                    <p className="text-gray-300 text-sm">{type.description}</p>
+                  </div>
+                )
+              )}
+          </div>
+        </Card>
+      </LessonSection>
+
+      {/* How to Choose OVDP */}
+      <LessonSection
+        title={t("sections.howToChooseOVDP.title")}
+        animationVariant={fadeInLeft}
+        onViewportEnter={() => handleProgress(3)}
+      >
+        <p className="text-gray-300 leading-relaxed mb-6">
+          {t("sections.howToChooseOVDP.content")}
+        </p>
+
+        <div className="space-y-6 mb-6">
+          {t.raw("sections.howToChooseOVDP.factors").map(
+            (
+              factor: {
+                title: string;
+                icon: string;
+                description: string;
+                tips: string[];
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...fadeInLeft}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="bg-yellow-900/20 border-yellow-700 p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-3xl">{factor.icon}</span>
+                    <h3 className="text-xl font-semibold text-yellow-300">
+                      {factor.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-300 mb-4">{factor.description}</p>
+                  <div className="bg-yellow-900/30 p-4 rounded">
+                    <h4 className="font-semibold text-yellow-200 mb-2">
+                      {t("sections.howToChooseOVDP.whatToLookFor")}:
+                    </h4>
+                    <ul className="space-y-1">
+                      {factor.tips.map((tip: string, i: number) => (
+                        <li key={i} className="text-gray-300 text-sm">
+                          • {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Card>
+              </motion.div>
+            )
+          )}
+        </div>
+
+        <Card className="bg-blue-900/30 border-blue-700 p-6">
+          <p className="text-blue-200 text-center">
+            {t("sections.howToChooseOVDP.importantNote")}
+          </p>
+        </Card>
+      </LessonSection>
+
       {/* Why Diversification Matters */}
       <LessonSection
         title={t("sections.diversificationMatters.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(2)}
+        onViewportEnter={() => handleProgress(3)}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="bg-slate-800/50 border-slate-700 p-6 backdrop-blur-sm">
@@ -83,258 +221,149 @@ export default function DiversifiedPortfolioPage() {
         </Card>
       </LessonSection>
 
-      {/* The Four-Fund Foundation */}
+      {/* Building Portfolio by Risk Profile */}
       <LessonSection
-        title={t("sections.fourFundFoundation.title")}
+        title={t("sections.riskBasedPortfolio.title")}
         animationVariant={fadeInLeft}
-        onViewportEnter={() => handleProgress(3)}
+        onViewportEnter={() => handleProgress(4)}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Domestic Stocks */}
-          <Card className="bg-blue-900/20 border-blue-700 p-6 hover:bg-blue-900/30 transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-blue-300">
-                {t("sections.fourFundFoundation.domesticStocks.title")}
-              </h3>
-              <span className="text-2xl font-bold text-blue-400">
-                {t("sections.fourFundFoundation.domesticStocks.percentage")}
-              </span>
-            </div>
-            <div className="space-y-3 text-gray-300 text-sm">
-              <p>
-                <strong>What it holds:</strong>{" "}
-                {t("sections.fourFundFoundation.domesticStocks.whatItHolds")}
-              </p>
-              <p>
-                <strong>Why this fund:</strong>{" "}
-                {t("sections.fourFundFoundation.domesticStocks.whyThisFund")}
-              </p>
-              <p>
-                <strong>Role:</strong>{" "}
-                {t("sections.fourFundFoundation.domesticStocks.role")}
-              </p>
-              <div className="bg-blue-900/40 p-3 rounded mt-4">
-                <p className="text-blue-200">
-                  <strong>Alternatives:</strong>
-                </p>
-                {t
-                  .raw(
-                    "sections.fourFundFoundation.domesticStocks.alternatives"
-                  )
-                  .map((alt: string, index: number) => (
-                    <p key={index}>• {alt}</p>
-                  ))}
-              </div>
-            </div>
-          </Card>
+        <p className="text-gray-300 leading-relaxed mb-6">
+          {t("sections.riskBasedPortfolio.content")}
+        </p>
 
-          {/* International Stocks */}
-          <Card className="bg-green-900/20 border-green-700 p-6 hover:bg-green-900/30 transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-green-300">
-                {t("sections.fourFundFoundation.internationalStocks.title")}
-              </h3>
-              <span className="text-2xl font-bold text-green-400">
-                {t(
-                  "sections.fourFundFoundation.internationalStocks.percentage"
-                )}
-              </span>
-            </div>
-            <div className="space-y-3 text-gray-300 text-sm">
-              <p>
-                <strong>What it holds:</strong>{" "}
-                {t(
-                  "sections.fourFundFoundation.internationalStocks.whatItHolds"
-                )}
-              </p>
-              <p>
-                <strong>Why this fund:</strong>{" "}
-                {t(
-                  "sections.fourFundFoundation.internationalStocks.whyThisFund"
-                )}
-              </p>
-              <p>
-                <strong>Role:</strong>{" "}
-                {t("sections.fourFundFoundation.internationalStocks.role")}
-              </p>
-              <div className="bg-green-900/40 p-3 rounded mt-4">
-                <p className="text-green-200">
-                  <strong>Alternatives:</strong>
-                </p>
-                {t
-                  .raw(
-                    "sections.fourFundFoundation.internationalStocks.alternatives"
-                  )
-                  .map((alt: string, index: number) => (
-                    <p key={index}>• {alt}</p>
-                  ))}
-              </div>
-            </div>
-          </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {t.raw("sections.riskBasedPortfolio.profiles").map(
+            (
+              profile: {
+                name: string;
+                color: string;
+                icon: string;
+                description: string;
+                allocation: {
+                  stocks: string;
+                  bonds: string;
+                  cash?: string;
+                };
+                characteristics: string[];
+                bestFor: string;
+              },
+              index: number
+            ) => {
+              const colorClasses: Record<
+                string,
+                { card: string; title: string; bg: string }
+              > = {
+                green: {
+                  card: "bg-green-900/20 border-green-700",
+                  title: "text-green-300",
+                  bg: "bg-green-900/30",
+                },
+                yellow: {
+                  card: "bg-yellow-900/20 border-yellow-700",
+                  title: "text-yellow-300",
+                  bg: "bg-yellow-900/30",
+                },
+                red: {
+                  card: "bg-red-900/20 border-red-700",
+                  title: "text-red-300",
+                  bg: "bg-red-900/30",
+                },
+              };
+              const colors = colorClasses[profile.color] || colorClasses.yellow;
 
-          {/* US Bonds */}
-          <Card className="bg-yellow-900/20 border-yellow-700 p-6 hover:bg-yellow-900/30 transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-yellow-300">
-                {t("sections.fourFundFoundation.domesticBonds.title")}
-              </h3>
-              <span className="text-2xl font-bold text-yellow-400">
-                {t("sections.fourFundFoundation.domesticBonds.percentage")}
-              </span>
-            </div>
-            <div className="space-y-3 text-gray-300 text-sm">
-              <p>
-                <strong>What it holds:</strong>{" "}
-                {t("sections.fourFundFoundation.domesticBonds.whatItHolds")}
-              </p>
-              <p>
-                <strong>Why this fund:</strong>{" "}
-                {t("sections.fourFundFoundation.domesticBonds.whyThisFund")}
-              </p>
-              <p>
-                <strong>Role:</strong>{" "}
-                {t("sections.fourFundFoundation.domesticBonds.role")}
-              </p>
-              <div className="bg-yellow-900/40 p-3 rounded mt-4">
-                <p className="text-yellow-200">
-                  <strong>Alternatives:</strong>
-                </p>
-                {t
-                  .raw("sections.fourFundFoundation.domesticBonds.alternatives")
-                  .map((alt: string, index: number) => (
-                    <p key={index}>• {alt}</p>
-                  ))}
-              </div>
-            </div>
-          </Card>
+              return (
+                <motion.div
+                  key={index}
+                  {...fadeInLeft}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className={`${colors.card} p-6`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">{profile.icon}</span>
+                      <h3 className={`text-xl font-semibold ${colors.title}`}>
+                        {profile.name}
+                      </h3>
+                    </div>
+                    <p className="text-gray-300 mb-4 text-sm">
+                      {profile.description}
+                    </p>
 
-          {/* International Bonds */}
-          <Card className="bg-purple-900/20 border-purple-700 p-6 hover:bg-purple-900/30 transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-purple-300">
-                {t("sections.fourFundFoundation.internationalBonds.title")}
-              </h3>
-              <span className="text-2xl font-bold text-purple-400">
-                {t("sections.fourFundFoundation.internationalBonds.percentage")}
-              </span>
-            </div>
-            <div className="space-y-3 text-gray-300 text-sm">
-              <p>
-                <strong>What it holds:</strong>{" "}
-                {t(
-                  "sections.fourFundFoundation.internationalBonds.whatItHolds"
-                )}
-              </p>
-              <p>
-                <strong>Why this fund:</strong>{" "}
-                {t(
-                  "sections.fourFundFoundation.internationalBonds.whyThisFund"
-                )}
-              </p>
-              <p>
-                <strong>Role:</strong>{" "}
-                {t("sections.fourFundFoundation.internationalBonds.role")}
-              </p>
-              <div className="bg-purple-900/40 p-3 rounded mt-4">
-                <p className="text-purple-200">
-                  <strong>Alternatives:</strong>
-                </p>
-                {t
-                  .raw(
-                    "sections.fourFundFoundation.internationalBonds.alternatives"
-                  )
-                  .map((alt: string, index: number) => (
-                    <p key={index}>• {alt}</p>
-                  ))}
-              </div>
-            </div>
-          </Card>
+                    <div className={`${colors.bg} p-4 rounded mb-4`}>
+                      <h4 className={`font-semibold ${colors.title} mb-2`}>
+                        {t("sections.riskBasedPortfolio.allocation")}:
+                      </h4>
+                      <ul className="space-y-1 text-gray-300 text-sm">
+                        <li>
+                          • {t("sections.riskBasedPortfolio.stocks")}:{" "}
+                          {profile.allocation.stocks}
+                        </li>
+                        <li>
+                          • {t("sections.riskBasedPortfolio.bonds")}:{" "}
+                          {profile.allocation.bonds}
+                        </li>
+                        {profile.allocation.cash && (
+                          <li>
+                            • {t("sections.riskBasedPortfolio.cash")}:{" "}
+                            {profile.allocation.cash}
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4
+                        className={`font-semibold ${colors.title} mb-2 text-sm`}
+                      >
+                        {t("sections.riskBasedPortfolio.characteristics")}:
+                      </h4>
+                      <ul className="space-y-1">
+                        {profile.characteristics.map(
+                          (char: string, i: number) => (
+                            <li key={i} className="text-gray-300 text-sm">
+                              • {char}
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+
+                    <div className="border-t border-gray-700 pt-3 mt-4">
+                      <p className="text-gray-400 text-xs">
+                        <strong>
+                          {t("sections.riskBasedPortfolio.bestFor")}:
+                        </strong>{" "}
+                        {profile.bestFor}
+                      </p>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            }
+          )}
         </div>
+
+        <Card className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-blue-700 p-6">
+          <h3 className="text-lg font-semibold text-center mb-3">
+            {t("sections.riskBasedPortfolio.formula.title")}
+          </h3>
+          <p className="text-gray-300 text-center mb-4">
+            {t("sections.riskBasedPortfolio.formula.description")}
+          </p>
+          <div className="bg-blue-900/40 p-4 rounded">
+            <p className="text-blue-200 font-mono text-center">
+              {t("sections.riskBasedPortfolio.formula.rule")}
+            </p>
+          </div>
+        </Card>
       </LessonSection>
 
       {/* Portfolio Calculator */}
       <LessonSection
         title={t("sections.calculator.title")}
         animationVariant={slideInFromBottom}
-        onViewportEnter={() => handleProgress(4)}
-      >
-        <PortfolioCalculator />
-      </LessonSection>
-
-      {/* Alternative Approaches */}
-      <LessonSection
-        title={t("sections.alternativeApproaches.title")}
-        animationVariant={fadeInRight}
         onViewportEnter={() => handleProgress(5)}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-slate-800/50 border-slate-700 p-6">
-            <h3 className="text-lg font-semibold text-blue-300 mb-3">
-              {t("sections.alternativeApproaches.threeFund.title")}
-            </h3>
-            <div className="text-sm text-gray-300 space-y-2 mb-4">
-              <p>
-                • {t("sections.alternativeApproaches.threeFund.description")}
-              </p>
-              <p>
-                • {t("sections.alternativeApproaches.threeFund.allocation")}
-              </p>
-              {t
-                .raw("sections.alternativeApproaches.threeFund.benefits")
-                .map((benefit: string, index: number) => (
-                  <p key={index}>• {benefit}</p>
-                ))}
-            </div>
-            <div className="text-xs text-gray-400 bg-slate-700 p-2 rounded">
-              {t("sections.alternativeApproaches.threeFund.bestFor")}
-            </div>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-slate-700 p-6">
-            <h3 className="text-lg font-semibold text-green-300 mb-3">
-              {t("sections.alternativeApproaches.growthFocused.title")}
-            </h3>
-            <div className="text-sm text-gray-300 space-y-2 mb-4">
-              <p>
-                •{" "}
-                {t("sections.alternativeApproaches.growthFocused.description")}
-              </p>
-              <p>
-                • {t("sections.alternativeApproaches.growthFocused.allocation")}
-              </p>
-              {t
-                .raw("sections.alternativeApproaches.growthFocused.benefits")
-                .map((benefit: string, index: number) => (
-                  <p key={index}>• {benefit}</p>
-                ))}
-            </div>
-            <div className="text-xs text-gray-400 bg-slate-700 p-2 rounded">
-              {t("sections.alternativeApproaches.growthFocused.bestFor")}
-            </div>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-slate-700 p-6">
-            <h3 className="text-lg font-semibold text-purple-300 mb-3">
-              {t("sections.alternativeApproaches.targetDate.title")}
-            </h3>
-            <div className="text-sm text-gray-300 space-y-2 mb-4">
-              <p>
-                • {t("sections.alternativeApproaches.targetDate.description")}
-              </p>
-              <p>
-                • {t("sections.alternativeApproaches.targetDate.allocation")}
-              </p>
-              {t
-                .raw("sections.alternativeApproaches.targetDate.benefits")
-                .map((benefit: string, index: number) => (
-                  <p key={index}>• {benefit}</p>
-                ))}
-            </div>
-            <div className="text-xs text-gray-400 bg-slate-700 p-2 rounded">
-              {t("sections.alternativeApproaches.targetDate.bestFor")}
-            </div>
-          </Card>
-        </div>
+        <PortfolioCalculator />
       </LessonSection>
 
       {/* Implementation Steps */}
@@ -374,6 +403,14 @@ export default function DiversifiedPortfolioPage() {
               )
             )}
         </div>
+        {t("sections.implementationSteps.importantNote") &&
+          t("sections.implementationSteps.importantNote").trim() !== "" && (
+            <Card className="bg-yellow-900/30 border-yellow-700 p-6 mt-6">
+              <p className="text-yellow-200 font-semibold text-center">
+                {t("sections.implementationSteps.importantNote")}
+              </p>
+            </Card>
+          )}
       </LessonSection>
 
       {/* Common Mistakes */}
