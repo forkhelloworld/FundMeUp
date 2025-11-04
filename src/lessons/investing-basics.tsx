@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LessonSection } from "@/components/lessons/LessonSection";
 import { Quiz } from "@/components/lessons/Quiz";
 import { LessonHero } from "@/components/lessons/LessonHero";
@@ -16,22 +16,26 @@ import {
   slideInFromBottom,
 } from "@/constants/animations";
 import { useLessonState } from "@/hooks/useLessonState";
+import { useUserProfileStore } from "@/lib/userProfile-store";
+import { createLocalizedAssetAllocationSchema } from "@/lib/validationSchemes";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { ZodError } from "zod";
 
 export default function InvestingBasicsPage() {
   const t = useTranslations("lessons.investingBasics");
   const commonT = useTranslations("common");
+  const validationT = useTranslations("settings.validation");
   const { state, actions } = useLessonState();
-
-  // Local state for form data
-  const [formData, setFormData] = useState({
-    riskTolerance: "moderate",
-    currentAge: 25,
-    timeHorizon: 20,
-    currentNetWorth: 0,
-    monthlyContribution: 0,
-  });
+  const {
+    riskTolerance,
+    currentAge,
+    timeHorizon,
+    currentNetWorth,
+    monthlyContribution,
+    setUserProfileData,
+    fetchUserProfileData,
+  } = useUserProfileStore();
 
   // Validation state
   const [validationErrors, setValidationErrors] = useState<{
@@ -40,55 +44,76 @@ export default function InvestingBasicsPage() {
     monthlyContribution?: string;
   }>({});
 
+  // Create validation schema
+  const assetAllocationSchema =
+    createLocalizedAssetAllocationSchema(validationT);
+
+  useEffect(() => {
+    fetchUserProfileData();
+  }, [fetchUserProfileData]);
+
   // Validation functions
   const validateField = (field: string, value: number) => {
-    // Simple validation - can be enhanced later
-    if (field === "currentAge" && (value < 18 || value > 100)) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        [field]: "Age must be between 18 and 100",
-      }));
-      return false;
+    try {
+      const data = {
+        currentAge,
+        currentNetWorth,
+        monthlyContribution,
+        [field]: value,
+      };
+      assetAllocationSchema.parse(data);
+      setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const fieldError = error.errors.find((err) => err.path.includes(field));
+        if (fieldError) {
+          setValidationErrors((prev) => ({
+            ...prev,
+            [field]: fieldError.message,
+          }));
+        }
+      }
     }
-    if (field === "currentNetWorth" && value < 0) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        [field]: "Net worth cannot be negative",
-      }));
-      return false;
-    }
-    if (field === "monthlyContribution" && value < 0) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        [field]: "Monthly contribution cannot be negative",
-      }));
-      return false;
-    }
-    setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
-    return true;
   };
 
   const validateAllFields = () => {
-    const isValid =
-      validateField("currentAge", formData.currentAge) &&
-      validateField("currentNetWorth", formData.currentNetWorth) &&
-      validateField("monthlyContribution", formData.monthlyContribution);
-    return isValid;
+    try {
+      const data = {
+        currentAge,
+        currentNetWorth,
+        monthlyContribution,
+      };
+      assetAllocationSchema.parse(data);
+      setValidationErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const newErrors: typeof validationErrors = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as keyof typeof validationErrors] =
+              err.message;
+          }
+        });
+        setValidationErrors(newErrors);
+      }
+      return false;
+    }
   };
 
   // Input handlers with validation
   const handleAgeChange = (value: number) => {
-    setFormData((prev) => ({ ...prev, currentAge: value }));
+    setUserProfileData({ currentAge: value });
     validateField("currentAge", value);
   };
 
   const handleNetWorthChange = (value: number) => {
-    setFormData((prev) => ({ ...prev, currentNetWorth: value }));
+    setUserProfileData({ currentNetWorth: value });
     validateField("currentNetWorth", value);
   };
 
   const handleContributionChange = (value: number) => {
-    setFormData((prev) => ({ ...prev, monthlyContribution: value }));
+    setUserProfileData({ monthlyContribution: value });
     validateField("monthlyContribution", value);
   };
 
@@ -99,7 +124,7 @@ export default function InvestingBasicsPage() {
   };
 
   // Calculations
-  const stockPercentage = Math.max(20, Math.min(90, 110 - formData.currentAge));
+  const stockPercentage = Math.max(20, Math.min(90, 110 - currentAge));
   const bondPercentage = 100 - stockPercentage;
   const dcaExample = {
     month1: { price: 100, shares: state.dcaAmount / 100 },
@@ -116,22 +141,22 @@ export default function InvestingBasicsPage() {
 
   // Progress tracking
   const handleProgress = (section: number) => {
-    actions.updateProgress(section, 11);
+    actions.updateProgress(section, 13);
   };
 
   // Event handlers
   const handleRiskQuiz = () => {
     let score = 0;
-    if (formData.currentAge < 30) score += 3;
-    else if (formData.currentAge < 50) score += 2;
+    if (currentAge < 30) score += 3;
+    else if (currentAge < 50) score += 2;
     else score += 1;
 
-    if (formData.timeHorizon > 20) score += 3;
-    else if (formData.timeHorizon > 10) score += 2;
+    if (timeHorizon > 20) score += 3;
+    else if (timeHorizon > 10) score += 2;
     else score += 1;
 
-    if (formData.riskTolerance === "aggressive") score += 3;
-    else if (formData.riskTolerance === "moderate") score += 2;
+    if (riskTolerance === "aggressive") score += 3;
+    else if (riskTolerance === "moderate") score += 2;
     else score += 1;
 
     if (score >= 8)
@@ -161,7 +186,7 @@ export default function InvestingBasicsPage() {
         onViewportEnter={() => handleProgress(1)}
         title={
           <>
-            📈 <span className="text-green-400">{t("title")}</span>
+            <span className="text-green-400">{t("title")}</span>
           </>
         }
         subtitle={t("subtitle")}
@@ -185,11 +210,94 @@ export default function InvestingBasicsPage() {
         </div>
       </LessonSection>
 
+      {/* Ukraine Investing Options */}
+      <LessonSection
+        title={t("sections.ukraineInvesting.title")}
+        animationVariant={fadeInRight}
+        onViewportEnter={() => handleProgress(3)}
+      >
+        <p className="text-gray-300 leading-relaxed mb-6">
+          {t("sections.ukraineInvesting.content")}
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {t.raw("sections.ukraineInvesting.options").map(
+            (
+              option: {
+                title: string;
+                icon: string;
+                color: string;
+                description: string;
+                pros: string[];
+                cons: string[];
+                bestFor: string;
+              },
+              index: number
+            ) => (
+              <motion.div
+                key={index}
+                {...scaleIn}
+                transition={{ delay: index * 0.1 }}
+                className={`bg-${option.color}-900/20 p-6 rounded-lg border border-${option.color}-700`}
+              >
+                <h3
+                  className={`text-${option.color}-300 font-semibold mb-3 flex items-center gap-2`}
+                >
+                  <span className="text-2xl">{option.icon}</span>
+                  {option.title}
+                </h3>
+                <p className="text-gray-300 text-sm mb-4">
+                  {option.description}
+                </p>
+
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="text-green-300 font-semibold text-sm mb-2">
+                      Плюси:
+                    </h4>
+                    <ul className="text-gray-300 text-sm space-y-1">
+                      {option.pros.map((pro: string, i: number) => (
+                        <li key={i}>✓ {pro}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="text-red-300 font-semibold text-sm mb-2">
+                      Мінуси:
+                    </h4>
+                    <ul className="text-gray-300 text-sm space-y-1">
+                      {option.cons.map((con: string, i: number) => (
+                        <li key={i}>⚠ {con}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div
+                  className={`bg-${option.color}-900/40 p-3 rounded-lg mt-4`}
+                >
+                  <p className={`text-${option.color}-200 text-sm`}>
+                    <strong>Найкраще для:</strong> {option.bestFor}
+                  </p>
+                </div>
+              </motion.div>
+            )
+          )}
+        </div>
+
+        <div className="bg-yellow-900/30 p-6 rounded-lg border border-yellow-700">
+          <p className="text-yellow-200 font-semibold text-center">
+            {t("sections.ukraineInvesting.importantNote")}
+          </p>
+        </div>
+      </LessonSection>
+
       {/* Investment Universe */}
       <LessonSection
         title={t("sections.investmentUniverse.title")}
         animationVariant={fadeInRight}
-        onViewportEnter={() => handleProgress(3)}
+        onViewportEnter={() => handleProgress(4)}
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[
@@ -271,7 +379,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.riskReturn.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(4)}
+        onViewportEnter={() => handleProgress(5)}
       >
         <div className="bg-yellow-900/30 p-4 rounded-lg border border-yellow-700 mb-6">
           <p className="text-yellow-200 font-semibold text-center">
@@ -332,7 +440,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.riskQuiz.title")}
         animationVariant={slideInFromBottom}
-        onViewportEnter={() => handleProgress(5)}
+        onViewportEnter={() => handleProgress(6)}
       >
         <div className="space-y-6">
           <div>
@@ -341,12 +449,9 @@ export default function InvestingBasicsPage() {
             </label>
             <input
               type="number"
-              value={formData.currentAge}
+              value={currentAge}
               onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  currentAge: Number(e.target.value),
-                }))
+                setUserProfileData({ currentAge: Number(e.target.value) })
               }
               className="w-full bg-slate-800 border-slate-700 text-white mt-2 p-2 rounded border"
             />
@@ -363,13 +468,10 @@ export default function InvestingBasicsPage() {
                   <button
                     key={option.value}
                     onClick={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        timeHorizon: Number(option.value),
-                      }))
+                      setUserProfileData({ timeHorizon: Number(option.value) })
                     }
                     className={`p-3 rounded-lg border transition-colors ${
-                      formData.timeHorizon === Number(option.value)
+                      timeHorizon === Number(option.value)
                         ? "border-green-500 bg-green-900/30"
                         : "border-slate-700 bg-slate-800 hover:bg-slate-700"
                     }`}
@@ -391,13 +493,10 @@ export default function InvestingBasicsPage() {
                   <button
                     key={option.value}
                     onClick={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        riskTolerance: option.value,
-                      }))
+                      setUserProfileData({ riskTolerance: option.value })
                     }
                     className={`p-3 rounded-lg border transition-colors ${
-                      formData.riskTolerance === option.value
+                      riskTolerance === option.value
                         ? "border-green-500 bg-green-900/30"
                         : "border-slate-700 bg-slate-800 hover:bg-slate-700"
                     }`}
@@ -428,9 +527,9 @@ export default function InvestingBasicsPage() {
             </p>
             <p className="text-blue-300 text-sm text-center">
               {t("sections.riskQuiz.resultSuffix", {
-                age: formData.currentAge,
-                timeHorizon: formData.timeHorizon,
-                riskTolerance: formData.riskTolerance,
+                age: currentAge,
+                timeHorizon,
+                riskTolerance,
               })}
             </p>
           </motion.div>
@@ -441,7 +540,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.assetAllocation.title")}
         animationVariant={fadeInRight}
-        onViewportEnter={() => handleProgress(6)}
+        onViewportEnter={() => handleProgress(7)}
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div
@@ -459,7 +558,7 @@ export default function InvestingBasicsPage() {
                 <input
                   id="calcAge"
                   type="number"
-                  value={formData.currentAge || ""}
+                  value={currentAge || ""}
                   onChange={(e) => handleAgeChange(Number(e.target.value))}
                   className={`w-full bg-slate-800 text-white p-2 rounded border ${
                     validationErrors.currentAge
@@ -480,7 +579,7 @@ export default function InvestingBasicsPage() {
                 <input
                   id="calcSavings"
                   type="number"
-                  value={formData.currentNetWorth || ""}
+                  value={currentNetWorth || ""}
                   onChange={(e) => handleNetWorthChange(Number(e.target.value))}
                   className={`w-full bg-slate-800 text-white p-2 rounded border ${
                     validationErrors.currentNetWorth
@@ -501,7 +600,7 @@ export default function InvestingBasicsPage() {
                 <input
                   id="calcContribution"
                   type="number"
-                  value={formData.monthlyContribution || ""}
+                  value={monthlyContribution || ""}
                   onChange={(e) =>
                     handleContributionChange(Number(e.target.value))
                   }
@@ -577,9 +676,9 @@ export default function InvestingBasicsPage() {
                   <p className="text-yellow-200 text-sm">
                     <strong>
                       {t("sections.assetAllocation.yourAge", {
-                        age: formData.currentAge,
-                        stockPercentage: 110 - formData.currentAge,
-                        bondPercentage: 100 - (110 - formData.currentAge),
+                        age: currentAge,
+                        stockPercentage: 110 - currentAge,
+                        bondPercentage: 100 - (110 - currentAge),
                       })}
                     </strong>
                   </p>
@@ -594,7 +693,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.dcaSimulator.title")}
         animationVariant={rotateIn}
-        onViewportEnter={() => handleProgress(7)}
+        onViewportEnter={() => handleProgress(8)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
           <strong>{t("sections.dcaSimulator.description")}</strong>
@@ -697,7 +796,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.strategyBuilder.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(8)}
+        onViewportEnter={() => handleProgress(9)}
       >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {t.raw("sections.strategyBuilder.options").map(
@@ -738,13 +837,24 @@ export default function InvestingBasicsPage() {
             )
           )}
         </div>
+        {t("sections.strategyBuilder.ukraineNote") &&
+          t("sections.strategyBuilder.ukraineNote").trim() !== "" && (
+            <motion.div
+              {...fadeInUp}
+              className="mt-6 bg-blue-900/30 p-6 rounded-lg border border-blue-700"
+            >
+              <p className="text-blue-200 font-semibold text-center">
+                {t("sections.strategyBuilder.ukraineNote")}
+              </p>
+            </motion.div>
+          )}
       </LessonSection>
 
       {/* Common Mistakes */}
       <LessonSection
         title={t("sections.commonMistakes.title")}
         animationVariant={slideInFromBottom}
-        onViewportEnter={() => handleProgress(9)}
+        onViewportEnter={() => handleProgress(10)}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {t.raw("sections.commonMistakes.mistakes").map(
@@ -789,7 +899,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.quiz.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(10)}
+        onViewportEnter={() => handleProgress(11)}
       >
         <Quiz
           question={t("sections.quiz.question")}
@@ -807,7 +917,7 @@ export default function InvestingBasicsPage() {
       <LessonSection
         title={t("sections.keyTakeaways.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(11)}
+        onViewportEnter={() => handleProgress(12)}
       >
         <KeyTakeaways
           animationVariant={fadeInLeft}
@@ -819,7 +929,7 @@ export default function InvestingBasicsPage() {
       {/* Next Steps */}
       <NextStepsCard
         animationVariant={bounceIn}
-        onViewportEnter={() => handleProgress(12)}
+        onViewportEnter={() => handleProgress(13)}
         title={t("sections.nextSteps.title")}
         description={t("sections.nextSteps.description")}
         progressValue={75}

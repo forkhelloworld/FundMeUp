@@ -23,7 +23,7 @@ export default function SetFinancialPlanPage() {
 
   // Progress tracking
   const handleProgress = (section: number) => {
-    actions.updateProgress(section, 10);
+    actions.updateProgress(section, 11);
   };
 
   return (
@@ -37,11 +37,51 @@ export default function SetFinancialPlanPage() {
         description={t("description")}
       />
 
+      {/* Ukraine Context Section - Only shows for Ukrainian locale */}
+      <LessonSection
+        title={t("sections.ukraineContext.title")}
+        animationVariant={fadeInRight}
+        onViewportEnter={() => handleProgress(2)}
+      >
+        <p className="text-gray-300 leading-relaxed mb-6">
+          {t("sections.ukraineContext.content")}
+        </p>
+
+        <div className="space-y-6">
+          {t
+            .raw("sections.ukraineContext.points")
+            .map(
+              (
+                point: { title: string; description: string },
+                index: number
+              ) => (
+                <motion.div
+                  key={index}
+                  {...fadeInLeft}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-blue-900/20 border border-blue-800 rounded-lg p-6"
+                >
+                  <h4 className="text-blue-300 font-semibold mb-3">
+                    {point.title}
+                  </h4>
+                  <p className="text-gray-300">{point.description}</p>
+                </motion.div>
+              )
+            )}
+        </div>
+
+        <div className="bg-blue-900/30 p-6 rounded-lg border border-blue-700 mt-6">
+          <p className="text-blue-200 font-semibold text-center">
+            {t("sections.ukraineContext.conclusion")}
+          </p>
+        </div>
+      </LessonSection>
+
       {/* Why a Financial Plan Matters */}
       <LessonSection
         title={t("sections.financialPlan.title")}
         animationVariant={fadeInLeft}
-        onViewportEnter={() => handleProgress(2)}
+        onViewportEnter={() => handleProgress(3)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
           {t("sections.financialPlan.content")}
@@ -95,7 +135,7 @@ export default function SetFinancialPlanPage() {
       <LessonSection
         title={t("sections.fiFramework.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(3)}
+        onViewportEnter={() => handleProgress(4)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
           {t("sections.fiFramework.content")}
@@ -198,20 +238,20 @@ export default function SetFinancialPlanPage() {
       <LessonSection
         title={t("sections.fiCalculator.title")}
         animationVariant={slideInFromBottom}
-        onViewportEnter={() => handleProgress(4)}
+        onViewportEnter={() => handleProgress(5)}
       >
         <p className="text-gray-300 mb-6">
           {t("sections.fiCalculator.content")}
         </p>
 
-        <FICalculator onViewportEnter={() => handleProgress(4)} />
+        <FICalculator onViewportEnter={() => handleProgress(5)} />
       </LessonSection>
 
       {/* Building Your Supporting Goals */}
       <LessonSection
         title={t("sections.supportingGoals.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(5)}
+        onViewportEnter={() => handleProgress(6)}
       >
         <p className="text-gray-300 leading-relaxed mb-6">
           {t("sections.supportingGoals.content")}
@@ -286,7 +326,7 @@ export default function SetFinancialPlanPage() {
       <LessonSection
         title={t("sections.planningProcess.title")}
         animationVariant={fadeInLeft}
-        onViewportEnter={() => handleProgress(6)}
+        onViewportEnter={() => handleProgress(7)}
       >
         <p className="text-gray-300 mb-6">
           {t("sections.planningProcess.content")}
@@ -339,7 +379,7 @@ export default function SetFinancialPlanPage() {
       <LessonSection
         title={t("sections.quiz.title")}
         animationVariant={slideInFromBottom}
-        onViewportEnter={() => handleProgress(7)}
+        onViewportEnter={() => handleProgress(8)}
       >
         <Quiz
           question={t("sections.quiz.question")}
@@ -357,7 +397,7 @@ export default function SetFinancialPlanPage() {
       <LessonSection
         title={t("sections.implementationChecklist.title")}
         animationVariant={fadeInRight}
-        onViewportEnter={() => handleProgress(8)}
+        onViewportEnter={() => handleProgress(9)}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <motion.div
@@ -404,7 +444,7 @@ export default function SetFinancialPlanPage() {
       <LessonSection
         title={t("sections.keyTakeaways.title")}
         animationVariant={fadeInUp}
-        onViewportEnter={() => handleProgress(9)}
+        onViewportEnter={() => handleProgress(10)}
       >
         <KeyTakeaways
           animationVariant={fadeInLeft}
@@ -415,7 +455,7 @@ export default function SetFinancialPlanPage() {
       {/* Next Steps */}
       <NextStepsCard
         animationVariant={bounceIn}
-        onViewportEnter={() => handleProgress(10)}
+        onViewportEnter={() => handleProgress(11)}
         title={t("sections.nextSteps.title")}
         description={t("sections.nextSteps.description")}
         progressValue={50}

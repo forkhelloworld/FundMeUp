@@ -247,6 +247,25 @@
           "title": "📈 The Magic of Compound Interest",
           "content": "Compound interest is when you earn interest on your interest. It's like a snowball rolling down a hill - it starts small but grows bigger and bigger over time. The earlier you start, the more powerful it becomes."
         },
+        "whyInvestNow": {
+          "title": "⚡ Why Invest Now?",
+          "content": "Economic uncertainty and market volatility can actually create opportunities for investors. While it may seem risky, investing during uncertain times can help protect your capital and preserve its value over the long term.",
+          "points": [
+            {
+              "title": "Market Volatility Creates Opportunities",
+              "description": "During uncertain times, markets can be volatile, but this volatility can create buying opportunities. Dollar-cost averaging helps you take advantage of market fluctuations."
+            },
+            {
+              "title": "Inflation Protection",
+              "description": "Cash loses value over time due to inflation. Investing in diversified assets helps your money grow faster than inflation, preserving and increasing your purchasing power."
+            },
+            {
+              "title": "Currency Diversification",
+              "description": "Don't put all your eggs in one basket - diversify between different currencies and international investments. This protects you from currency risks and economic instability in any single country."
+            }
+          ],
+          "conclusion": "Investing now isn't about luxury - it's about protecting your financial future in uncertain times."
+        },
         "inflation": {
           "title": "💸 The Silent Thief: Inflation",
           "content": "Inflation erodes the purchasing power of your money over time. If inflation is 3% per year, your $100 today will only be worth $97 next year. Investing helps your money grow faster than inflation, preserving and increasing your purchasing power.",
@@ -305,7 +324,7 @@
                 "Starts investing at age 25",
                 "Invests $200 monthly for 10 years, then stops",
                 "Total invested: $24,000",
-                "Value at age 65: $525,000"
+                "Value at age 65: $516,000"
               ],
               "color": "green"
             },
@@ -315,12 +334,12 @@
                 "Starts investing at age 35",
                 "Invests $200 monthly for 30 years",
                 "Total invested: $72,000",
-                "Value at age 65: $379,000"
+                "Value at age 65: $365,000"
               ],
               "color": "red"
             }
           ],
-          "conclusion": "The early bird invested $48,000 less but ended up with $146,000 more! That's the magic of compound interest combined with time."
+          "conclusion": "The early bird invested $48,000 less but ended up with $151,000 more! That's the magic of compound interest combined with time."
         },
         "quiz": {
           "title": "🧠 Quick Knowledge Check",
@@ -392,6 +411,25 @@
         "importance": {
           "title": "🎯 Why Goals Matter",
           "content": "Without a clear goal, investing becomes aimless. A well-defined financial goal gives you direction, motivation, and a way to measure your progress. Whether it's buying a house, retiring comfortably, or building wealth, your goal shapes your investment strategy."
+        },
+        "ukraineContext": {
+          "title": "🌍 Financial Planning in Today's World",
+          "content": "Modern financial planning requires adapting to economic uncertainty, market volatility, and changing global conditions. A solid financial plan provides stability even in uncertain times.",
+          "points": [
+            {
+              "title": "Economic Uncertainty",
+              "description": "Global economic conditions are constantly evolving. Planning with flexibility and diversification helps protect your wealth regardless of market conditions or currency fluctuations."
+            },
+            {
+              "title": "Access to Global Markets",
+              "description": "Today's investors have unprecedented access to international markets through online brokers and ETFs. This allows for true global diversification and reduces country-specific risk."
+            },
+            {
+              "title": "Importance of Liquidity",
+              "description": "In volatile times, having an emergency fund of 3-6 months expenses is crucial. This should be split between cash and easily accessible investments to provide flexibility."
+            }
+          ],
+          "conclusion": "Financial planning in today's world requires careful consideration of global factors, but proper planning and diversification can help you achieve your goals regardless of economic conditions."
         },
         "types": {
           "title": "📋 Types of Financial Goals",
@@ -625,6 +663,82 @@
           "content": "Think of investing like planting a garden. You wouldn't throw seeds randomly in the dirt and hope for the best. You'd choose the right seeds (investments) for your climate (risk tolerance), plant them in good soil (diversified portfolio), water them regularly (consistent contributions), and give them time to grow.",
           "highlight": "Today, you become a money gardener."
         },
+        "ukraineInvesting": {
+          "title": "🌍 Investment Options: Building Your Strategy",
+          "content": "There are many ways to invest, each with different benefits and considerations. Here are the main options available:",
+          "options": [
+            {
+              "title": "Online Brokers",
+              "icon": "🌐",
+              "color": "blue",
+              "description": "Interactive Brokers, Fidelity, Vanguard, Charles Schwab - allow access to global markets with ETFs and stocks.",
+              "pros": [
+                "Full access to global markets",
+                "Low fees on ETFs",
+                "Access to thousands of investment instruments"
+              ],
+              "cons": [
+                "Requires account setup and funding",
+                "Tax implications to understand",
+                "Can be overwhelming for beginners"
+              ],
+              "bestFor": "Investors seeking global diversification and low-cost index funds"
+            },
+            {
+              "title": "Government Bonds",
+              "icon": "🏛️",
+              "color": "green",
+              "description": "Government bonds provide stable income with lower risk. Available through banks or brokerage accounts.",
+              "pros": [
+                "Stable income stream",
+                "Lower risk than stocks",
+                "Easy to access through banks"
+              ],
+              "cons": [
+                "Lower returns than stocks",
+                "Limited diversification",
+                "Sensitive to interest rate changes"
+              ],
+              "bestFor": "Conservative investors seeking stability"
+            },
+            {
+              "title": "High-Yield Savings Accounts",
+              "icon": "💰",
+              "color": "yellow",
+              "description": "Savings accounts offer safety and liquidity, though with lower returns than investments.",
+              "pros": [
+                "FDIC insured (in US)",
+                "Easy to access",
+                "Very low risk"
+              ],
+              "cons": [
+                "Very low returns",
+                "Doesn't beat inflation long-term",
+                "Currency can depreciate"
+              ],
+              "bestFor": "Emergency fund or short-term savings"
+            },
+            {
+              "title": "ETFs Through Brokers",
+              "icon": "📈",
+              "color": "purple",
+              "description": "ETFs are the best option for long-term investing. VTI, VXUS, AGG through any major broker provide global market access.",
+              "pros": [
+                "Broad diversification",
+                "Low fees",
+                "Passive investing",
+                "Historically high returns"
+              ],
+              "cons": [
+                "Requires brokerage account",
+                "Market volatility risk",
+                "Tax considerations"
+              ],
+              "bestFor": "Investors with 5+ year time horizon"
+            }
+          ],
+          "importantNote": "Important: Investment options vary by country and regulations. Always check local regulations and tax implications before investing."
+        },
         "investmentUniverse": {
           "title": "🏗️ The Investment Universe: Your Options Explained",
           "stocks": {
@@ -788,7 +902,8 @@
               ],
               "bestFor": "Beginners who want guidance"
             }
-          ]
+          ],
+          "ukraineNote": ""
         },
         "commonMistakes": {
           "title": "⚠️ Common Beginner Mistakes to Avoid",
@@ -861,6 +976,196 @@
       "subtitle": "Turn Knowledge Into Action",
       "description": "Create a diversified portfolio that aligns with your goals and risk tolerance.",
       "sections": {
+        "howToChooseETF": {
+          "title": "📈 How to Choose ETFs for Investing",
+          "content": "ETFs (Exchange-Traded Funds) are an excellent way to gain access to a variety of stocks and bonds. Here are the key criteria to look for when choosing ETFs:",
+          "criteria": [
+            {
+              "title": "Fees (Expense Ratio)",
+              "icon": "💰",
+              "description": "Fees reduce your returns over time. Even a 0.5% difference can cost thousands of dollars over decades.",
+              "details": [
+                "Look for fees below 0.15% (ideally < 0.10%)",
+                "Compare fees of similar ETFs",
+                "Fees are deducted annually automatically",
+                "Lower fees = more money stays in your portfolio"
+              ]
+            },
+            {
+              "title": "Diversification",
+              "icon": "🌍",
+              "description": "An ETF should cover a wide range of companies or assets to reduce risk.",
+              "details": [
+                "Total market ETFs include hundreds/thousands of companies",
+                "Avoid ETFs concentrated in 10-20 stocks",
+                "International ETFs provide global diversification",
+                "Consider balance between developed and emerging markets"
+              ]
+            },
+            {
+              "title": "Index Type",
+              "icon": "📊",
+              "description": "An ETF may track different indices. Understanding the type helps you choose the right fund.",
+              "details": [
+                "Total market indices (S&P 500, Total Market) - broadest coverage",
+                "Value indices - stocks with low valuations",
+                "Growth indices - stocks with high growth potential",
+                "For beginners: start with total market indices"
+              ]
+            },
+            {
+              "title": "Liquidity and Trading Volume",
+              "icon": "💹",
+              "description": "Liquidity determines how easy it is to buy or sell an ETF without significant losses.",
+              "details": [
+                "Check average daily trading volume",
+                "High volume = easier to buy/sell without losses",
+                "Avoid ETFs with very low volume (< 100k shares per day)",
+                "Spread between bid and ask should be minimal"
+              ]
+            }
+          ],
+          "types": {
+            "title": "Main Types of ETFs for Investing",
+            "items": [
+              {
+                "name": "Total Market",
+                "description": "Covers all or most stocks in the market. Maximum diversification."
+              },
+              {
+                "name": "International",
+                "description": "Stocks from other countries. Helps diversify geographically and by currency."
+              },
+              {
+                "name": "Bonds",
+                "description": "Government or corporate bonds. Reduces portfolio risk."
+              }
+            ]
+          }
+        },
+        "howToChooseOVDP": {
+          "title": "🏛️ How to Choose Government Bonds",
+          "content": "Government bonds allow you to earn stable income and support your country's economy. Here are the key factors to consider:",
+          "whatToLookFor": "What to Look For",
+          "factors": [
+            {
+              "title": "Currency of Issue",
+              "icon": "💱",
+              "description": "Bonds can be issued in local currency or stable currencies like USD/EUR. For protection against currency devaluation, consider bonds in stable currencies.",
+              "tips": [
+                "Bonds in USD/EUR protect against local currency devaluation",
+                "Stable currency bonds have more stable purchasing power",
+                "Consider balance between local and foreign currency bonds",
+                "Foreign currency bonds are better for long-term capital preservation"
+              ]
+            },
+            {
+              "title": "Maturity Term",
+              "icon": "📅",
+              "description": "The term determines how long your money will be locked in. Shorter terms offer more flexibility.",
+              "tips": [
+                "Short-term (3-12 months) - higher liquidity, lower risks",
+                "Medium-term (1-3 years) - balance between yield and flexibility",
+                "Long-term (3-5+ years) - higher yield but less flexibility",
+                "For beginners: start with short-term (6-12 months)"
+              ]
+            },
+            {
+              "title": "Yield (Coupon Rate)",
+              "icon": "📈",
+              "description": "Yield shows how much you'll earn annually. Usually higher yield = higher risk.",
+              "tips": [
+                "Compare yields of different bond issues",
+                "Foreign currency bonds usually have lower yield but better inflation protection",
+                "Check if yield exceeds inflation",
+                "Warning: very high yield may indicate higher risk"
+              ]
+            },
+            {
+              "title": "Liquidity and Ability to Sell",
+              "icon": "💼",
+              "description": "Some bonds can be sold on the secondary market before maturity, others can only be held until the end of the term.",
+              "tips": [
+                "Check if you can sell the bond early",
+                "Bonds on secondary market may have price volatility",
+                "For emergencies: keep some in short-term bonds",
+                "Some bonds can be used as collateral for loans"
+              ]
+            }
+          ],
+          "importantNote": "Important: Government bonds are backed by the state, so they carry government guarantee. However, always check the terms of specific issues and pay attention to currency and maturity term."
+        },
+        "riskBasedPortfolio": {
+          "title": "⚖️ Building Portfolio by Risk Profile",
+          "content": "Your risk profile determines the optimal allocation between stocks (ETFs) and bonds (government bonds). Instead of specific recommendations, here's how to build a portfolio according to your profile:",
+          "allocation": "Recommended Allocation",
+          "stocks": "Stocks (ETFs)",
+          "bonds": "Bonds",
+          "cash": "Cash/Deposits",
+          "characteristics": "Characteristics",
+          "bestFor": "Best For",
+          "profiles": [
+            {
+              "name": "Conservative",
+              "color": "green",
+              "icon": "🛡️",
+              "description": "Minimal risk, stable income. Focus on capital preservation.",
+              "allocation": {
+                "stocks": "20-30%",
+                "bonds": "50-60%",
+                "cash": "10-20%"
+              },
+              "characteristics": [
+                "Low portfolio volatility",
+                "Stable regular income",
+                "Capital protection is priority",
+                "Suitable for short-term goals"
+              ],
+              "bestFor": "Investors close to retirement, with low risk tolerance, or with short-term goals (1-5 years)"
+            },
+            {
+              "name": "Moderate",
+              "color": "yellow",
+              "icon": "⚖️",
+              "description": "Balance between growth and stability. Most popular choice.",
+              "allocation": {
+                "stocks": "50-60%",
+                "bonds": "30-40%",
+                "cash": "5-10%"
+              },
+              "characteristics": [
+                "Moderate volatility",
+                "Combination of growth and stable income",
+                "Suitable for medium-term goals",
+                "Allows to beat inflation with reasonable risk"
+              ],
+              "bestFor": "Middle-aged investors with goals for 5-15 years, seeking balance between growth and safety"
+            },
+            {
+              "name": "Aggressive",
+              "color": "red",
+              "icon": "🚀",
+              "description": "Maximum growth potential. Higher risks but higher potential returns.",
+              "allocation": {
+                "stocks": "70-80%",
+                "bonds": "15-25%",
+                "cash": "5%"
+              },
+              "characteristics": [
+                "High portfolio volatility",
+                "Maximum growth potential",
+                "May experience significant declines in short term",
+                "Better for long-term goals"
+              ],
+              "bestFor": "Young investors with long-term goals (15+ years), high risk tolerance, and ability to recover from losses"
+            }
+          ],
+          "formula": {
+            "title": "Simple Allocation Rule",
+            "description": "For a quick reference, you can use a formula based on age:",
+            "rule": "Stock percentage = 110 - your age\nExample: 30 years old = 80% stocks, 20% bonds"
+          }
+        },
         "assetAllocation": {
           "title": "📊 Asset Allocation",
           "content": "Asset allocation is how you divide your investments among different asset classes like stocks, bonds, and cash. This is one of the most important decisions you'll make as an investor."
@@ -898,86 +1203,6 @@
             "content": "A globally diversified portfolio has never had a negative 20-year return in modern history, while individual stocks and sectors can go to zero."
           }
         },
-        "fourFundFoundation": {
-          "title": "🏗️ The Four-Fund Foundation",
-          "domesticStocks": {
-            "title": "🇺🇸 ITOT - US Total Market",
-            "percentage": "50%",
-            "whatItHolds": "3,000+ US companies (Apple, Microsoft, Amazon, etc.)",
-            "whyThisFund": "Broadest US coverage, ultra-low 0.03% fee",
-            "role": "Core holding for developed market stability and growth",
-            "alternatives": [
-              "VTI (Vanguard) - 0.03% fee, slightly different weighting",
-              "SWTSX (Schwab) - 0.03% fee, mutual fund version"
-            ]
-          },
-          "internationalStocks": {
-            "title": "🌍 VXUS - International Stocks",
-            "percentage": "20%",
-            "whatItHolds": "7,000+ non-US companies (Nestlé, Samsung, TSMC)",
-            "whyThisFund": "Developed + emerging markets, 0.08% fee",
-            "role": "Hedges against US-only risk, captures global growth",
-            "alternatives": [
-              "FTIHX (Fidelity) - 0.06% fee, similar coverage",
-              "SWISX (Schwab) - 0.06% fee, international focus"
-            ]
-          },
-          "domesticBonds": {
-            "title": "🏛️ AGG - US Total Bond Market",
-            "percentage": "20%",
-            "whatItHolds": "10,000+ US government & corporate bonds",
-            "whyThisFund": "Broad bond exposure, 0.03% fee, high quality",
-            "role": "Stability during stock market crashes, income generation",
-            "alternatives": [
-              "BND (Vanguard) - 0.03% fee, nearly identical holdings",
-              "SWAGX (Schwab) - 0.04% fee, similar strategy"
-            ]
-          },
-          "internationalBonds": {
-            "title": "🌐 BNDX - International Bonds",
-            "percentage": "10%",
-            "whatItHolds": "Government bonds from developed countries",
-            "whyThisFund": "Currency diversification, 0.07% fee",
-            "role": "Hedges US dollar risk, international stability",
-            "alternatives": [
-              "Skip it: Many experts suggest US bonds only",
-              "VTEB (Vanguard Tax-Exempt) if in high tax bracket"
-            ]
-          }
-        },
-        "alternativeApproaches": {
-          "title": "🎨 Alternative Portfolio Approaches",
-          "threeFund": {
-            "title": "🎯 Three-Fund Portfolio",
-            "description": "Skip international bonds (BNDX)",
-            "allocation": "70% ITOT, 20% VXUS, 10% AGG",
-            "benefits": [
-              "Simpler, still well-diversified",
-              "Most popular approach"
-            ],
-            "bestFor": "Perfect for beginners who want simplicity"
-          },
-          "growthFocused": {
-            "title": "🚀 Growth-Focused",
-            "description": "Add VUG (growth) or VTV (value)",
-            "allocation": "Include VNQ (REITs) for real estate",
-            "benefits": [
-              "Higher risk, higher potential return",
-              "More complex rebalancing"
-            ],
-            "bestFor": "For investors wanting more control"
-          },
-          "targetDate": {
-            "title": "🛡️ Target-Date Fund",
-            "description": "One fund does everything",
-            "allocation": "Automatically rebalances",
-            "benefits": [
-              "Becomes conservative with age",
-              "Slightly higher fees (0.10-0.15%)"
-            ],
-            "bestFor": "Set-and-forget approach"
-          }
-        },
         "implementationSteps": {
           "title": "📋 Step-by-Step Implementation",
           "steps": [
@@ -1006,7 +1231,8 @@
               "title": "Rebalance Annually",
               "content": "Once per year, check if any fund is more than 5% off target. Sell the overweight, buy the underweight."
             }
-          ]
+          ],
+          "importantNote": ""
         },
         "commonMistakes": {
           "title": "⚠️ Common Beginner Mistakes",
@@ -1046,21 +1272,23 @@
         "keyTakeaways": {
           "title": "🎉 Key Takeaways",
           "items": [
-            "Diversification reduces risk without sacrificing returns",
-            "Four funds (ITOT, VXUS, AGG, BNDX) provide global exposure",
-            "Keep costs low - under 0.06% annually for the entire portfolio",
-            "Automate everything to remove emotion from investing",
-            "Rebalance annually to maintain target allocation",
-            "Time in the market beats timing the market",
-            "Start with whatever you can afford - consistency matters most"
+            "When choosing ETFs, pay attention to fees (expense ratio), diversification, index type, and liquidity",
+            "When choosing bonds, consider currency of issue (stable currencies protect against devaluation), maturity term, yield, and liquidity",
+            "Your risk profile determines allocation between stocks (ETFs) and bonds",
+            "Conservative profile: 20-30% stocks, 50-60% bonds - for short-term goals",
+            "Moderate profile: 50-60% stocks, 30-40% bonds - balance of growth and stability",
+            "Aggressive profile: 70-80% stocks, 15-25% bonds - for long-term goals",
+            "Use the formula: Stock percentage = 110 - your age (as a guideline)",
+            "Rebalance your portfolio annually to maintain desired allocation",
+            "Keep track of all investments for tax reporting"
           ]
         },
         "nextSteps": {
           "title": "Next Steps",
-          "description": "Congratulations! You now have a complete understanding of how to build a diversified portfolio. The next step is to take action - open a brokerage account and start investing with your four-fund foundation.",
+          "description": "Congratulations! Now you know how to choose ETFs and bonds, and how to build a portfolio according to your risk profile. The next step is to apply this knowledge in practice: determine your risk profile, select appropriate ETFs and bonds, and create your first portfolio.",
           "progressValue": 100,
           "lessonLabel": "Lesson 4 of 4 — \"Complete! You've mastered portfolio building.\"",
-          "completeMessage": "Remember: The best portfolio is the one you can stick with. Start simple, stay consistent, and let time and compound interest work their magic."
+          "completeMessage": "Remember: The best portfolio is one that matches your risk profile and goals. Start by determining your profile, choose appropriate instruments, and stay consistent. Your portfolio is your path to financial freedom."
         }
       }
     },
