@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { NextIntlClientProvider } from "next-intl";
+import { PostHogClientProvider } from "@/components/PostHogProvider";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
     <html className="dark">
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <PostHogClientProvider>
+            <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          </PostHogClientProvider>
         </AuthProvider>
         <Toaster richColors position="top-right" closeButton />
       </body>

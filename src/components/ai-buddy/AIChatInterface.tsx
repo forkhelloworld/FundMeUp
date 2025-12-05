@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import { useUserStore } from "@/lib/user-store";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { trackEvent } from "@/lib/posthog";
 
 interface Message {
   id: string;
@@ -97,6 +98,12 @@ export function AIChatInterface() {
     setInputValue("");
     setIsLoading(true);
 
+    trackEvent("ai_chat_message", {
+      status: "sent",
+      prompt_length: content.trim().length,
+      conversation_length: messages.length + 1,
+    });
+
     try {
       // Call AI API
       const response = await fetch("/api/ai/chat", {
@@ -123,6 +130,12 @@ export function AIChatInterface() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiResponse]);
+
+      trackEvent("ai_chat_message", {
+        status: "response",
+        prompt_length: content.trim().length,
+        conversation_length: messages.length + 2,
+      });
     } catch (error) {
       console.error("AI chat error:", error);
       const errorMessage: Message = {
@@ -135,6 +148,12 @@ export function AIChatInterface() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+
+      trackEvent("ai_chat_message", {
+        status: "error",
+        prompt_length: content.trim().length,
+        conversation_length: messages.length + 2,
+      });
     } finally {
       setIsLoading(false);
     }

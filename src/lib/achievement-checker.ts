@@ -1,6 +1,7 @@
 import { useUserStore } from "./user-store";
 import { useUserProfileStore } from "./userProfile-store";
 import { toast } from "sonner";
+import { trackEvent } from "./posthog";
 
 export interface AchievementCheckResult {
   shouldCheck: boolean;
@@ -39,6 +40,10 @@ export class AchievementChecker {
         const wasAwarded = data?.awarded ?? false;
 
         if (wasAwarded) {
+          trackEvent("achievement_awarded", {
+            key: achievementKey,
+            source: "triggerEvaluation",
+          });
           // Refresh achievements in store
           await useUserStore.getState().fetchAchievements();
         }
@@ -276,6 +281,10 @@ export class AchievementChecker {
           if (response.ok) {
             const data = await response.json();
             if (data.awarded) {
+              trackEvent("achievement_awarded", {
+                key: achievement.key,
+                source: "lesson",
+              });
               // Refresh achievements in store
               await useUserStore.getState().fetchAchievements();
 
@@ -352,6 +361,10 @@ export class AchievementChecker {
           if (response.ok) {
             const data = await response.json();
             if (data.awarded) {
+              trackEvent("achievement_awarded", {
+                key: achievement.key,
+                source: "simulation",
+              });
               // Refresh achievements in store
               await useUserStore.getState().fetchAchievements();
 
@@ -417,6 +430,10 @@ export class AchievementChecker {
           if (awardResponse.ok) {
             const awardData = await awardResponse.json();
             if (awardData.awarded) {
+              trackEvent("achievement_awarded", {
+                key: "consistency-is-key",
+                source: "time",
+              });
               // Refresh achievements in store
               await useUserStore.getState().fetchAchievements();
 

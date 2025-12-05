@@ -24,6 +24,7 @@ import {
 import { useUserStore } from "@/lib/user-store";
 import { loginSchema } from "@/lib/validationSchemes";
 import { useTranslations } from "next-intl";
+import { trackEvent } from "@/lib/posthog";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -45,6 +46,8 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password);
+
+      trackEvent("auth_login", { method: "credentials" });
 
       toast.success(tMessages("loginSuccess"), {
         description: "You've successfully logged in to FundMeUp.",

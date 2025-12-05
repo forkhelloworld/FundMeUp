@@ -6,6 +6,7 @@ import Link from "next/link";
 import { lessons } from "@/constants/lessons";
 import { useAchievementChecker } from "@/lib/achievement-checker";
 import { useTranslations } from "next-intl";
+import { trackEvent } from "@/lib/posthog";
 
 export function CompleteLessonButton({ slug }: { slug: string }) {
   const t = useTranslations("lessons");
@@ -34,6 +35,8 @@ export function CompleteLessonButton({ slug }: { slug: string }) {
       console.log("complete button res data ", data);
       if (!res.ok)
         throw new Error(data?.error || t("errors.failedToRecordCompletion"));
+
+      trackEvent("lesson_completed", { slug });
 
       // Check and award lesson achievements (only one per call)
       await checkAndAwardLessonAchievement();

@@ -24,6 +24,7 @@ import {
 import { useUserStore } from "@/lib/user-store";
 import { registrationSchema } from "@/lib/validationSchemes";
 import { useTranslations } from "next-intl";
+import { trackEvent } from "@/lib/posthog";
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
@@ -53,6 +54,8 @@ export function RegistrationForm() {
         email: data.email,
         password: data.password,
       });
+
+      trackEvent("auth_register", { method: "credentials" });
 
       toast.success(tMessages("registerSuccess"), {
         description:
