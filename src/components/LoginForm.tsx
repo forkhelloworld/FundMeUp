@@ -1,9 +1,10 @@
 "use client";
+import { useState } from "react";
+import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,9 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useUserStore } from "@/lib/user-store";
-import { loginSchema } from "@/lib/validationSchemes";
 import { useTranslations } from "next-intl";
+import { loginSchema } from "@/lib/validationSchemes";
+import { signInWithGoogle, signInWithCredentials } from "@/lib/auth-actions";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -31,8 +32,13 @@ export function LoginForm() {
   const t = useTranslations("auth.login");
   const tCommon = useTranslations("common");
   const tMessages = useTranslations("auth.messages");
-  const { login, isLoading } = useUserStore();
-  const router = useRouter();
+  const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  // Get current locale from pathname
+  const locale = pathname?.split("/")[1] || "en";
+  const callbackUrl = `/${locale}/lessons`;
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -42,23 +48,47 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const handleEmailSignIn = async (data: LoginFormData) => {
+    setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      const result = await signInWithCredentials(
+        data.email,
+        data.password,
+        callbackUrl
+      );
 
-      toast.success(tMessages("loginSuccess"), {
-        description: "You've successfully logged in to FundMeUp.",
-      });
-
-      form.reset();
-      router.push("/lessons");
+      if (result?.error) {
+        toast.error(tMessages("loginError"), {
+          description: "Invalid email or password. Please try again.",
+        });
+        setIsLoading(false);
+      }
+      // If successful, redirect happens on server side
     } catch (error) {
       console.error("Login error:", error);
       toast.error(tMessages("loginError"), {
         description:
           error instanceof Error
             ? error.message
-            : "Please check your credentials and try again.",
+            : "An unexpected error occurred. Please try again.",
+      });
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await signInWithGoogle(callbackUrl);
+      // Redirect happens on server side
+    } catch (error) {
+      console.error("Login error:", error);
+      setIsGoogleLoading(false);
+      toast.error(tMessages("loginError"), {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred. Please try again.",
       });
     }
   };
@@ -75,7 +105,10 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleEmailSignIn)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -127,6 +160,27 @@ export function LoginForm() {
             </Button>
           </form>
         </Form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-slate-600" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-slate-800/50 px-2 text-slate-400">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <Button
+          type="button"
+          onClick={handleGoogleSignIn}
+          variant="outline"
+          className="w-full border-slate-600 text-slate-200 hover:bg-slate-700 hover:text-white font-mono transition-all duration-200"
+          disabled={isGoogleLoading}
+        >
+          {isGoogleLoading ? tCommon("loading") : "Sign in with Google"}
+        </Button>
       </CardContent>
     </Card>
   );

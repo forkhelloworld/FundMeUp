@@ -1,24 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
+import { auth } from "@/auth";
 import { recordLessonCompletion } from "@/lib/achievements/service";
 import { handleApiError } from "@/lib/api-error";
 
-interface JwtPayloadWithId {
-  id: string;
-}
-
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  const cookieToken = request.cookies.get("auth-token")?.value || null;
-  const rawToken = extractTokenFromHeader(authHeader) || cookieToken;
-  const payload = rawToken
-    ? (verifyToken(rawToken) as JwtPayloadWithId | null)
-    : null;
+  const session = await auth();
 
-  const userId = payload?.id ?? null;
-  if (!userId) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const userId = session.user.id;
 
   try {
     const body = await request.json();
