@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { useUserStore } from "@/lib/user-store";
 import { initialDataLoader } from "@/lib/initial-data-loader";
 import { identifyUser, resetPosthog } from "@/lib/posthog";
@@ -8,12 +9,25 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const { checkAuth, isAuthenticated, user } = useUserStore();
+function AuthSync({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
+  const { setSession, isAuthenticated, getProfile, user } = useUserStore();
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    if (status === "authenticated" && session) {
+      setSession(session);
+      // Fetch full user profile to get firstName/lastName
+      // Add a small delay to ensure session is fully established
+      setTimeout(() => {
+        getProfile().catch((error) => {
+          console.error("Failed to fetch user profile:", error);
+          // Don't show error to user if it's just a temporary issue
+        });
+      }, 100);
+    } else if (status === "unauthenticated") {
+      setSession(null);
+    }
+  }, [session, status, setSession, getProfile]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -36,4 +50,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [isAuthenticated, user]);
 
   return <>{children}</>;
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  return (
+    <SessionProvider>
+      <AuthSync>{children}</AuthSync>
+    </SessionProvider>
+  );
 }

@@ -1,9 +1,10 @@
 "use client";
+import { useState } from "react";
+import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,10 +22,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useUserStore } from "@/lib/user-store";
-import { registrationSchema } from "@/lib/validationSchemes";
 import { useTranslations } from "next-intl";
 import { trackEvent } from "@/lib/posthog";
+import { registrationSchema } from "@/lib/validationSchemes";
+import { signInWithGoogle, signInWithCredentials } from "@/lib/auth-actions";
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
@@ -32,8 +33,13 @@ export function RegistrationForm() {
   const t = useTranslations("auth.register");
   const tCommon = useTranslations("common");
   const tMessages = useTranslations("auth.messages");
-  const { register, isLoading } = useUserStore();
-  const router = useRouter();
+  const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  // Get current locale from pathname
+  const locale = pathname?.split("/")[1] || "en";
+  const callbackUrl = `/${locale}/lessons`;
 
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -46,24 +52,58 @@ export function RegistrationForm() {
     },
   });
 
-  const onSubmit = async (data: RegistrationFormData) => {
+  const redirectWithTracking = async (url: string) => {
+    trackEvent("auth_register", { method: "credentials" });
+    // Give PostHog a brief moment to send the event before navigation
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    window.location.href = url;
+  };
+
+  const handleEmailRegistration = async (data: RegistrationFormData) => {
+    setIsLoading(true);
     try {
-      await register({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        password: data.password,
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          password: data.password,
+        }),
       });
 
-      trackEvent("auth_register", { method: "credentials" });
+      const result = await response.json();
 
-      toast.success(tMessages("registerSuccess"), {
-        description:
-          "Your account has been created successfully. Let's start your financial education journey!",
-      });
+      if (!response.ok) {
+        throw new Error(result.error || "Registration failed");
+      }
 
-      form.reset();
-      router.push("/lessons");
+      // After successful registration, sign in with credentials
+      const signInResult = await signInWithCredentials(
+        data.email,
+        data.password,
+        callbackUrl
+      );
+
+      if (signInResult?.error) {
+        toast.error(tMessages("registerError"), {
+          description:
+            "Account created but failed to sign in. Please try logging in.",
+        });
+        setIsLoading(false);
+        // Redirect to login page
+        window.location.href = `/${locale}/login`;
+        return;
+      }
+      if (signInResult?.ok) {
+        await redirectWithTracking(signInResult.redirectUrl || callbackUrl);
+        return;
+      }
+
+      setIsLoading(false);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(tMessages("registerError"), {
@@ -71,6 +111,24 @@ export function RegistrationForm() {
           error instanceof Error
             ? error.message
             : "Please check your information and try again.",
+      });
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await signInWithGoogle(callbackUrl);
+      // Redirect happens on server side
+    } catch (error) {
+      console.error("Registration error:", error);
+      setIsGoogleLoading(false);
+      toast.error(tMessages("registerError"), {
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred. Please try again.",
       });
     }
   };
@@ -87,7 +145,10 @@ export function RegistrationForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleEmailRegistration)}
+            className="space-y-4"
+          >
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -201,6 +262,27 @@ export function RegistrationForm() {
             </Button>
           </form>
         </Form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-slate-600" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-slate-800/50 px-2 text-slate-400">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <Button
+          type="button"
+          onClick={handleGoogleSignIn}
+          variant="outline"
+          className="w-full border-slate-600 text-slate-200 hover:bg-slate-700 hover:text-white font-mono transition-all duration-200"
+          disabled={isGoogleLoading}
+        >
+          {isGoogleLoading ? tCommon("loading") : "Sign up with Google"}
+        </Button>
       </CardContent>
     </Card>
   );

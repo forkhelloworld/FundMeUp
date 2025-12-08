@@ -1,10 +1,10 @@
-import posthog, { Posthog } from "posthog-js";
+import posthog, { PostHog } from "posthog-js";
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const POSTHOG_HOST =
   process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 
-let posthogClient: Posthog | null = null;
+let posthogClient: PostHog | null = null;
 
 const isBrowser = typeof window !== "undefined";
 
@@ -57,4 +57,3 @@ export function resetPosthog(): void {
   posthogClient.reset();
   posthogClient = null;
 }
-

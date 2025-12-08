@@ -1,24 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
+import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { handleApiError, NotFoundError } from "@/lib/api-error";
 
-interface JwtPayloadWithId {
-  id: string;
-}
+export async function GET() {
+  const session = await auth();
 
-export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  const cookieToken = request.cookies.get("auth-token")?.value || null;
-  const rawToken = extractTokenFromHeader(authHeader) || cookieToken;
-  const payload = rawToken
-    ? (verifyToken(rawToken) as JwtPayloadWithId | null)
-    : null;
-
-  const userId = payload?.id ?? null;
-  if (!userId) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const userId = session.user.id;
 
   try {
     // Check if user exists

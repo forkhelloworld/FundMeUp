@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { NextIntlClientProvider } from "next-intl";
@@ -22,9 +23,11 @@ export default function RootLayout({
     <html className="dark">
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
-          <PostHogClientProvider>
-            <NextIntlClientProvider>{children}</NextIntlClientProvider>
-          </PostHogClientProvider>
+          <Suspense fallback={null}>
+            <PostHogClientProvider>
+              <NextIntlClientProvider>{children}</NextIntlClientProvider>
+            </PostHogClientProvider>
+          </Suspense>
         </AuthProvider>
         <Toaster richColors position="top-right" closeButton />
       </body>

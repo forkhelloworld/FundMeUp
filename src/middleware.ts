@@ -1,27 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { extractTokenFromHeader } from "@/lib/jwt";
+import { NextResponse } from "next/server";
+import { auth } from "@/auth-edge";
 import createIntlMiddleware from "next-intl/middleware";
-
-// Constants for better maintainability
-const PUBLIC_ROUTES = [
-  { path: "/api/user", method: "POST" },
-  { path: "/api/user/login", method: "POST" },
-  { path: "/api/user/logout", method: "POST" },
-] as const;
-
-const isPublicRoute = (pathname: string, method: string): boolean => {
-  return PUBLIC_ROUTES.some(
-    (route) => route.path === pathname && route.method === method
-  );
-};
-
-const extractAuthToken = (request: NextRequest): string | null => {
-  return (
-    extractTokenFromHeader(request.headers.get("authorization")) ||
-    request.cookies.get("auth-token")?.value ||
-    null
-  );
-};
 
 const intlMiddleware = createIntlMiddleware({
   locales: ["en", "uk"],
@@ -29,37 +8,34 @@ const intlMiddleware = createIntlMiddleware({
   localePrefix: "always",
 });
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const method = request.method;
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
 
-  // API: Allow public routes without authentication
-  if (isPublicRoute(pathname, method)) {
+  // Allow NextAuth API routes
+  if (pathname.startsWith("/api/auth/")) {
     return NextResponse.next();
   }
 
-  // API: Require authentication for other user API routes
-  if (pathname.startsWith("/api/user/")) {
-    const token = extractAuthToken(request);
-
-    if (!token) {
+  // API: Require authentication for user API routes
+  if (pathname.startsWith("/api/user")) {
+    if (!req.auth) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
       );
     }
-
-    // Skip JWT verification in middleware (Edge runtime). Actual verification happens in handlers.
     return NextResponse.next();
   }
 
   // Non-API: handle locale routing
-  return intlMiddleware(request);
-}
+  return intlMiddleware(req);
+});
 
 export const config = {
   matcher: [
     "/((?!_next|.*\\..*|api).*)", // all non-API paths without static files
-    "/api/user/", // keep API user routes matched for auth
+    "/api/user", // API user route (exact match)
+    "/api/user/:path*", // API user routes with subpaths
+    "/api/auth/:path*", // NextAuth routes
   ],
 };

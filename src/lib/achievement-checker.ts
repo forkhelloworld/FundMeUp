@@ -19,9 +19,9 @@ export class AchievementChecker {
   private static async triggerAchievementEvaluation(
     achievementKey: string
   ): Promise<boolean> {
-    const { token, isAuthenticated } = useUserStore.getState();
+    const { isAuthenticated } = useUserStore.getState();
 
-    if (!isAuthenticated || !token) return false;
+    if (!isAuthenticated) return false;
 
     try {
       // Award the specific achievement directly
@@ -30,7 +30,6 @@ export class AchievementChecker {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ achievementKey }),
       });
@@ -191,9 +190,9 @@ export class AchievementChecker {
 
   // Check for a specific lesson achievement and award it if eligible
   static async checkAndAwardLessonAchievement(): Promise<string | null> {
-    const { token, isAuthenticated } = useUserStore.getState();
+    const { isAuthenticated } = useUserStore.getState();
 
-    if (!isAuthenticated || !token) return null;
+    if (!isAuthenticated) return null;
 
     // Get current achievements to see what's already unlocked
     const unlockedKeys = this.getUnlockedAchievements();
@@ -207,7 +206,7 @@ export class AchievementChecker {
         check: async () => {
           // Check if user has completed any lessons
           const response = await fetch("/api/user/lessons", {
-            headers: { Authorization: `Bearer ${token}` },
+            credentials: "include",
           });
           if (response.ok) {
             const data = await response.json();
@@ -222,7 +221,7 @@ export class AchievementChecker {
         description: "Completed 3 lessons",
         check: async () => {
           const response = await fetch("/api/user/lessons", {
-            headers: { Authorization: `Bearer ${token}` },
+            credentials: "include",
           });
           if (response.ok) {
             const data = await response.json();
@@ -237,7 +236,7 @@ export class AchievementChecker {
         description: "Completed 3 lessons in one day",
         check: async () => {
           const response = await fetch("/api/user/lessons", {
-            headers: { Authorization: `Bearer ${token}` },
+            credentials: "include",
           });
           if (response.ok) {
             const data = await response.json();
@@ -271,9 +270,9 @@ export class AchievementChecker {
           // Award this achievement
           const response = await fetch("/api/user/achievements/award", {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ achievementKey: achievement.key }),
           });
@@ -307,9 +306,9 @@ export class AchievementChecker {
 
   // Check for a specific simulation achievement and award it if eligible
   static async checkAndAwardSimulationAchievement(): Promise<string | null> {
-    const { token, isAuthenticated } = useUserStore.getState();
+    const { isAuthenticated } = useUserStore.getState();
 
-    if (!isAuthenticated || !token) return null;
+    if (!isAuthenticated) return null;
 
     // Get current achievements to see what's already unlocked
     const unlockedKeys = this.getUnlockedAchievements();
@@ -351,9 +350,9 @@ export class AchievementChecker {
           // Award this achievement
           const response = await fetch("/api/user/achievements/award", {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ achievementKey: achievement.key }),
           });
@@ -387,9 +386,9 @@ export class AchievementChecker {
 
   // Check for time-based achievement and award it if eligible
   static async checkAndAwardTimeBasedAchievement(): Promise<string | null> {
-    const { token, isAuthenticated, user } = useUserStore.getState();
+    const { isAuthenticated, user } = useUserStore.getState();
 
-    if (!isAuthenticated || !token || !user) return null;
+    if (!isAuthenticated || !user) return null;
 
     // Get current achievements to see what's already unlocked
     const unlockedKeys = this.getUnlockedAchievements();
@@ -403,8 +402,8 @@ export class AchievementChecker {
     try {
       const response = await fetch("/api/user", {
         method: "GET",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -420,9 +419,9 @@ export class AchievementChecker {
           // Award consistency achievement
           const awardResponse = await fetch("/api/user/achievements/award", {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ achievementKey: "consistency-is-key" }),
           });
