@@ -29,14 +29,15 @@ const useUserProfileStore = create<UserProfileState & UserProfileActions>(
     monthlyContribution: 500,
     setUserProfileData: (data) => set((state) => ({ ...state, ...data })),
     fetchUserProfileData: async () => {
-      const { token } = useUserStore.getState();
-      if (!token) {
+      const { isAuthenticated } = useUserStore.getState();
+      if (!isAuthenticated) {
         return;
       }
       try {
         const response = await fetch("/api/user/profile", {
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
         if (response.ok) {

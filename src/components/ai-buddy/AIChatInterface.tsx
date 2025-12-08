@@ -11,7 +11,6 @@ import {
   Calculator,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useUserStore } from "@/lib/user-store";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { trackEvent } from "@/lib/posthog";
@@ -25,7 +24,6 @@ interface Message {
 
 export function AIChatInterface() {
   const t = useTranslations("aiBuddy");
-  const { token } = useUserStore();
 
   const QUICK_ACTIONS = [
     {
@@ -110,7 +108,6 @@ export function AIChatInterface() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({ messages: apiMessages }),
       });

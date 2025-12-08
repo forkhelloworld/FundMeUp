@@ -1,6 +1,8 @@
 import { ApiAchievement } from "@/types/achievements";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 
 export interface User {
   id: string;
@@ -9,19 +11,23 @@ export interface User {
   email: string;
 }
 
+// Extended NextAuth user type with additional fields
+interface ExtendedSessionUser {
+  id?: string;
+  email?: string | null;
+  name?: string | null;
+  firstName?: string;
+  lastName?: string;
+}
+
 interface UserState {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
   achievements: Array<ApiAchievement>;
-  register: (
-    userData: Omit<User, "id"> & { password: string }
-  ) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
+  setSession: (session: Session | null) => void;
   logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
   getProfile: () => Promise<User>;
   fetchAchievements: () => void;
@@ -31,126 +37,46 @@ export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
       user: null,
-      token: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
       achievements: [],
 
-      register: async (userData) => {
-        set({ isLoading: true });
-        try {
-          const response = await fetch("/api/user", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Registration failed");
-          }
-
-          const data = await response.json();
-
+      setSession: (session) => {
+        if (session?.user) {
+          // Extract user data from NextAuth session
+          // Note: NextAuth session.user may not have firstName/lastName directly
+          // We'll need to fetch it from the API
+          const user = session.user as ExtendedSessionUser;
           set({
-            user: data.user,
-            token: data.token,
             isAuthenticated: true,
-            isLoading: false,
+            user:
+              user.id && user.email
+                ? {
+                    id: user.id,
+                    email: user.email || "",
+                    firstName: user.firstName || user.name?.split(" ")[0] || "",
+                    lastName:
+                      user.lastName ||
+                      user.name?.split(" ").slice(1).join(" ") ||
+                      "",
+                  }
+                : null,
           });
-        } catch (error) {
-          set({ isLoading: false });
-          throw error;
-        }
-      },
-
-      login: async (email, password) => {
-        set({ isLoading: true });
-        try {
-          const response = await fetch("/api/user/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-          });
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.error || "Login failed");
-          }
-
+        } else {
           set({
-            user: data.user,
-            token: data.token,
-            isAuthenticated: true,
-            isLoading: false,
+            user: null,
+            isAuthenticated: false,
           });
-        } catch (error) {
-          set({ isLoading: false, isAuthenticated: false });
-          throw error instanceof Error ? error : new Error("Login failed");
         }
       },
 
       logout: async () => {
-        try {
-          await fetch("/api/user/logout", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-        } catch (error) {
-          console.error("Logout API error:", error);
-        } finally {
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-          });
-        }
-      },
-
-      checkAuth: async () => {
-        const { token } = get();
-        if (!token) {
-          set({ isAuthenticated: false });
-          return;
-        }
-
-        try {
-          // Verify token by making a request to get user profile
-          const response = await fetch("/api/user", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            set({
-              user: data.user,
-              isAuthenticated: true,
-            });
-          } else {
-            set({
-              user: null,
-              token: null,
-              isAuthenticated: false,
-            });
-          }
-        } catch (error) {
-          console.error("Auth check error:", error);
-          set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-          });
-        }
+        await signOut({ redirect: false });
+        set({
+          user: null,
+          isAuthenticated: false,
+        });
       },
 
       updateUser: (updates) => {
@@ -163,25 +89,28 @@ export const useUserStore = create<UserState>()(
       },
 
       getProfile: async () => {
-        const { token } = get();
-        if (!token) throw new Error("No token");
-        const response = await fetch("/api/user/", {
+        // Use absolute path to avoid locale prefix issues
+        const baseUrl =
+          typeof window !== "undefined" ? window.location.origin : "";
+        const response = await fetch(`${baseUrl}/api/user`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch profile");
+          const errorText = await response.text();
+          throw new Error(
+            `Failed to fetch profile: ${response.status} ${errorText}`
+          );
         }
         const data = await response.json();
         set({ user: data.user });
         return data.user;
       },
+
       fetchAchievements: async () => {
         set({ isLoading: true, error: null });
-        const { token } = get();
         try {
           // Get current locale from the URL or default to 'en'
           const currentLocale =
@@ -192,7 +121,6 @@ export const useUserStore = create<UserState>()(
           const res = await fetch(`/api/achievements?locale=${currentLocale}`, {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
             cache: "no-store",
@@ -214,7 +142,6 @@ export const useUserStore = create<UserState>()(
       name: "fundmeup-user-storage",
       partialize: (state) => ({
         user: state.user,
-        token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
     }
