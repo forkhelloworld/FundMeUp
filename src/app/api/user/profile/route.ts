@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { extractTokenFromHeader, verifyToken } from "@/lib/jwt";
+import { auth } from "@/auth";
 import {
   createApiHandlerWithContext,
-  AuthenticationError,
   ValidationError,
   NotFoundError,
 } from "@/lib/api-error";
@@ -41,19 +40,16 @@ const formSchema = z
   });
 
 async function createSimulation(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  const token = extractTokenFromHeader(authHeader);
+  const session = await auth();
 
-  if (!token) {
-    throw new AuthenticationError();
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
   }
 
-  const payload = verifyToken(token);
-  if (!payload || typeof payload !== "object" || !("id" in payload)) {
-    throw new AuthenticationError("Invalid or expired token");
-  }
-
-  const userId = payload.id;
+  const userId = session.user.id;
   const user = await prisma.user.findUnique({ where: { id: userId } });
 
   if (!user) {
@@ -115,20 +111,17 @@ function createSimulationContext(request: NextRequest) {
   };
 }
 
-async function getSimulation(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  const token = extractTokenFromHeader(authHeader);
+async function getSimulation() {
+  const session = await auth();
 
-  if (!token) {
-    throw new AuthenticationError();
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
   }
 
-  const payload = verifyToken(token);
-  if (!payload || typeof payload !== "object" || !("id" in payload)) {
-    throw new AuthenticationError("Invalid or expired token");
-  }
-
-  const userId = payload.id;
+  const userId = session.user.id;
   const userProfile = await prisma.userProfile.findUnique({
     where: { userId },
   });

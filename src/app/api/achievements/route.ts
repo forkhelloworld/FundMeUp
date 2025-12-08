@@ -1,20 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyToken, extractTokenFromHeader } from "@/lib/jwt";
-
-interface JwtPayloadWithId {
-  id: string;
-}
+import { auth } from "@/auth";
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  const cookieToken = request.cookies.get("auth-token")?.value || null;
-  const rawToken = extractTokenFromHeader(authHeader) || cookieToken;
-  const payload = rawToken
-    ? (verifyToken(rawToken) as JwtPayloadWithId | null)
-    : null;
-
-  const userId = payload?.id ?? null;
+  const session = await auth();
+  const userId = session?.user?.id ?? null;
 
   // Get locale from query parameter, Accept-Language header, or default to 'en'
   const url = new URL(request.url);
