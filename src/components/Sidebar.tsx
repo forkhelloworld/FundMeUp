@@ -13,7 +13,6 @@ import {
   Bot,
   LayoutDashboard,
 } from "lucide-react";
-import { useState } from "react";
 import { useSidebarStore } from "@/lib/sidebar-store";
 import { useUserStore } from "@/lib/user-store";
 import { useRouter } from "next/navigation";
@@ -25,7 +24,6 @@ export function Sidebar() {
   const tCommon = useTranslations("common");
   const tMessages = useTranslations("auth.messages");
   const { expanded, toggle } = useSidebarStore();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { logout } = useUserStore();
   const router = useRouter();
@@ -49,6 +47,8 @@ export function Sidebar() {
       console.error("Logout error:", error);
     }
   };
+
+  const mobileNavItems = navItems.filter((item) => item.href !== "/settings");
 
   return (
     <>
@@ -142,9 +142,9 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-800/95 border-t border-emerald-400/20 backdrop-blur-md">
-        <div className="flex justify-around items-center py-2 px-4">
-          {navItems.slice(0, 6).map((item) => {
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-800/95 border-t border-emerald-400/20 backdrop-blur-md shadow-[0_-8px_20px_rgba(0,0,0,0.35)]">
+        <div className="flex justify-around items-center py-2 px-2 sm:px-4 gap-1 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]">
+          {mobileNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 
@@ -152,99 +152,21 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center p-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center ${
+                className={`flex flex-col items-center px-2 py-1.5 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center ${
                   isActive
                     ? "bg-emerald-400/20 text-emerald-400"
                     : "text-white hover:text-emerald-400 hover:bg-emerald-400/10"
                 }`}
               >
                 <Icon size={20} />
-                <span className="text-xs font-mono mt-1">{item.label}</span>
-              </Link>
-            );
-          })}
-          {/* Logout button in mobile bottom navigation */}
-          <button
-            onClick={handleLogout}
-            className="flex flex-col items-center p-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] justify-center text-red-400 hover:text-red-300 hover:bg-red-400/10"
-            title="Logout"
-          >
-            <LogOut size={20} />
-            <span className="text-xs font-mono mt-1">{tCommon("logout")}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Overlay */}
-      {mobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* Mobile Sidebar */}
-      <aside
-        className={`lg:hidden fixed top-0 left-0 h-full bg-slate-800/95 border-r border-emerald-400/20 flex flex-col items-center py-6 px-2 shadow-xl backdrop-blur-md transition-all duration-300 z-50 ${
-          mobileOpen ? "w-56 translate-x-0" : "w-56 -translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col gap-2 flex-1 w-full items-center">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative px-2 justify-start ${
-                  isActive
-                    ? "bg-emerald-400/20 border border-emerald-400/40 shadow-lg"
-                    : "hover:bg-emerald-400/10 hover:border hover:border-emerald-400/20"
-                }`}
-              >
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-emerald-400 rounded-r-full"></div>
-                )}
-
-                <span className="flex justify-center items-center w-12 h-12">
-                  <Icon
-                    size={22}
-                    className={`transition-colors duration-200 ${
-                      isActive
-                        ? "text-emerald-400"
-                        : "text-white group-hover:text-emerald-400"
-                    }`}
-                  />
-                </span>
-
-                <span
-                  className={`ml-4 font-mono text-base transition-colors duration-200 ${
-                    isActive
-                      ? "text-emerald-400 font-semibold"
-                      : "text-white group-hover:text-emerald-400"
-                  }`}
-                >
+                <span className="text-[11px] font-mono mt-1 leading-none">
                   {item.label}
                 </span>
               </Link>
             );
           })}
         </div>
-
-        <div className="mt-auto flex flex-col items-center w-full">
-          <Button
-            variant="ghost"
-            onClick={handleLogout}
-            className="w-12 h-12 p-0 flex items-center justify-center text-red-400 hover:bg-red-400/10 hover:text-red-300 rounded-xl transition-all duration-200"
-            title="Logout"
-          >
-            <LogOut size={22} />
-          </Button>
-        </div>
-      </aside>
+      </div>
     </>
   );
 }

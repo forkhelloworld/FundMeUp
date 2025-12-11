@@ -7,8 +7,7 @@ import {
   Menu,
   X,
   Trophy,
-  BookOpen,
-  BarChart2,
+  Settings,
   LogOut,
   User as UserIcon,
 } from "lucide-react";
@@ -28,9 +27,7 @@ export function HeaderIsland() {
   const tHeader = useTranslations("headerIsland");
 
   const navItems = [
-    { href: "/lessons", icon: BookOpen, label: t("lessons") },
-    { href: "/simulations", icon: BarChart2, label: t("simulations") },
-    { href: "/achievements", icon: Trophy, label: t("achievements") },
+    { href: "/settings", icon: Settings, label: t("settings") },
   ];
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -87,10 +84,10 @@ export function HeaderIsland() {
   return (
     <div
       ref={headerRef}
-      className="fixed top-0 inset-x-0 z-50 p-3 sm:p-0 sm:top-4 sm:bottom-auto sm:left-auto sm:right-4 sm:w-80 xl:w-80"
+      className="fixed top-0 inset-x-0 z-50 p-3 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:p-0 sm:top-4 sm:bottom-auto sm:left-auto sm:right-4 sm:w-80 xl:w-80"
     >
-      <div className="mx-auto">
-        <div className="bg-slate-900/90 border border-emerald-400/20 backdrop-blur-md shadow-lg rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 flex items-center gap-3">
+      <div className="mx-auto w-full max-w-xl sm:max-w-none">
+        <div className="bg-slate-900/90 border border-emerald-400/20 backdrop-blur-md shadow-lg rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 flex flex-wrap items-center gap-3">
           {/* Avatar */}
           <div className="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
             {initials ? (
@@ -124,7 +121,7 @@ export function HeaderIsland() {
             size="icon"
             onClick={() => setOpen((v) => !v)}
             aria-label={tHeader("openMenu")}
-            className="rounded-xl hover:bg-emerald-400/10"
+            className="rounded-xl hover:bg-emerald-400/10 min-w-10 min-h-10"
           >
             {open ? (
               <X size={18} className="text-emerald-300" />
@@ -142,7 +139,7 @@ export function HeaderIsland() {
               animate={{ opacity: 1, y: 6, scale: 1 }}
               exit={{ opacity: 0, y: -6, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 280, damping: 24 }}
-              className="origin-top bg-slate-900/95 border border-emerald-400/20 backdrop-blur-md shadow-xl rounded-xl sm:rounded-2xl mt-2 overflow-hidden"
+              className="origin-top bg-slate-900/95 border border-emerald-400/20 backdrop-blur-md shadow-xl rounded-xl sm:rounded-2xl mt-2 overflow-hidden w-full sm:w-auto"
             >
               <nav className="py-2">
                 {navItems.map((item) => {
