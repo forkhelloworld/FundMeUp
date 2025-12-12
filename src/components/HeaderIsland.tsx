@@ -3,18 +3,10 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Menu,
-  X,
-  Trophy,
-  Settings,
-  LogOut,
-  User as UserIcon,
-} from "lucide-react";
+import { Menu, X, Settings, LogOut, User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useUserStore } from "@/lib/user-store";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
 export function HeaderIsland() {
@@ -22,7 +14,7 @@ export function HeaderIsland() {
   const headerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, achievements, logout } = useUserStore();
+  const { user, logout } = useUserStore();
   const t = useTranslations("common");
   const tHeader = useTranslations("headerIsland");
 
@@ -63,13 +55,6 @@ export function HeaderIsland() {
       .slice(0, 2);
   }, [user]);
 
-  // Simple progress proxy: proportion of achievements earned out of 3 visible items
-  const progress = useMemo(() => {
-    const earned = achievements?.length ?? 0;
-    const total = 3; // heuristic for compact header; avoid 0 division
-    return Math.min(100, Math.round((earned / total) * 100));
-  }, [achievements]);
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -99,20 +84,16 @@ export function HeaderIsland() {
             )}
           </div>
 
-          {/* Name and progress */}
+          {/* Name */}
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate text-white/90">
               {displayName}
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <Trophy size={14} className="text-emerald-400 shrink-0" />
-              <div className="w-full">
-                <Progress value={progress} className="h-1.5 bg-slate-800" />
+            {user?.email && (
+              <div className="text-[11px] text-white/60 truncate">
+                {user.email}
               </div>
-              <span className="text-[10px] text-white/60 w-8 text-right">
-                {progress}%
-              </span>
-            </div>
+            )}
           </div>
 
           {/* Hamburger */}

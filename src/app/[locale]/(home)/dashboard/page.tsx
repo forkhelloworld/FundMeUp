@@ -2,7 +2,6 @@
 import { useUserStore } from "@/lib/user-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import {
@@ -22,16 +21,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import { lessons } from "@/constants/lessons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { LucideIcon } from "lucide-react";
 import { FeedbackForm } from "@/components/FeedbackForm";
-
-interface LessonProgress {
-  completed: number;
-  total: number;
-  percentage: number;
-}
 
 interface QuickAction {
   title: string;
@@ -46,20 +39,6 @@ interface QuickAction {
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
   const { user, achievements } = useUserStore();
-  const [lessonProgress, setLessonProgress] = useState<LessonProgress>({
-    completed: 0,
-    total: lessons.length,
-    percentage: 0,
-  });
-
-  useEffect(() => {
-    const completed = Math.floor(Math.random() * lessons.length);
-    setLessonProgress({
-      completed,
-      total: lessons.length,
-      percentage: (completed / lessons.length) * 100,
-    });
-  }, []);
 
   const achievementProgress = {
     total: achievements.length,
@@ -152,12 +131,6 @@ export default function DashboardPage() {
             {/* Quick Stats Row */}
             <div className="hidden md:flex gap-3">
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
-                <BookOpen className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-medium text-emerald-300">
-                  {lessonProgress.completed}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
                 <Trophy className="w-4 h-4 text-emerald-400" />
                 <span className="text-sm font-medium text-emerald-300">
                   {achievementProgress.unlocked}
@@ -177,42 +150,20 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
           {/* Primary Action Cards - High Priority */}
           <div className="lg:col-span-8 space-y-4 sm:space-y-6">
-            {/* Learning Progress - Large Card */}
+            {/* Learning CTA - Progress temporarily hidden */}
             <Card className="bg-slate-800/50 border-emerald-400/20 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300 group">
-              <CardHeader className="pb-4">
-                <div className="flex flex-wrap items-center gap-3 justify-between">
-                  <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    {t("progress.learningJourney")}
-                  </CardTitle>
-                  <Badge
-                    variant="secondary"
-                    className="bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
-                  >
-                    {lessonProgress.percentage.toFixed(0)}% Complete
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-300">
-                      {t("progress.overallProgress")}
-                    </span>
-                    <span className="text-white font-semibold">
-                      {lessonProgress.completed} of {lessonProgress.total}{" "}
-                      lessons
-                    </span>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-emerald-400" />
                   </div>
-                  <Progress
-                    value={lessonProgress.percentage}
-                    className="h-3 bg-slate-800"
-                  />
-                </div>
-
-                {/* Next Lesson Preview */}
+                  {t("progress.learningJourney")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-slate-300 text-sm sm:text-base">
+                  {t("progress.continueJourney")}
+                </p>
                 <div className="p-4 rounded-xl bg-emerald-400/10 border border-emerald-400/20">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                     <div className="flex items-center gap-3">
@@ -221,13 +172,10 @@ export default function DashboardPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-white leading-tight">
-                          {lessons[lessonProgress.completed]?.title ||
-                            t("progress.allCompleted")}
+                          {lessons[0]?.title || t("progress.learningJourney")}
                         </h3>
                         <p className="text-sm text-slate-400">
-                          {lessonProgress.completed < lessons.length
-                            ? t("progress.continueJourney")
-                            : t("progress.congratulations")}
+                          {t("progress.review")}
                         </p>
                       </div>
                     </div>
@@ -236,9 +184,7 @@ export default function DashboardPage() {
                       className="bg-emerald-400 hover:bg-emerald-500 text-white w-full sm:w-auto"
                     >
                       <Link href="/lessons">
-                        {lessonProgress.completed < lessons.length
-                          ? t("progress.continue")
-                          : t("progress.review")}
+                        {t("progress.continue")}
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Link>
                     </Button>
