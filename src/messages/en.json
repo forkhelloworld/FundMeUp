@@ -1649,6 +1649,48 @@
     "logout": "Logout",
     "guest": "Guest"
   },
+  "feedback": {
+    "title": "Help Us Improve",
+    "description": "Your feedback helps us build a better product. All fields are optional - answer what you can!",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "rating": "Overall, how helpful was this?",
+    "ratingHint": "1 = Not helpful, 5 = Very helpful",
+    "whatLiked": "What did you like most?",
+    "whatLikedPlaceholder": "What worked well? What was valuable?",
+    "whatMissing": "What's missing or could be better?",
+    "whatMissingPlaceholder": "What would make this more useful?",
+    "wouldPay": "How much would you pay monthly?",
+    "wouldPayHint": "Select the maximum you'd be willing to pay",
+    "wouldNotPay": "Wouldn't pay",
+    "wouldRecommend": "How likely are you to recommend us?",
+    "notLikely": "Not likely",
+    "veryLikely": "Very likely",
+    "howFound": "How did you find us?",
+    "howFoundPlaceholder": "e.g., Google, friend, social media...",
+    "comment": "Anything else?",
+    "commentPlaceholder": "Additional thoughts, suggestions, or feedback...",
+    "wantsPremiumTrial": "Reserve 7 days of premium for me (when available)",
+    "submit": "Submit Feedback",
+    "submitting": "Submitting...",
+    "skip": "Skip",
+    "cancel": "Cancel",
+    "optional": "Optional",
+    "characters": "characters",
+    "success": {
+      "default": "Thank you for your feedback!",
+      "withTrial": "Thank you! 7 days of premium reserved",
+      "trialDescription": "You'll get 7 days free when premium launches"
+    },
+    "errors": {
+      "submitFailed": "Failed to submit feedback",
+      "unknown": "An unknown error occurred"
+    },
+    "validation": {
+      "requiredOptions": "Please select rating, price willingness, and recommend score",
+      "textTooLong": "Some text fields are too long. Please shorten them."
+    }
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage your account and preferences",

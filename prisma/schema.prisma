@@ -24,6 +24,7 @@ model User {
   lessons       UserLesson[]
   profile       UserProfile?
   achievements  UserAchievement[]
+  feedback      Feedback[]
 
   @@map("users")
 }
@@ -148,4 +149,29 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Feedback {
+  id                 String   @id @default(cuid())
+  userId             String?  @map("user_id")
+  email              String?
+  context            String   // e.g., "lesson:set-your-financial-goal", "landing-hero", "dashboard", "course:all-lessons"
+  rating             Int?     // 1-5
+  comment            String?  @db.Text
+  whatLiked          String?  @db.Text @map("what_liked")
+  whatMissing        String?  @db.Text @map("what_missing")
+  wouldPay           Int?     @map("would_pay")          // Monthly price willing to pay (0 = wouldn't pay)
+  wouldRecommend     Int?     @map("would_recommend")    // NPS: 0-10
+  howFound           String?  @map("how_found")          // How did you find us?
+  wantsPremiumTrial  Boolean  @default(false) @map("wants_premium_trial")
+  eligibleForTrial   Boolean  @default(false) @map("eligible_for_trial")
+  locale             String?  @default("en")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([context])
+  @@index([createdAt])
+  @@map("feedback")
 }

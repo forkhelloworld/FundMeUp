@@ -25,6 +25,7 @@ import { lessons } from "@/constants/lessons";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { LucideIcon } from "lucide-react";
+import { FeedbackForm } from "@/components/FeedbackForm";
 
 interface LessonProgress {
   completed: number;
@@ -73,6 +74,7 @@ export default function DashboardPage() {
         : 0,
   };
   const unlockedAchievements = achievements.filter((a) => a.unlocked);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   // Personalized quick actions based on user progress
   const quickActions: QuickAction[] = [
@@ -438,9 +440,47 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Feedback Card */}
+            <Card className="bg-slate-800/50 border-emerald-400/20 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  Feedback
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-slate-300">
+                  Share what’s working and what to improve.
+                </p>
+                <Button
+                  className="w-full bg-emerald-400 hover:bg-emerald-500 text-slate-950"
+                  onClick={() => setShowFeedback(true)}
+                >
+                  Leave feedback
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
+
+      {showFeedback && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md">
+            <FeedbackForm
+              context="dashboard:main"
+              onSuccess={() => setShowFeedback(false)}
+              onCancel={() => setShowFeedback(false)}
+              onSkip={() => setShowFeedback(false)}
+              showEmail
+              defaultEmail={user?.email}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
