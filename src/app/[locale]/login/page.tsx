@@ -1,19 +1,27 @@
 "use client";
 import { LoginForm } from "@/components/LoginForm";
-import Link from "next/link";
-import { useUserStore } from "@/lib/user-store";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function LoginPage() {
-  const { isAuthenticated } = useUserStore();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/lessons");
+    if (status === "authenticated" && session) {
+      const locale = window.location.pathname.split("/")[1] || "en";
+      router.push(`/${locale}/lessons`);
     }
-  }, [isAuthenticated, router]);
+  }, [session, status, router]);
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 px-4">
+        <div className="text-emerald-400 font-mono">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 px-4">
@@ -21,15 +29,6 @@ export default function LoginPage() {
         Sign In
       </h1>
       <LoginForm />
-      <p className="mt-6 text-slate-400 text-sm font-sans">
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/register"
-          className="text-emerald-400 underline hover:text-emerald-300 font-mono transition-colors"
-        >
-          Create Account
-        </Link>
-      </p>
     </div>
   );
 }

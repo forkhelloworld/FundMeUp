@@ -1,19 +1,26 @@
 "use client";
 import { RegistrationForm } from "@/components/RegistrationForm";
-import Link from "next/link";
-import { useUserStore } from "@/lib/user-store";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function RegisterPage() {
-  const { isAuthenticated } = useUserStore();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (status === "authenticated" && session) {
       router.push("/lessons");
     }
-  }, [isAuthenticated, router]);
+  }, [session, status, router]);
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 px-4">
+        <div className="text-emerald-400 font-mono">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 px-4">
@@ -21,15 +28,6 @@ export default function RegisterPage() {
         Create Account
       </h1>
       <RegistrationForm />
-      <p className="mt-6 text-slate-400 text-sm font-sans">
-        Already have an account?{" "}
-        <Link
-          href="/login"
-          className="text-emerald-400 underline hover:text-emerald-300 font-mono transition-colors"
-        >
-          Sign In
-        </Link>
-      </p>
     </div>
   );
 }

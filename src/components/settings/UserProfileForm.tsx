@@ -21,7 +21,7 @@ import { useTranslations } from "next-intl";
 import * as z from "zod";
 
 export function UserProfileForm() {
-  const { isAuthenticated, token } = useUserStore();
+  const { isAuthenticated } = useUserStore();
   const { setUserProfileData, ...userProfileData } = useUserProfileStore();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
@@ -50,7 +50,6 @@ export function UserProfileForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(values),
       });

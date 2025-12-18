@@ -77,7 +77,10 @@ class ConsoleErrorLogger implements ErrorLogger {
     }
   }
 
-  logPrismaError(error: Record<string, unknown>, context?: Record<string, unknown>): void {
+  logPrismaError(
+    error: Record<string, unknown>,
+    context?: Record<string, unknown>
+  ): void {
     console.error("Prisma Error:", {
       code: error.code,
       message: error.message,
@@ -87,7 +90,10 @@ class ConsoleErrorLogger implements ErrorLogger {
     });
   }
 
-  logValidationError(error: Record<string, unknown>, context?: Record<string, unknown>): void {
+  logValidationError(
+    error: Record<string, unknown>,
+    context?: Record<string, unknown>
+  ): void {
     console.warn("Validation Error:", {
       issues: error.issues,
       message: error.message,
@@ -194,13 +200,27 @@ export function createApiHandler<T extends unknown[], R>(
 }
 
 // Utility function to create API handlers with context
+// Overload 1: handler and getContext have the same signature
 export function createApiHandlerWithContext<T extends unknown[], R>(
   handler: (...args: T) => Promise<R>,
-  getContext?: (...args: T) => Record<string, unknown>
+  getContext: (...args: T) => Record<string, unknown>
+): (...args: T) => Promise<NextResponse>;
+// Overload 2: handler takes no args, but getContext takes route handler args
+export function createApiHandlerWithContext<TArgs extends unknown[], R>(
+  handler: () => Promise<R>,
+  getContext: (...args: TArgs) => Record<string, unknown>
+): (...args: TArgs) => Promise<NextResponse>;
+// Implementation
+export function createApiHandlerWithContext<TArgs extends unknown[], R>(
+  handler: ((...args: TArgs) => Promise<R>) | (() => Promise<R>),
+  getContext?: (...args: TArgs) => Record<string, unknown>
 ) {
-  return async (...args: T): Promise<NextResponse> => {
+  return async (...args: TArgs): Promise<NextResponse> => {
     try {
-      const result = await handler(...args);
+      // Call handler - if it doesn't accept args, call without args
+      const result = await (handler.length === 0
+        ? (handler as () => Promise<R>)()
+        : (handler as (...args: TArgs) => Promise<R>)(...args));
       if (result instanceof NextResponse) {
         return result;
       }

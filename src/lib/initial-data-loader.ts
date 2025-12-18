@@ -19,9 +19,9 @@ class InitialDataLoader {
       return;
     }
 
-    const { isAuthenticated, token } = useUserStore.getState();
+    const { isAuthenticated } = useUserStore.getState();
 
-    if (!isAuthenticated || !token) {
+    if (!isAuthenticated) {
       return;
     }
 

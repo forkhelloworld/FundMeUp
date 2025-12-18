@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { extractTokenFromHeader, verifyToken } from "@/lib/jwt";
+import { auth } from "@/auth";
 import {
   createApiHandler,
-  AuthenticationError,
   ValidationError,
   ApiError,
 } from "@/lib/api-error";
@@ -34,16 +33,13 @@ interface OpenRouterResponse {
 
 async function chatWithAI(request: NextRequest) {
   // Verify authentication
-  const authHeader = request.headers.get("authorization");
-  const token = extractTokenFromHeader(authHeader);
+  const session = await auth();
 
-  if (!token) {
-    throw new AuthenticationError();
-  }
-
-  const payload = verifyToken(token);
-  if (!payload || typeof payload !== "object" || !("id" in payload)) {
-    throw new AuthenticationError("Invalid or expired token");
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
   }
 
   // Parse request body
