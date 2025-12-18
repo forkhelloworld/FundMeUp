@@ -23,7 +23,6 @@ interface Message {
 
 export function AIChatInterface() {
   const t = useTranslations("aiBuddy");
-  const { token } = useUserStore();
 
   const QUICK_ACTIONS = [
     {
