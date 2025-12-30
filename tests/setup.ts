@@ -7,6 +7,22 @@ afterEach(() => {
   cleanup();
 });
 
+// Provide IntersectionObserver for jsdom (used by framer-motion)
+if (typeof globalThis.IntersectionObserver === "undefined") {
+  class MockIntersectionObserver {
+    constructor(_: IntersectionObserverCallback) {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+  }
+
+  // @ts-expect-error: attaching to global for tests
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+}
+
 // Mock environment variables
 process.env.AUTH_SECRET = "test-secret-key-for-testing-only";
 process.env.GOOGLE_CLIENT_ID = "test-google-client-id";

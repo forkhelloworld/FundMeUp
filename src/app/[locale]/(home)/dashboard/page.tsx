@@ -2,7 +2,6 @@
 import { useUserStore } from "@/lib/user-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import {
@@ -22,15 +21,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import { lessons } from "@/constants/lessons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { LucideIcon } from "lucide-react";
-
-interface LessonProgress {
-  completed: number;
-  total: number;
-  percentage: number;
-}
+import { FeedbackForm } from "@/components/FeedbackForm";
 
 interface QuickAction {
   title: string;
@@ -45,20 +39,6 @@ interface QuickAction {
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
   const { user, achievements } = useUserStore();
-  const [lessonProgress, setLessonProgress] = useState<LessonProgress>({
-    completed: 0,
-    total: lessons.length,
-    percentage: 0,
-  });
-
-  useEffect(() => {
-    const completed = Math.floor(Math.random() * lessons.length);
-    setLessonProgress({
-      completed,
-      total: lessons.length,
-      percentage: (completed / lessons.length) * 100,
-    });
-  }, []);
 
   const achievementProgress = {
     total: achievements.length,
@@ -73,6 +53,7 @@ export default function DashboardPage() {
         : 0,
   };
   const unlockedAchievements = achievements.filter((a) => a.unlocked);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   // Personalized quick actions based on user progress
   const quickActions: QuickAction[] = [
@@ -128,20 +109,20 @@ export default function DashboardPage() {
   const portfolioChange = 12.5;
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="container mx-auto max-w-7xl px-4 py-6 md:py-8 space-y-6">
+    <div className="min-h-screen bg-slate-950 pt-[calc(4.5rem+env(safe-area-inset-top,0px))]">
+      <div className="container mx-auto max-w-7xl px-3 sm:px-4 py-5 md:py-8 space-y-6 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]">
         {/* Compact Welcome Section */}
-        <div className="bg-slate-800/50 border border-emerald-400/20 rounded-xl p-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+        <div className="bg-slate-800/50 border border-emerald-400/20 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 rounded-lg bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
                 <Sparkles className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight">
                   {getGreeting()}, {user?.firstName || "Investor"}!
                 </h1>
-                <p className="text-slate-300 text-sm">
+                <p className="text-slate-300 text-sm sm:text-base">
                   {t("welcome.motivation")}
                 </p>
               </div>
@@ -149,12 +130,6 @@ export default function DashboardPage() {
 
             {/* Quick Stats Row */}
             <div className="hidden md:flex gap-3">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
-                <BookOpen className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-medium text-emerald-300">
-                  {lessonProgress.completed}
-                </span>
-              </div>
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-400/10 border border-emerald-400/20">
                 <Trophy className="w-4 h-4 text-emerald-400" />
                 <span className="text-sm font-medium text-emerald-300">
@@ -172,71 +147,44 @@ export default function DashboardPage() {
         </div>
 
         {/* Main Dashboard Grid - Bento Style */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
           {/* Primary Action Cards - High Priority */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Learning Progress - Large Card */}
+          <div className="lg:col-span-8 space-y-4 sm:space-y-6">
+            {/* Learning CTA - Progress temporarily hidden */}
             <Card className="bg-slate-800/50 border-emerald-400/20 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300 group">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    {t("progress.learningJourney")}
-                  </CardTitle>
-                  <Badge
-                    variant="secondary"
-                    className="bg-emerald-400/20 text-emerald-300 border-emerald-400/30"
-                  >
-                    {lessonProgress.percentage.toFixed(0)}% Complete
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-300">
-                      {t("progress.overallProgress")}
-                    </span>
-                    <span className="text-white font-semibold">
-                      {lessonProgress.completed} of {lessonProgress.total}{" "}
-                      lessons
-                    </span>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-emerald-400" />
                   </div>
-                  <Progress
-                    value={lessonProgress.percentage}
-                    className="h-3 bg-slate-800"
-                  />
-                </div>
-
-                {/* Next Lesson Preview */}
+                  {t("progress.learningJourney")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-slate-300 text-sm sm:text-base">
+                  {t("progress.continueJourney")}
+                </p>
                 <div className="p-4 rounded-xl bg-emerald-400/10 border border-emerald-400/20">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
                         <Play className="w-6 h-6 text-emerald-400" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-white">
-                          {lessons[lessonProgress.completed]?.title ||
-                            t("progress.allCompleted")}
+                        <h3 className="font-semibold text-white leading-tight">
+                          {lessons[0]?.title || t("progress.learningJourney")}
                         </h3>
                         <p className="text-sm text-slate-400">
-                          {lessonProgress.completed < lessons.length
-                            ? t("progress.continueJourney")
-                            : t("progress.congratulations")}
+                          {t("progress.review")}
                         </p>
                       </div>
                     </div>
                     <Button
                       asChild
-                      className="bg-emerald-400 hover:bg-emerald-500 text-white"
+                      className="bg-emerald-400 hover:bg-emerald-500 text-white w-full sm:w-auto"
                     >
                       <Link href="/lessons">
-                        {lessonProgress.completed < lessons.length
-                          ? t("progress.continue")
-                          : t("progress.review")}
+                        {t("progress.continue")}
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Link>
                     </Button>
@@ -248,7 +196,7 @@ export default function DashboardPage() {
             {/* Recent Achievements */}
             <Card className="bg-slate-800/50 border-emerald-400/20 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-xl">
+                <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                   <div className="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
                     <Trophy className="w-5 h-5 text-emerald-400" />
                   </div>
@@ -261,20 +209,20 @@ export default function DashboardPage() {
                     {unlockedAchievements.slice(0, 2).map((achievement) => (
                       <div
                         key={achievement.id}
-                        className="flex items-center gap-4 p-4 rounded-xl bg-emerald-400/10 border border-emerald-400/20 hover:border-emerald-400/30 transition-all duration-200"
+                        className="flex items-start sm:items-center gap-3 sm:gap-4 p-4 rounded-xl bg-emerald-400/10 border border-emerald-400/20 hover:border-emerald-400/30 transition-all duration-200"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
                           <Award className="w-6 h-6 text-emerald-400" />
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-white">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-white leading-tight">
                             {achievement.title}
                           </h3>
                           <p className="text-sm text-slate-400">
                             {achievement.description}
                           </p>
                         </div>
-                        <Badge className="bg-emerald-400/20 text-emerald-300 border-emerald-400/30">
+                        <Badge className="bg-emerald-400/20 text-emerald-300 border-emerald-400/30 shrink-0">
                           {t("achievements.unlocked")}
                         </Badge>
                       </div>
@@ -315,7 +263,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Sidebar - Quick Actions & Stats */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-4 sm:space-y-6">
             {/* Quick Actions */}
             <Card className="bg-slate-800/50 border-emerald-400/20 backdrop-blur-sm">
               <CardHeader>
@@ -361,8 +309,8 @@ export default function DashboardPage() {
             <div className="space-y-4">
               {/* Learning Streak */}
               <Card className="bg-slate-800/50 border-emerald-400/20 hover:border-emerald-400/30 transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
+                <CardContent className="p-5 sm:p-6">
+                  <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm text-emerald-300 font-medium">
                         {t("stats.learningStreak")}
@@ -374,7 +322,7 @@ export default function DashboardPage() {
                         {t("stats.daysInRow")}
                       </p>
                     </div>
-                    <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
                       <Calendar className="w-6 h-6 text-emerald-400" />
                     </div>
                   </div>
@@ -383,8 +331,8 @@ export default function DashboardPage() {
 
               {/* Portfolio Value */}
               <Card className="bg-slate-800/50 border-emerald-400/20 hover:border-emerald-400/30 transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
+                <CardContent className="p-5 sm:p-6">
+                  <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm text-emerald-300 font-medium">
                         {t("stats.portfolioValue")}
@@ -397,7 +345,7 @@ export default function DashboardPage() {
                         {t("stats.thisMonth")}
                       </p>
                     </div>
-                    <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
                       <DollarSign className="w-6 h-6 text-emerald-400" />
                     </div>
                   </div>
@@ -438,9 +386,47 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Feedback Card */}
+            <Card className="bg-slate-800/50 border-emerald-400/20 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  Feedback
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-slate-300">
+                  Share what’s working and what to improve.
+                </p>
+                <Button
+                  className="w-full bg-emerald-400 hover:bg-emerald-500 text-slate-950"
+                  onClick={() => setShowFeedback(true)}
+                >
+                  Leave feedback
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
+
+      {showFeedback && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md">
+            <FeedbackForm
+              context="dashboard:main"
+              onSuccess={() => setShowFeedback(false)}
+              onCancel={() => setShowFeedback(false)}
+              onSkip={() => setShowFeedback(false)}
+              showEmail
+              defaultEmail={user?.email}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

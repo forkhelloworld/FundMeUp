@@ -1329,6 +1329,7 @@
         "subtitle": "Calculate how much you need to achieve financial independence",
         "currentAge": "Current Age",
         "retirementAge": "Desired Retirement Age",
+        "monthlyIncome": "Monthly Income",
         "monthlyExpenses": "Monthly Expenses",
         "currentSavings": "Current Savings",
         "monthlySavings": "Monthly Savings",
@@ -1348,7 +1349,35 @@
           "shortfall": "Shortfall: ${amount}",
           "additionalNeeded": "Need additional ${amount}/month",
           "congratulations": "🎉 Congratulations!",
-          "onTrack": "You're on track to achieve FI by age {age}!"
+          "onTrack": "You're on track to achieve FI by age {age}!",
+          "noData": "Press Calculate to see your plan",
+          "noExpenses": "Enter monthly expenses above 0 to calculate your plan"
+        },
+        "validation": {
+          "currentAgeRequired": "Current age is required",
+          "currentAgeInvalid": "Current age must be a whole number",
+          "currentAgeMin": "Current age must be at least 18",
+          "currentAgeMax": "Current age must be at most 100",
+          "targetFIAgeRequired": "Target FI age is required",
+          "targetFIAgeInvalid": "Target FI age must be a whole number",
+          "targetFIAgeMin": "Target FI age must be at least 19",
+          "targetFIAgeMax": "Target FI age must be at most 120",
+          "currentNetWorthRequired": "Current net worth is required",
+          "currentNetWorthNegative": "Net worth cannot be negative",
+          "monthlyIncomeRequired": "Monthly income is required",
+          "monthlyIncomeNegative": "Monthly income cannot be negative",
+          "monthlyIncomeMin": "Monthly income must be greater than 0",
+          "monthlyExpensesRequired": "Monthly expenses are required",
+          "monthlyExpensesNegative": "Monthly expenses cannot be negative",
+          "monthlyExpensesMin": "Monthly expenses must be greater than 0",
+          "savingsRateRequired": "Savings rate is required",
+          "savingsRateMin": "Savings rate cannot be negative",
+          "savingsRateMax": "Savings rate must be 0-80%",
+          "expectedReturnRequired": "Expected return is required",
+          "expectedReturnMin": "Expected return is too low",
+          "expectedReturnMax": "Expected return seems unrealistic",
+          "targetFIAgeGreater": "Target FI age must be greater than current age",
+          "expensesExceedIncome": "Expenses should not exceed income"
         }
       },
       "portfolioCalculator": {
@@ -1620,6 +1649,48 @@
     "logout": "Logout",
     "guest": "Guest"
   },
+  "feedback": {
+    "title": "Help Us Improve",
+    "description": "Your feedback helps us build a better product. All fields are optional - answer what you can!",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "rating": "Overall, how helpful was this?",
+    "ratingHint": "1 = Not helpful, 5 = Very helpful",
+    "whatLiked": "What did you like most?",
+    "whatLikedPlaceholder": "What worked well? What was valuable?",
+    "whatMissing": "What's missing or could be better?",
+    "whatMissingPlaceholder": "What would make this more useful?",
+    "wouldPay": "How much would you pay monthly?",
+    "wouldPayHint": "Select the maximum you'd be willing to pay",
+    "wouldNotPay": "Wouldn't pay",
+    "wouldRecommend": "How likely are you to recommend us?",
+    "notLikely": "Not likely",
+    "veryLikely": "Very likely",
+    "howFound": "How did you find us?",
+    "howFoundPlaceholder": "e.g., Google, friend, social media...",
+    "comment": "Anything else?",
+    "commentPlaceholder": "Additional thoughts, suggestions, or feedback...",
+    "wantsPremiumTrial": "Reserve 7 days of premium for me (when available)",
+    "submit": "Submit Feedback",
+    "submitting": "Submitting...",
+    "skip": "Skip",
+    "cancel": "Cancel",
+    "optional": "Optional",
+    "characters": "characters",
+    "success": {
+      "default": "Thank you for your feedback!",
+      "withTrial": "Thank you! 7 days of premium reserved",
+      "trialDescription": "You'll get 7 days free when premium launches"
+    },
+    "errors": {
+      "submitFailed": "Failed to submit feedback",
+      "unknown": "An unknown error occurred"
+    },
+    "validation": {
+      "requiredOptions": "Please select rating, price willingness, and recommend score",
+      "textTooLong": "Some text fields are too long. Please shorten them."
+    }
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage your account and preferences",
@@ -1655,9 +1726,13 @@
       "netWorthNegative": "Net worth cannot be negative",
       "incomeRequired": "Monthly income is required",
       "incomeNegative": "Monthly income cannot be negative",
+      "incomeMin": "Monthly income must be greater than 0",
       "expensesRequired": "Monthly expenses is required",
       "expensesNegative": "Monthly expenses cannot be negative",
-      "expensesExceedIncome": "Expenses should not exceed income"
+      "expensesMin": "Monthly expenses must be greater than 0",
+      "expensesExceedIncome": "Expenses should not exceed income",
+      "monthlyContributionRequired": "Monthly contribution is required",
+      "monthlyContributionNegative": "Monthly contribution cannot be negative"
     }
   }
 }

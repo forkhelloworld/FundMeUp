@@ -26,7 +26,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
     const Content = mod.default as React.ComponentType;
     return (
       <div className="min-h-screen bg-slate-950 text-white">
-        <div className="mx-auto max-w-5xl px-6 py-16 prose prose-invert">
+        <div className="mx-auto max-w-5xl px-2 py-16 prose prose-invert">
           <Content />
           <LessonContent slug={slug} locale={locale} />
         </div>

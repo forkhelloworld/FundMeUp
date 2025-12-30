@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { fadeInLeft, fadeInRight, scaleIn } from "@/constants/animations";
 import { useUserProfileStore } from "@/lib/userProfile-store";
-import { fiCalculatorSchema } from "@/lib/validationSchemes";
+import { createLocalizedFiCalculatorSchema } from "@/lib/validationSchemes";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useAchievementChecker } from "@/lib/achievement-checker";
 import { useTranslations } from "next-intl";
@@ -17,6 +17,9 @@ export function FICalculator({
 }) {
   const t = useTranslations("lessons.calculators.fiCalculator");
   const tErrors = useTranslations("lessons.errors");
+  const tValidation = useTranslations(
+    "lessons.calculators.fiCalculator.validation"
+  );
 
   const {
     currentAge,
@@ -31,6 +34,23 @@ export function FICalculator({
   const [expectedReturn, setExpectedReturn] = useState(7);
   const [showFICalculation, setShowFICalculation] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [calcResult, setCalcResult] = useState<{
+    annualExpenses: number;
+    fiNumber: number;
+    monthlySavings: number;
+    totalFutureValue: number;
+    fiGap: number;
+    additionalMonthlySavingsNeeded: number;
+    progressPct: number;
+    currentNetWorth: number;
+    selectedFIAge: number;
+    hasExpenses: boolean;
+  } | null>(null);
+
+  const schema = useMemo(
+    () => createLocalizedFiCalculatorSchema((key) => tValidation(key)),
+    [tValidation]
+  );
 
   const {
     checkAndAwardSimulationAchievement,
@@ -38,7 +58,7 @@ export function FICalculator({
   } = useAchievementChecker();
 
   const validateAll = () => {
-    const result = fiCalculatorSchema.safeParse({
+    const result = schema.safeParse({
       currentAge,
       selectedFIAge,
       currentNetWorth,
@@ -60,35 +80,71 @@ export function FICalculator({
     return true;
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      validateAll();
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [
+    currentAge,
+    selectedFIAge,
+    currentNetWorth,
+    monthlyIncome,
+    monthlyExpenses,
+    savingsRate,
+    expectedReturn,
+  ]);
+
   const annualExpenses = monthlyExpenses * 12;
-  const fiNumber = annualExpenses * 25;
-  const monthlySavings = (monthlyIncome * savingsRate) / 100;
-  const yearsToFI = selectedFIAge - currentAge;
+  const computeResults = () => {
+    const hasExpenses = annualExpenses > 0;
+    const fiNumber = hasExpenses ? annualExpenses * 25 : 0;
+    const monthlySavings = (monthlyIncome * savingsRate) / 100;
+    const yearsToFI = selectedFIAge - currentAge;
 
-  const monthlyReturn = expectedReturn / 100 / 12;
-  const totalMonths = yearsToFI * 12;
-  const futureValueFromCurrent =
-    currentNetWorth * Math.pow(1 + expectedReturn / 100, yearsToFI);
-  const growthFactor =
-    monthlyReturn === 0
-      ? totalMonths
-      : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
-  const futureValueFromSavings = monthlySavings * growthFactor;
-  const totalFutureValue = futureValueFromCurrent + futureValueFromSavings;
+    const monthlyReturn = expectedReturn / 100 / 12;
+    const totalMonths = yearsToFI * 12;
+    const futureValueFromCurrent =
+      currentNetWorth * Math.pow(1 + expectedReturn / 100, yearsToFI);
+    const growthFactor =
+      monthlyReturn === 0
+        ? totalMonths
+        : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
+    const futureValueFromSavings = monthlySavings * growthFactor;
+    const totalFutureValue = futureValueFromCurrent + futureValueFromSavings;
 
-  const fiGap = Math.max(0, fiNumber - totalFutureValue);
-  const denom =
-    monthlyReturn === 0
-      ? totalMonths
-      : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
-  const additionalMonthlySavingsNeeded = fiGap > 0 ? fiGap / denom : 0;
+    const fiGap = hasExpenses ? Math.max(0, fiNumber - totalFutureValue) : 0;
+    const denom =
+      monthlyReturn === 0
+        ? totalMonths
+        : (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
+    const additionalMonthlySavingsNeeded =
+      hasExpenses && fiGap > 0 ? fiGap / denom : 0;
+    const progressPct =
+      hasExpenses && fiNumber > 0
+        ? Math.min(100, (currentNetWorth / fiNumber) * 100)
+        : 0;
+
+    return {
+      annualExpenses,
+      fiNumber,
+      monthlySavings,
+      totalFutureValue,
+      fiGap,
+      additionalMonthlySavingsNeeded,
+      progressPct,
+      currentNetWorth,
+      selectedFIAge,
+      hasExpenses,
+    };
+  };
 
   const handleUserProfileDataChange = (field: string, value: number) => {
     setUserProfileData({
       ...useUserProfileStore.getState(),
       [field]: value,
     });
-    validateAll();
   };
 
   return (
@@ -201,7 +257,7 @@ export function FICalculator({
 
           <div>
             <label className="text-gray-300 block mb-2">
-              {t("monthlyExpenses")}
+              {t("monthlyIncome")}
             </label>
             <input
               type="number"
@@ -325,6 +381,7 @@ export function FICalculator({
         <Button
           onClick={async () => {
             if (validateAll()) {
+              setCalcResult(computeResults());
               setShowFICalculation(true);
 
               // Check achievements after running simulation
@@ -349,84 +406,89 @@ export function FICalculator({
       >
         <h3 className="text-white font-semibold mb-4">{t("results.title")}</h3>
 
-        {showFICalculation && (
-          <motion.div {...scaleIn} className="space-y-4">
-            <div className="bg-blue-900/30 p-4 rounded-lg">
-              <h4 className="text-blue-300 font-semibold mb-2">
-                {t("results.targetAmount")}
-              </h4>
-              <p className="text-2xl font-bold text-blue-200">
-                ${fiNumber.toLocaleString()}
-              </p>
-              <p className="text-blue-300 text-sm">
-                {t("results.basedOnExpenses", {
-                  amount: annualExpenses.toLocaleString(),
-                })}
-              </p>
-            </div>
-
-            <div className="bg-green-900/30 p-4 rounded-lg">
-              <h4 className="text-green-300 font-semibold mb-2">
-                {t("results.currentProgress")}
-              </h4>
-              <div className="mb-2">
-                <Progress
-                  value={Math.min(100, (currentNetWorth / fiNumber) * 100)}
-                  className="mb-2"
-                />
-              </div>
-              <p className="text-green-200">
-                ${currentNetWorth.toLocaleString()} / $
-                {fiNumber.toLocaleString()}
-              </p>
-              <p className="text-green-300 text-sm">
-                {((currentNetWorth / fiNumber) * 100).toFixed(1)}% to FI
-              </p>
-            </div>
-
-            <div className="bg-purple-900/30 p-4 rounded-lg">
-              <h4 className="text-purple-300 font-semibold mb-2">
-                {t("results.projectedAtAge", { age: selectedFIAge })}
-              </h4>
-              <p className="text-2xl font-bold text-purple-200">
-                ${Math.round(totalFutureValue).toLocaleString()}
-              </p>
-              <p className="text-purple-300 text-sm">
-                {t("results.monthlySavingsAmount", {
-                  amount: monthlySavings.toLocaleString(),
-                })}
-              </p>
-            </div>
-
-            {fiGap > 0 ? (
-              <div className="bg-red-900/30 p-4 rounded-lg">
-                <h4 className="text-red-300 font-semibold mb-2">
-                  {t("results.gapAnalysis")}
+        {showFICalculation && calcResult ? (
+          !calcResult.hasExpenses ? (
+            <p className="text-gray-400 text-sm">{t("results.noExpenses")}</p>
+          ) : (
+            <motion.div {...scaleIn} className="space-y-4">
+              <div className="bg-blue-900/30 p-4 rounded-lg">
+                <h4 className="text-blue-300 font-semibold mb-2">
+                  {t("results.targetAmount")}
                 </h4>
-                <p className="text-red-200 mb-2">
-                  {t("results.shortfall", {
-                    amount: Math.round(fiGap).toLocaleString(),
-                  })}
+                <p className="text-2xl font-bold text-blue-200">
+                  ${calcResult.fiNumber.toLocaleString()}
                 </p>
-                <p className="text-red-300 text-sm">
-                  {t("results.additionalNeeded", {
-                    amount: Math.round(
-                      additionalMonthlySavingsNeeded
-                    ).toLocaleString(),
+                <p className="text-blue-300 text-sm">
+                  {t("results.basedOnExpenses", {
+                    amount: calcResult.annualExpenses.toLocaleString(),
                   })}
                 </p>
               </div>
-            ) : (
+
               <div className="bg-green-900/30 p-4 rounded-lg">
                 <h4 className="text-green-300 font-semibold mb-2">
-                  {t("results.congratulations")}
+                  {t("results.currentProgress")}
                 </h4>
+                <div className="mb-2">
+                  <Progress value={calcResult.progressPct} className="mb-2" />
+                </div>
                 <p className="text-green-200">
-                  {t("results.onTrack", { age: selectedFIAge })}
+                  ${calcResult.currentNetWorth.toLocaleString()} / $
+                  {calcResult.fiNumber.toLocaleString()}
+                </p>
+                <p className="text-green-300 text-sm">
+                  {calcResult.progressPct.toFixed(1)}% to FI
                 </p>
               </div>
-            )}
-          </motion.div>
+
+              <div className="bg-purple-900/30 p-4 rounded-lg">
+                <h4 className="text-purple-300 font-semibold mb-2">
+                  {t("results.projectedAtAge", {
+                    age: calcResult.selectedFIAge,
+                  })}
+                </h4>
+                <p className="text-2xl font-bold text-purple-200">
+                  ${Math.round(calcResult.totalFutureValue).toLocaleString()}
+                </p>
+                <p className="text-purple-300 text-sm">
+                  {t("results.monthlySavingsAmount", {
+                    amount: calcResult.monthlySavings.toLocaleString(),
+                  })}
+                </p>
+              </div>
+
+              {calcResult.fiGap > 0 ? (
+                <div className="bg-red-900/30 p-4 rounded-lg">
+                  <h4 className="text-red-300 font-semibold mb-2">
+                    {t("results.gapAnalysis")}
+                  </h4>
+                  <p className="text-red-200 mb-2">
+                    {t("results.shortfall", {
+                      amount: Math.round(calcResult.fiGap).toLocaleString(),
+                    })}
+                  </p>
+                  <p className="text-red-300 text-sm">
+                    {t("results.additionalNeeded", {
+                      amount: Math.round(
+                        calcResult.additionalMonthlySavingsNeeded
+                      ).toLocaleString(),
+                    })}
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-green-900/30 p-4 rounded-lg">
+                  <h4 className="text-green-300 font-semibold mb-2">
+                    {t("results.congratulations")}
+                  </h4>
+                  <p className="text-green-200">
+                    {t("results.onTrack", { age: calcResult.selectedFIAge })}
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )
+        ) : (
+          <p className="text-gray-400 text-sm">{t("results.noData")}</p>
         )}
       </motion.div>
     </motion.div>
